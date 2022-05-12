@@ -1,46 +1,59 @@
 ﻿@page "/fetchdata"
-@using MiljøFestival.Shared
+@using MiljøFestival.Shared.Models
 @inject HttpClient Http
 
-<h1>Weather forecast</h1>
+<h1>Overblik over alle vagter</h1>
 
-<p>This component demonstrates fetching data from the server.</p>
-
-@if (forecasts == null)
+@if (VagtListe == null)
 {
     <p><em>Loading...</em></p>
 }
 else
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Temp. (C)</th>
-                <th>Temp. (F)</th>
-                <th>Summary</th>
+<div class="table-responsive rounded">
+        <table class="table table-striped">
+            <thead>
+                <tr class="table">
+                <th>Vagt ID</th>
+                <th>Start</th>
+                <th>Slut</th>
+                <th>Bruger ID</th>
+                <th>Vagt ID</th>       
             </tr>
         </thead>
         <tbody>
-            @foreach (var forecast in forecasts)
+            @foreach (var vagt in VagtListe)
             {
                 <tr>
-                    <td>@forecast.Date.ToShortDateString()</td>
-                    <td>@forecast.TemperatureC</td>
-                    <td>@forecast.TemperatureF</td>
-                    <td>@forecast.Summary</td>
+                    <td><input type="button" class="btn btn-danger" value="Slet"></td>
+                            <td>@vagt.Vagt_Id</td>
+                            <td>@vagt.Start</td>
+                            <td>@vagt.Slut</td>
+                            <td>@vagt.Bruger_Id</td>
+                            <td>@vagt.Vagt_Id</td>
                 </tr>
             }
         </tbody>
     </table>
+    </div>
 }
 
 @code {
-    private WeatherForecast[] forecasts;
+    private List<Vagt> VagtListe;
+    private List<Vagt> VagtListeUnsorted;
+
+    private bool editmode = false;
 
     protected override async Task OnInitializedAsync()
     {
-        forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("WeatherForecast");
+        VagtListeUnsorted = await Http.GetFromJsonAsync<List<Vagt>>("Vagt/all");
+
+        VagtListe = VagtListeUnsorted.OrderBy(q => q.Vagt_Id).ToList();
+
     }
 
+
+    
+
+   
 }
