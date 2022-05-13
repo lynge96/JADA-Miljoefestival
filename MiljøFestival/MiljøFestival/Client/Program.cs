@@ -18,6 +18,7 @@ namespace MiljøFestival.Client
             builder.RootComponents.Add<App>("#app");
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            builder.Services.AddScoped<Client.Test.AppData>();
 
             await builder.Build().RunAsync();
         }

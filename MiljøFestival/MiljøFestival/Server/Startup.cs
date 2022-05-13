@@ -26,6 +26,9 @@ namespace MiljøFestival.Server
             services.AddControllersWithViews();
             services.AddRazorPages();
             services.AddSingleton<IConfiguration>(Configuration);
+            services.AddScoped<Shared.Models.AppData>();
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

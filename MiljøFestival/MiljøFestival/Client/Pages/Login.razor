@@ -1,6 +1,8 @@
 ﻿@page "/login"
 @using MiljøFestival.Shared.Models
 @inject HttpClient Http
+@inject NavigationManager UriHelper
+
 
 <h1>Test dit login!</h1>
 
@@ -24,6 +26,9 @@
             <button type="submit" class="btn btn-primary">Tjek</button>
         </div>
     </EditForm>
+        <NavLink class="nav-link" href="opretbruger">
+            <button class="btn btn-primary">Opret bruger</button>
+        </NavLink>
 }
 else
 {
@@ -36,7 +41,7 @@ else
 
     private Bruger bruger = new Bruger();
     private EditContext EditContext;
-    private string godkendt = "";
+    private string godkendt = string.Empty;
     private bool logedin = false;
 
     protected override void OnInitialized()
@@ -47,6 +52,7 @@ else
     protected void LogAf()
     {
         logedin = false;
+        godkendt = string.Empty;
     }
 
     protected async Task<List<string>> TjekLogin(Bruger user)
@@ -61,13 +67,18 @@ else
 
         var sikkerhed = await TjekLogin(bruger);
 
-        if (sikkerhed.First() == "True")
+        if (sikkerhed.First() == "true")
         {
+            var testbruger = await Http.GetFromJsonAsync<IEnumerable<Bruger>>($"Bruger/findbrugeremail?email={bruger.Email}");
+
+            Bruger logedinbruger = testbruger.First();
+
             godkendt = "Godkendt!";
+
+            logedin = true;
 
             bruger = new Bruger();
 
-            logedin = true;
 
         }
         else
