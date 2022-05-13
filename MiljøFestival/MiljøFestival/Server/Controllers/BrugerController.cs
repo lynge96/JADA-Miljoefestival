@@ -101,8 +101,8 @@ namespace MiljøFestival.Server.Controllers
 
 
         // Hent bruger udfra email
-        [HttpGet("findbrugeremail")]
-        public async Task<IEnumerable<Bruger>> FindBrugerEmail(string email)
+        [HttpGet("findbruger")]
+        public async Task<IEnumerable<Bruger>> FindBruger(string email)
         {
             var connString = "User ID=jbpzuakg;Password=7FunsLh3XcgblqOlN4WJ5dIMJr2v134O;Host=abul.db.elephantsql.com;Port=5432;Database=jbpzuakg;";
 
@@ -124,30 +124,5 @@ namespace MiljøFestival.Server.Controllers
 
         }
 
-
-
-        // Hent bruger udfra id
-        [HttpGet("findbrugerid")]
-        public async Task<IEnumerable<Bruger>> FindBrugerId(string id)
-        {
-            var connString = "User ID=jbpzuakg;Password=7FunsLh3XcgblqOlN4WJ5dIMJr2v134O;Host=abul.db.elephantsql.com;Port=5432;Database=jbpzuakg;";
-
-            var sql = $"SELECT * FROM bruger WHERE bruger_id = '{id}';";
-
-            try
-            {
-                using (var connection = new NpgsqlConnection(connString))
-                {
-                    var bruger = await connection.QueryAsync<Bruger>(sql);
-
-                    return bruger;
-                }
-            }
-            catch (System.Exception)
-            {
-                return new List<Bruger>();
-            }
-
-        }
     }
 }

@@ -2,13 +2,17 @@
 @using MiljøFestival.Shared.Models
 @inject HttpClient Http
 @inject NavigationManager UriHelper
+@inject Client.Shared.LogedIn LogedIn
+
+<p>Bruger Id: @LogedIn.Bruger_Id</p>
+<p>Koordinator?: @LogedIn.Koordinator</p>
 
 
 <h1>Test dit login!</h1>
 
 <p> @godkendt </p>
 
-@if (logedin == false)
+@if (LogedIn.LoggetPå == false)
 {
     <EditForm EditContext="@EditContext" class="row p-3" OnSubmit="@HandleSubmit">
         <DataAnnotationsValidator />
@@ -38,11 +42,9 @@ else
 }
 
 @code {
-
     private Bruger bruger = new Bruger();
     private EditContext EditContext;
     private string godkendt = string.Empty;
-    private bool logedin = false;
 
     protected override void OnInitialized()
     {
@@ -51,8 +53,11 @@ else
 
     protected void LogAf()
     {
-        logedin = false;
         godkendt = string.Empty;
+
+        LogedIn.Bruger_Id = string.Empty;
+        LogedIn.Koordinator = false;
+        LogedIn.LoggetPå = false;
     }
 
     protected async Task<List<string>> TjekLogin(Bruger user)
@@ -65,17 +70,19 @@ else
     private async Task HandleSubmit()
     {
 
-        var sikkerhed = await TjekLogin(bruger);
+        var verificerBruger = await TjekLogin(bruger);
 
-        if (sikkerhed.First() == "true")
+        if (verificerBruger.First() == "true")
         {
-            var testbruger = await Http.GetFromJsonAsync<IEnumerable<Bruger>>($"Bruger/findbrugeremail?email={bruger.Email}");
+            var findBruger = await Http.GetFromJsonAsync<IEnumerable<Bruger>>($"Bruger/findbruger?email={bruger.Email}");
 
-            Bruger logedinbruger = testbruger.First();
+            Bruger logedinBruger = findBruger.First();
+
+            LogedIn.Bruger_Id = logedinBruger.Bruger_Id.ToString();
+            LogedIn.Koordinator = logedinBruger.Koordinator;
+            LogedIn.LoggetPå = true;
 
             godkendt = "Godkendt!";
-
-            logedin = true;
 
             bruger = new Bruger();
 

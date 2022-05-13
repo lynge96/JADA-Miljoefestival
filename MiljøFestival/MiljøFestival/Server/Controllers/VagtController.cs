@@ -36,5 +36,30 @@ namespace MiljøFestival.Server.Controllers
                 return new List<Vagt>();
             }
         }
+
+
+        // Find vagter efter bruger id
+        [HttpGet("brugerVagter")]
+        public async Task<IEnumerable<Vagt>> BrugerIdVagt(string brugerid)
+        {
+
+            var connString = "User ID=jbpzuakg;Password=7FunsLh3XcgblqOlN4WJ5dIMJr2v134O;Host=abul.db.elephantsql.com;Port=5432;Database=jbpzuakg;";
+
+            var sql = $"SELECT vagt.vagt_id, vagt.start, vagt.slut, bruger.fornavn AS taget_af, opgave.type AS opgave_navn, vagt.bruger_id, vagt.opgave_id FROM vagt LEFT JOIN bruger USING(bruger_id ) LEFT JOIN opgave USING(opgave_id ) WHERE bruger.bruger_id = {brugerid}";
+
+            try
+            {
+                using (var connection = new NpgsqlConnection(connString))
+                {
+                    var vagtListe = await connection.QueryAsync<Vagt>(sql);
+
+                    return vagtListe;
+                }
+            }
+            catch (System.Exception)
+            {
+                return new List<Vagt>();
+            }
+        }
     }
 }

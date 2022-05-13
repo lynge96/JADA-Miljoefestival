@@ -1,11 +1,60 @@
-﻿@page "/frivilligstartside/{bruger_id}"
+﻿@page "/frivilligstartside"
 @using MiljøFestival.Shared.Models
 @inject HttpClient Http
+@inject Client.Shared.LogedIn LogedIn
 
-<h1>Bruger Id: </h1>
+<p>Bruger Id: @LogedIn.Bruger_Id</p>
+<p>Koordinator?: @LogedIn.Koordinator</p>
 
-
+@if (VagtListe == null)
+{
+    <p><em>Loading...</em></p>
+}
+else if (LogedIn.LoggetPå == true)
+{
+    <div class="table-responsive rounded">
+        <table class="table table-striped">
+            <thead>
+                <tr class="table">
+                    <th>Vagt ID</th>
+                    <th>Start</th>
+                    <th>Slut</th>
+                    <th>Taget af</th>
+                    <th>Opgave navn</th>
+                    <th>Bruger ID</th>
+                    <th>Opgave ID</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var vagt in VagtListe)
+                {
+                    <tr>
+                        <td>@vagt.Vagt_Id</td>
+                        <td>@vagt.Start</td>
+                        <td>@vagt.Slut</td>
+                        <td>@vagt.Taget_Af</td>
+                        <td>@vagt.Opgave_Navn</td>
+                        <td>@vagt.Bruger_Id</td>
+                        <td>@vagt.Opgave_Id</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+} else
+{
+    <p><em>Log in for at se dine vagter</em></p>
+}
 
 @code {
-  
+    private List<Vagt> VagtListe;
+    private List<Vagt> VagtListeUnsorted;
+
+    protected override async Task OnInitializedAsync()
+    {
+        VagtListeUnsorted = await Http.GetFromJsonAsync<List<Vagt>>($"Vagt/brugerVagter?brugerid={LogedIn.Bruger_Id}");
+
+        VagtListe = VagtListeUnsorted.OrderBy(q => q.Vagt_Id).ToList();
+
+    }
 }
