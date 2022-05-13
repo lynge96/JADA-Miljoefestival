@@ -1,0 +1,76 @@
+﻿@page "/opretbruger"
+@using MiljøFestival.Shared.Models
+@inject HttpClient Http
+
+<h1>Opret en bruger</h1>
+
+<EditForm EditContext="@EditContext" class="row p-3" OnSubmit="@HandleSubmit">
+    <DataAnnotationsValidator />
+    <div class="col-md-12 mb-3">
+        <label for="Fornavn">Fornavn</label>
+        <InputText id="Fornavn" @bind-Value="nyBruger.Fornavn" class="form-control" />
+        <ValidationMessage For="@(() => nyBruger.Fornavn)" />
+    </div>
+    <div class="col-md-12 mb-3">
+        <label for="Efternavn">Efternavn</label>
+        <InputText id="Efternavn" @bind-Value="nyBruger.Efternavn" class="form-control" />
+        <ValidationMessage For="@(() => nyBruger.Efternavn)" />
+    </div>
+    <div class="col-md-12 mb-3">
+        <label for="Telefon">Telefon</label>
+        <InputText id="Telefon" @bind-Value="nyBruger.Telefon" class="form-control" />
+        <ValidationMessage For="@(() => nyBruger.Telefon)" />
+    </div>
+    <div class="col-md-12 mb-3">
+        <label for="Email">Email</label>
+        <InputText id="Email" @bind-Value="nyBruger.Email" class="form-control" />
+        <ValidationMessage For="@(() => nyBruger.Email)" />
+    </div>
+    <div class="col-md-12 mb-3">
+        <label for="Adresse">Adresse</label>
+        <InputText id="Adresse" @bind-Value="nyBruger.Adresse" class="form-control" />
+        <ValidationMessage For="@(() => nyBruger.Adresse)" />
+    </div>
+    <div class="col-md-12 mb-3">
+        <label for="Kode">Kode</label>
+        <InputText id="Kode" @bind-Value="nyBruger.Kode" class="form-control" />
+        <ValidationMessage For="@(() => nyBruger.Kode)" />
+    </div>
+    <div class="col-12 mb-3">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</EditForm>
+
+@code {
+
+    private Bruger nyBruger = new Bruger();
+    private EditContext EditContext;
+
+    protected override void OnInitialized()
+    {
+        EditContext = new EditContext(nyBruger);
+    }
+    
+    protected async Task OpretUser(Bruger bruger)
+    {
+        await Http.PostAsJsonAsync<Bruger>("Bruger/opret", bruger);
+
+    }
+
+    private async Task HandleSubmit()
+    {
+
+        if (EditContext.Validate())
+        {
+            await OpretUser(nyBruger);
+
+            nyBruger = new Bruger();
+
+        }
+        else
+        {
+            Console.WriteLine("Form is Invalid...");
+
+        }
+    }
+}

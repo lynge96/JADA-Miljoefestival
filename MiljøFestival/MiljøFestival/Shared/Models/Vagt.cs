@@ -14,7 +14,11 @@ namespace MiljøFestival.Shared.Models
 
         public DateTime Slut { get; set; }
 
-        public int Bruger_Id { get; set; }
+        public string? Taget_Af { get; set; }
+
+        public string Opgave_Navn { get; set; }
+
+        public int? Bruger_Id { get; set; }
 
         public int Opgave_Id { get; set; }
     }

@@ -1,0 +1,79 @@
+﻿@page "/login"
+@using MiljøFestival.Shared.Models
+@inject HttpClient Http
+
+<h1>Test dit login!</h1>
+
+<p> @godkendt </p>
+
+@if (logedin == false)
+{
+    <EditForm EditContext="@EditContext" class="row p-3" OnSubmit="@HandleSubmit">
+        <DataAnnotationsValidator />
+        <div class="col-md-12 mb-3">
+            <label for="Email">Email</label>
+            <InputText id="Email" @bind-Value="bruger.Email" class="form-control" />
+            <ValidationMessage For="@(() => bruger.Email)" />
+        </div>
+        <div class="col-md-12 mb-3">
+            <label for="Kode">Kode</label>
+            <InputText id="Kode" @bind-Value="bruger.Kode" class="form-control" />
+            <ValidationMessage For="@(() => bruger.Kode)" />
+        </div>
+        <div class="col-12 mb-3">
+            <button type="submit" class="btn btn-primary">Tjek</button>
+        </div>
+    </EditForm>
+}
+else
+{
+    <div class="col-12 mb-3">
+        <button @onclick="LogAf" class="btn btn-primary">Log af</button>
+    </div>
+}
+
+@code {
+
+    private Bruger bruger = new Bruger();
+    private EditContext EditContext;
+    private string godkendt = "";
+    private bool logedin = false;
+
+    protected override void OnInitialized()
+    {
+        EditContext = new EditContext(bruger);
+    }
+
+    protected void LogAf()
+    {
+        logedin = false;
+    }
+
+    protected async Task<List<string>> TjekLogin(Bruger user)
+    {
+
+        return await Http.GetFromJsonAsync<List<string>>($"Bruger/tjeklogin?email={bruger.Email}&kode={bruger.Kode}");
+
+    }
+
+    private async Task HandleSubmit()
+    {
+
+        var sikkerhed = await TjekLogin(bruger);
+
+        if (sikkerhed.First() == "True")
+        {
+            godkendt = "Godkendt!";
+
+            bruger = new Bruger();
+
+            logedin = true;
+
+        }
+        else
+        {
+            godkendt = "Forkert, prøv igen...";
+        }
+    }
+
+}

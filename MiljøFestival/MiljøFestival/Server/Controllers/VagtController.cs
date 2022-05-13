@@ -18,9 +18,9 @@ namespace MiljøFestival.Server.Controllers
         public async Task<IEnumerable<Vagt>> GetAll()
         {
             
-            var connString = "User ID = jbpzuakg; Password = 7FunsLh3XcgblqOlN4WJ5dIMJr2v134O; Server = abul.db.elephantsql.com; Port = 5432; Database = jbpzuakg;";
+            var connString = "User ID=jbpzuakg;Password=7FunsLh3XcgblqOlN4WJ5dIMJr2v134O;Host=abul.db.elephantsql.com;Port=5432;Database=jbpzuakg;";
 
-            var sql = "SELECT vagt_id, start, slut, bruger_id, opgave_id FROM vagt";
+            var sql = "SELECT vagt.vagt_id, vagt.start, vagt.slut, bruger.fornavn AS taget_af, opgave.type AS opgave_navn, vagt.bruger_id, vagt.opgave_id FROM vagt LEFT JOIN bruger USING(bruger_id ) LEFT JOIN opgave USING(opgave_id )";
 
             try
             {

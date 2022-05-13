@@ -1,0 +1,60 @@
+﻿@page "/allebruger"
+@using MiljøFestival.Shared.Models
+@inject HttpClient Http
+
+<h1>Overblik over alle brugere</h1>
+
+@if (BrugerListe == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="table-responsive rounded">
+        <table class="table table-striped">
+            <thead>
+                <tr class="table">
+                    <th>Bruger ID</th>
+                    <th>Fornavn</th>
+                    <th>Efternavn</th>
+                    <th>Telefon</th>
+                    <th>Email</th>
+                    <th>Adresse</th>
+                    <th>Koordinator?</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var bruger in BrugerListe)
+                {
+                    <tr>
+                        <td>@bruger.Bruger_Id</td>
+                        <td>@bruger.Fornavn</td>
+                        <td>@bruger.Efternavn</td>
+                        <td>@bruger.Telefon</td>
+                        <td>@bruger.Email</td>
+                        <td>@bruger.Adresse</td>
+                        <td>@bruger.Koordinator</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+@code {
+    private List<Bruger> BrugerListe;
+    private List<Bruger> BrugerListeUnsorted;
+
+    protected override async Task OnInitializedAsync()
+    {
+        BrugerListeUnsorted = await Http.GetFromJsonAsync<List<Bruger>>("Bruger/all");
+
+        BrugerListe = BrugerListeUnsorted.OrderBy(q => q.Bruger_Id).ToList();
+
+    }
+
+
+
+
+
+}
