@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace MiljøFestival.Shared.Models
 {
-    
-        public class AppData
-        {
-            public int Age { get; set; }
-        }
-    
+    public class VagtDTO
+    {
+        public int? Bruger_Id { get; set; }
+
+        public int Vagt_Id { get; set; }
+    }
 }

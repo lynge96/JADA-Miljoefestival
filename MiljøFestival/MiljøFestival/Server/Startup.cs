@@ -26,8 +26,6 @@ namespace MiljøFestival.Server
             services.AddControllersWithViews();
             services.AddRazorPages();
             services.AddSingleton<IConfiguration>(Configuration);
-            services.AddScoped<Shared.Models.AppData>();
-
 
         }
 

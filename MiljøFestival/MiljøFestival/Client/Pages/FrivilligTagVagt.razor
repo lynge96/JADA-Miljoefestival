@@ -1,4 +1,4 @@
-﻿@page "/frivilligStartside"
+﻿@page "/frivilligTagVagt"
 @using MiljøFestival.Shared.Models
 @inject HttpClient Http
 @inject Client.Shared.LogedIn LogedIn
@@ -21,7 +21,7 @@ else if (LogedIn.LoggetPå == true)
                     <th>Slut</th>
                     <th>Opgave</th>
                     <th>Beskrivelse</th>
-                    <th>Slet vagt</th>
+                    <th> Tag vagt </th> 
                 </tr>
             </thead>
             <tbody>
@@ -33,7 +33,7 @@ else if (LogedIn.LoggetPå == true)
                         <td>@vagt.Slut.ToShortTimeString()</td>
                         <td>@vagt.Opgave_Navn</td>
                         <td>Coming soon</td>
-                        <td><input type="button" class="btn btn-danger" value="Slet" @onclick="() => SletVagt(vagt)"></td>
+                        <td><input type="button" class="btn btn-primary" value="Tag vagt" @onclick="() => TagVagt(LogedIn.Bruger_Id, vagt.Vagt_Id)"></td>
                     </tr>
                 }
             </tbody>
@@ -41,26 +41,32 @@ else if (LogedIn.LoggetPå == true)
     </div>
 } else
 {
-    <p><em>Log in for at se dine vagter</em></p>
+    <p><em>Log in for at se ledige vagter</em></p>
 }
 
 @code {
     private List<Vagt> VagtListe;
     private List<Vagt> VagtListeUnsorted;
 
+    // Henter alle ledige vagter (taget_af == null)
     protected override async Task OnInitializedAsync()
     {
-        VagtListeUnsorted = await Http.GetFromJsonAsync<List<Vagt>>($"Vagt/brugerVagter?brugerid={LogedIn.Bruger_Id}");
+        VagtListeUnsorted = await Http.GetFromJsonAsync<List<Vagt>>("Vagt/ledigeVagter");
 
         VagtListe = VagtListeUnsorted.OrderBy(q => q.Vagt_Id).ToList();
 
     }
 
-     // Sletter vagt, sætter bruger_id til null og henter vagtlisten igen
-    protected async Task SletVagt(Vagt vagt)
-    {
 
-        await Http.PostAsJsonAsync<Vagt>("Vagt/sletVagt", vagt);
+    // Tager vagt og opdaterer ledige vagter
+    protected async Task TagVagt(int? bruger_id, int vagt_id)
+    {
+        VagtDTO DTO = new VagtDTO();
+
+        DTO.Bruger_Id = bruger_id;
+        DTO.Vagt_Id = vagt_id;
+
+        await Http.PostAsJsonAsync<VagtDTO>("Vagt/tagVagt", DTO);
 
         await OnInitializedAsync();
 

@@ -2,7 +2,7 @@
 {
     public class LogedIn
     {
-        public string Bruger_Id { get; set; }
+        public int? Bruger_Id { get; set; }
 
         public bool Koordinator { get; set; }
 

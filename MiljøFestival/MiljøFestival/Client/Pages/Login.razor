@@ -55,7 +55,7 @@ else
     {
         godkendt = string.Empty;
 
-        LogedIn.Bruger_Id = string.Empty;
+        LogedIn.Bruger_Id = null;
         LogedIn.Koordinator = false;
         LogedIn.LoggetPå = false;
     }
@@ -78,7 +78,7 @@ else
 
             Bruger logedinBruger = findBruger.First();
 
-            LogedIn.Bruger_Id = logedinBruger.Bruger_Id.ToString();
+            LogedIn.Bruger_Id = logedinBruger.Bruger_Id;
             LogedIn.Koordinator = logedinBruger.Koordinator;
             LogedIn.LoggetPå = true;
 
