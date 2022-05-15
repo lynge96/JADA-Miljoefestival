@@ -33,7 +33,7 @@ else if (LogedIn.LoggetPå == true)
                         <td>@vagt.Slut.ToShortTimeString()</td>
                         <td>@vagt.Opgave_Navn</td>
                         <td>Coming soon</td>
-                        <td><input type="button" class="btn btn-primary" value="Tag vagt" @onclick="() => TagVagt(LogedIn.Bruger_Id, vagt.Vagt_Id)"></td>
+                        <td><input type="button" class="btn btn-primary" value="Tag vagt" @onclick="() => TagVagt(vagt)"></td>
                     </tr>
                 }
             </tbody>
@@ -59,14 +59,12 @@ else if (LogedIn.LoggetPå == true)
 
 
     // Tager vagt og opdaterer ledige vagter
-    protected async Task TagVagt(int? bruger_id, int vagt_id)
+    protected async Task TagVagt(Vagt vagt)
     {
-        VagtDTO DTO = new VagtDTO();
 
-        DTO.Bruger_Id = bruger_id;
-        DTO.Vagt_Id = vagt_id;
+        vagt.Bruger_Id = LogedIn.Bruger_Id;
 
-        await Http.PostAsJsonAsync<VagtDTO>("Vagt/tagVagt", DTO);
+        await Http.PostAsJsonAsync<Vagt>("Vagt/tagVagt", vagt);
 
         await OnInitializedAsync();
 

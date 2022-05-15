@@ -1,0 +1,55 @@
+﻿@page "/profil"
+@using MiljøFestival.Shared.Models
+@inject HttpClient Http
+@inject Client.Shared.LogedIn LogedIn
+
+
+<h1>Proil for bruger:</h1>
+
+@if (bruger == null)
+{
+    <p><em>Loading...</em></p>
+}
+else if (LogedIn.LoggetPå == true)
+{
+    <p>Bruger_Id: @bruger.Bruger_Id</p>
+    <input type = "text" class="form-control" @bind="bruger.Fornavn">
+    <input type = "text" class="form-control" @bind="bruger.Efternavn">
+    <input type = "text" class="form-control" @bind="bruger.Telefon">
+    <input type = "text" class="form-control" @bind="bruger.Email">
+    <input type = "text" class="form-control" @bind="bruger.Adresse">
+    <input type = "checkbox" name = "Koordinator" @bind="bruger.Koordinator">
+    <label for = "Koordinator">Koordinator:</label>
+    <p>HashPwd: @bruger.Kode</p>
+    <td><input type="button" class="btn btn-primary" value="Gem opdateringer" @onclick="() => OpdaterBruger(bruger)"></td>
+
+} else
+{
+    <p>Log på for at se og redigere din profil</p>
+}
+
+@code {
+    private Bruger bruger = new Bruger();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (LogedIn.LoggetPå == true)
+        {
+            var brugerListe = await Http.GetFromJsonAsync<IEnumerable<Bruger>>($"Bruger/findBrugerId?bruger_id={LogedIn.Bruger_Id}");
+
+            bruger = brugerListe.First();
+        }
+    }
+
+    protected async Task OpdaterBruger(Bruger bruger)
+    {
+        await Http.PostAsJsonAsync<Bruger>("Bruger/opdaterBruger", bruger);
+
+        await OnInitializedAsync();
+
+    }
+
+
+
+
+}

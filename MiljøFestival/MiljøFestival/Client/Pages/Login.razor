@@ -74,7 +74,7 @@ else
 
         if (verificerBruger.First() == "true")
         {
-            var findBruger = await Http.GetFromJsonAsync<IEnumerable<Bruger>>($"Bruger/findbruger?email={bruger.Email}");
+            var findBruger = await Http.GetFromJsonAsync<IEnumerable<Bruger>>($"Bruger/findBrugerEmail?email={bruger.Email}");
 
             Bruger logedinBruger = findBruger.First();
 

@@ -89,13 +89,13 @@ namespace MiljøFestival.Server.Controllers
         }
 
 
-        // Tag en vagt
+        // Tager en vagt 
         [HttpPost("tagVagt")]
-        public async Task TagVagt(VagtDTO DTO)
+        public async Task TagVagt(Vagt vagt)
         {
             var connString = "User ID=jbpzuakg;Password=7FunsLh3XcgblqOlN4WJ5dIMJr2v134O;Host=abul.db.elephantsql.com;Port=5432;Database=jbpzuakg;";
 
-            var sql = $"UPDATE vagt SET bruger_id = {DTO.Bruger_Id} WHERE vagt_id = {DTO.Vagt_Id};";
+            var sql = $"UPDATE vagt SET bruger_id = {vagt.Bruger_Id} WHERE vagt_id = {vagt.Vagt_Id};";
 
             try
             {
@@ -113,7 +113,7 @@ namespace MiljøFestival.Server.Controllers
         }
 
 
-        // Fjern vagt
+        // Fjerner vagt fra brugeren og gør den ledig til andre
         [HttpPost("sletVagt")]
         public async Task FjernVagt(Vagt vagt)
         {

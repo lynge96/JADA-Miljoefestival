@@ -14,6 +14,8 @@ namespace MiljøFestival.Server.Controllers
     [Route("[controller]")]
     public class OpgaveController : ControllerBase
     {
+
+        // Henter alle opgaver
         [HttpGet("all")]
         public async Task<IEnumerable<Opgave>> GetAll()
         {
@@ -36,5 +38,7 @@ namespace MiljøFestival.Server.Controllers
                 return new List<Opgave>();
             }
         }
+
+
     }
 }

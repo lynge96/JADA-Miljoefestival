@@ -59,10 +59,8 @@ else if (LogedIn.LoggetPå == true)
      // Sletter vagt, sætter bruger_id til null og henter vagtlisten igen
     protected async Task SletVagt(Vagt vagt)
     {
-
         await Http.PostAsJsonAsync<Vagt>("Vagt/sletVagt", vagt);
 
         await OnInitializedAsync();
-
     }
 }

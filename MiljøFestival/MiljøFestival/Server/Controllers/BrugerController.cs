@@ -75,7 +75,7 @@ namespace MiljøFestival.Server.Controllers
         }
 
 
-        // Tjek om login er korret
+        // Tjekker om email og kode tastet ind er korrekt -> om en bruger er oprettet
         [HttpGet("tjeklogin")]
         public async Task<IEnumerable<string>> TjekLogin(string email, string kode)
         {
@@ -100,8 +100,8 @@ namespace MiljøFestival.Server.Controllers
         }
 
 
-        // Hent bruger udfra email
-        [HttpGet("findbruger")]
+        // Hent bruger udfra email indtastet, når login er godkendt i /tjeklogin
+        [HttpGet("findBrugerEmail")]
         public async Task<IEnumerable<Bruger>> FindBruger(string email)
         {
             var connString = "User ID=jbpzuakg;Password=7FunsLh3XcgblqOlN4WJ5dIMJr2v134O;Host=abul.db.elephantsql.com;Port=5432;Database=jbpzuakg;";
@@ -121,6 +121,66 @@ namespace MiljøFestival.Server.Controllers
             {
                 return new List<Bruger>();
             }
+
+        }
+
+
+        // Find bruger med Bruger Id
+        [HttpGet("findBrugerId")]
+        public async Task<IEnumerable<Bruger>> HentBrugerBrugerId(int bruger_id)
+        {
+            var connString = "User ID=jbpzuakg;Password=7FunsLh3XcgblqOlN4WJ5dIMJr2v134O;Host=abul.db.elephantsql.com;Port=5432;Database=jbpzuakg;";
+
+            var sql = $"SELECT bruger_id, fornavn, efternavn, telefon, email, adresse, koordinator, hashpwd AS kode FROM bruger WHERE bruger_id = '{bruger_id}'";
+
+            try
+            {
+                using (var connection = new NpgsqlConnection(connString))
+                {
+                    var bruger = await connection.QueryAsync<Bruger>(sql);
+
+                    return bruger;
+                }
+            }
+            catch (System.Exception)
+            {
+                return new List<Bruger>();
+            }
+
+        }
+
+
+        // Opdaterer oplysninger for brugers profil
+        [HttpPost("opdaterBruger")]
+        public async Task OpdaterBruger(Bruger bruger)
+        {
+            var connString = "User ID=jbpzuakg;Password=7FunsLh3XcgblqOlN4WJ5dIMJr2v134O;Host=abul.db.elephantsql.com;Port=5432;Database=jbpzuakg;";
+
+            var sql = $"UPDATE bruger SET fornavn = @fornavn, efternavn = @efternavn, telefon = @telefon, email = @email, adresse = @adresse, koordinator = @koordinator where bruger_id = @bruger_id";
+
+            var queryArguments = new
+            {
+                fornavn = bruger.Fornavn,
+                efternavn = bruger.Efternavn,
+                telefon = bruger.Telefon,
+                email = bruger.Email,
+                adresse = bruger.Adresse,
+                bruger_id = bruger.Bruger_Id,
+                koordinator = bruger.Koordinator
+            };
+
+            try
+            {
+                using (var connection = new NpgsqlConnection(connString))
+                {
+                    await connection.ExecuteAsync(sql, queryArguments);
+                }
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }
+
 
         }
 
