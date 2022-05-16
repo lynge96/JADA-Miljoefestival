@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+
 namespace MiljøFestival.Server.Controllers
 {
     [ApiController]
@@ -75,13 +76,13 @@ namespace MiljøFestival.Server.Controllers
         }
 
 
-        // Tjekker om email og kode tastet ind er korrekt -> om en bruger er oprettet
+        // Tjekker om email og kode tastet ind er korrekt og om en bruger er oprettet. Henter brugeren herefter
         [HttpGet("tjeklogin")]
         public async Task<IEnumerable<Bruger>> TjekLogin(string email, string kode)
         {
             var connString = "User ID=jbpzuakg;Password=7FunsLh3XcgblqOlN4WJ5dIMJr2v134O;Host=abul.db.elephantsql.com;Port=5432;Database=jbpzuakg;";
 
-            var sql = $"SELECT * FROM ABC('{email}', '{kode}');";
+            var sql = $"SELECT * FROM tjek_login('{email}', '{kode}');";
 
             try
             {
@@ -95,31 +96,6 @@ namespace MiljøFestival.Server.Controllers
             catch (System.Exception)
             {
                 throw;
-            }
-
-        }
-
-
-        // Hent bruger udfra email indtastet, når login er godkendt i /tjeklogin
-        [HttpGet("findBrugerEmail")]
-        public async Task<IEnumerable<Bruger>> FindBruger(string email)
-        {
-            var connString = "User ID=jbpzuakg;Password=7FunsLh3XcgblqOlN4WJ5dIMJr2v134O;Host=abul.db.elephantsql.com;Port=5432;Database=jbpzuakg;";
-
-            var sql = $"SELECT * FROM bruger WHERE email = '{email}';";
-
-            try
-            {
-                using (var connection = new NpgsqlConnection(connString))
-                {
-                    var bruger = await connection.QueryAsync<Bruger>(sql);
-
-                    return bruger;
-                }
-            }
-            catch (System.Exception)
-            {
-                return new List<Bruger>();
             }
 
         }

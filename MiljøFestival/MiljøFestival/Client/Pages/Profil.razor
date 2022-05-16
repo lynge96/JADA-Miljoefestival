@@ -1,7 +1,7 @@
 ﻿@page "/profil"
 @using MiljøFestival.Shared.Models
 @inject HttpClient Http
-@inject MiljøFestival.Shared.Models.LogedIn LogedIn
+@inject MiljøFestival.Shared.Models.Bruger LogedInBruger
 
 
 <h1>Proil for bruger:</h1>
@@ -10,20 +10,20 @@
 {
     <p><em>Loading...</em></p>
 }
-else if (LogedIn.LoggetPå == true)
+else if (LogedInBruger.ErLoggetPå())
 {
     <p>Bruger_Id: @bruger.Bruger_Id</p>
-    <input type = "text" class="form-control" @bind="bruger.Fornavn">
-    <input type = "text" class="form-control" @bind="bruger.Efternavn">
-    <input type = "text" class="form-control" @bind="bruger.Telefon">
-    <input type = "text" class="form-control" @bind="bruger.Email">
-    <input type = "text" class="form-control" @bind="bruger.Adresse">
-    <input type = "checkbox" name = "Koordinator" @bind="bruger.Koordinator">
-    <label for = "Koordinator">Koordinator</label>
-    <p>HashPwd: @bruger.Kode</p>
+    <input type="text" class="form-control" @bind="bruger.Fornavn">
+    <input type="text" class="form-control" @bind="bruger.Efternavn">
+    <input type="text" class="form-control" @bind="bruger.Telefon">
+    <input type="text" class="form-control" @bind="bruger.Email">
+    <input type="text" class="form-control" @bind="bruger.Adresse">
+    <input type="checkbox" name="Koordinator" @bind="bruger.Koordinator">
+    <label for="Koordinator">Koordinator</label>
     <td><input type="button" class="btn btn-primary" value="Gem opdateringer" @onclick="() => OpdaterBruger(bruger)"></td>
 
-} else
+}
+else
 {
     <p>Log på for at se og redigere din profil</p>
 }
@@ -33,9 +33,9 @@ else if (LogedIn.LoggetPå == true)
 
     protected override async Task OnInitializedAsync()
     {
-        if (LogedIn.LoggetPå == true)
+        if (LogedInBruger.Bruger_Id != 0)
         {
-            var brugerListe = await Http.GetFromJsonAsync<IEnumerable<Bruger>>($"Bruger/findBrugerId?bruger_id={LogedIn.Bruger_Id}");
+            var brugerListe = await Http.GetFromJsonAsync<IEnumerable<Bruger>>($"Bruger/findBrugerId?bruger_id={LogedInBruger.Bruger_Id}");
 
             bruger = brugerListe.First();
         }
@@ -43,6 +43,15 @@ else if (LogedIn.LoggetPå == true)
 
     protected async Task OpdaterBruger(Bruger bruger)
     {
+        // Opdater nuværende bruger
+        LogedInBruger.Bruger_Id = bruger.Bruger_Id;
+        LogedInBruger.Fornavn = bruger.Fornavn;
+        LogedInBruger.Efternavn = bruger.Efternavn;
+        LogedInBruger.Telefon = bruger.Telefon;
+        LogedInBruger.Email = bruger.Email;
+        LogedInBruger.Adresse = bruger.Adresse;
+        LogedInBruger.Koordinator = bruger.Koordinator;
+
         await Http.PostAsJsonAsync<Bruger>("Bruger/opdaterBruger", bruger);
 
         await OnInitializedAsync();

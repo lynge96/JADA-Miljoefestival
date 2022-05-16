@@ -1,16 +1,20 @@
 ﻿@page "/frivilligStartside"
 @using MiljøFestival.Shared.Models
 @inject HttpClient Http
-@inject MiljøFestival.Shared.Models.LogedIn LogedIn
+@inject MiljøFestival.Shared.Models.Bruger LogedInBruger
 
-<p>Bruger Id: @LogedIn.Bruger_Id</p>
-<p>Koordinator?: @LogedIn.Koordinator</p>
+<p>Bruger Id: @LogedInBruger.Bruger_Id</p>
+<p>Koordinator?: @LogedInBruger.Koordinator</p>
 
 @if (VagtListe == null)
 {
     <p><em>Loading...</em></p>
 }
-else if (LogedIn.LoggetPå == true)
+else if (LogedInBruger.ErKoordinator())
+{
+    <p><em>Du skal være frivillig for at se denne side</em></p>
+}
+else if (LogedInBruger.ErLoggetPå())
 {
     <div class="table-responsive rounded">
         <table class="table table-striped">
@@ -33,13 +37,14 @@ else if (LogedIn.LoggetPå == true)
                         <td>@vagt.Slut.ToShortTimeString()</td>
                         <td>@vagt.Opgave_Navn</td>
                         <td>Coming soon</td>
-                        <td><input type="button" class="btn btn-danger" value="Slet" @onclick="() => SletVagt(vagt)"></td>
+                        <td><input type="button" class="btn btn-danger" value="Slet" @onclick="() => FrigivVagt(vagt)"></td>
                     </tr>
                 }
             </tbody>
         </table>
     </div>
-} else
+}
+else
 {
     <p><em>Log in for at se dine vagter</em></p>
 }
@@ -50,16 +55,16 @@ else if (LogedIn.LoggetPå == true)
 
     protected override async Task OnInitializedAsync()
     {
-        VagtListeUnsorted = await Http.GetFromJsonAsync<List<Vagt>>($"Vagt/brugerVagter?brugerid={LogedIn.Bruger_Id}");
+        VagtListeUnsorted = await Http.GetFromJsonAsync<List<Vagt>>($"Vagt/brugerVagter?brugerid={LogedInBruger.Bruger_Id}");
 
         VagtListe = VagtListeUnsorted.OrderBy(q => q.Vagt_Id).ToList();
 
     }
 
-     // Sletter vagt, sætter bruger_id til null og henter vagtlisten igen
-    protected async Task SletVagt(Vagt vagt)
+    // Sletter vagt, sætter bruger_id til null og henter vagtlisten igen
+    protected async Task FrigivVagt(Vagt vagt)
     {
-        await Http.PostAsJsonAsync<Vagt>("Vagt/sletVagt", vagt);
+        await Http.PostAsJsonAsync<Vagt>("Vagt/frigivVagt", vagt);
 
         await OnInitializedAsync();
     }

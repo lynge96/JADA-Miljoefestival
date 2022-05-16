@@ -31,5 +31,37 @@ namespace MiljøFestival.Shared.Models
         [Required]
         public string Kode { get; set; }
 
+
+        // Returnerer true / false om brugeren er logget på
+        public bool ErLoggetPå()
+        {
+            if (Bruger_Id > 1)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+
+        // Returnerer true / false om brugeren er koordinator
+        public bool ErKoordinator()
+        {
+            if (Koordinator == true)
+            {
+                return true;
+            } else
+            {
+                return false;
+            }
+        }
+
     }
+
+
+
+    // Metode til ErLoggetPå -> returnerer true / false
+    // Metode til at ændre koordinatorstatus
 }

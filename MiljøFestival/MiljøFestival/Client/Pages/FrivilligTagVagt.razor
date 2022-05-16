@@ -1,16 +1,20 @@
 ﻿@page "/frivilligTagVagt"
 @using MiljøFestival.Shared.Models
 @inject HttpClient Http
-@inject MiljøFestival.Shared.Models.LogedIn LogedIn
+@inject MiljøFestival.Shared.Models.Bruger LogedInBruger
 
-<p>Bruger Id: @LogedIn.Bruger_Id</p>
-<p>Koordinator?: @LogedIn.Koordinator</p>
+<p>Bruger Id: @LogedInBruger.Bruger_Id</p>
+<p>Koordinator?: @LogedInBruger.Koordinator</p>
 
 @if (VagtListe == null)
 {
     <p><em>Loading...</em></p>
 }
-else if (LogedIn.LoggetPå == true)
+else if (LogedInBruger.ErKoordinator())
+{
+    <p><em>Du skal være frivillig for at se denne side</em></p>
+}
+else if (LogedInBruger.ErLoggetPå())
 {
     <div class="table-responsive rounded">
         <table class="table table-striped">
@@ -21,7 +25,7 @@ else if (LogedIn.LoggetPå == true)
                     <th>Slut</th>
                     <th>Opgave</th>
                     <th>Beskrivelse</th>
-                    <th> Tag vagt </th> 
+                    <th> Tag vagt </th>
                 </tr>
             </thead>
             <tbody>
@@ -39,7 +43,8 @@ else if (LogedIn.LoggetPå == true)
             </tbody>
         </table>
     </div>
-} else
+}
+else
 {
     <p><em>Log in for at se ledige vagter</em></p>
 }
@@ -47,6 +52,7 @@ else if (LogedIn.LoggetPå == true)
 @code {
     private List<Vagt> VagtListe;
     private List<Vagt> VagtListeUnsorted;
+
 
     // Henter alle ledige vagter (taget_af == null)
     protected override async Task OnInitializedAsync()
@@ -62,7 +68,7 @@ else if (LogedIn.LoggetPå == true)
     protected async Task TagVagt(Vagt vagt)
     {
 
-        vagt.Bruger_Id = LogedIn.Bruger_Id;
+        vagt.Bruger_Id = LogedInBruger.Bruger_Id;
 
         await Http.PostAsJsonAsync<Vagt>("Vagt/tagVagt", vagt);
 
