@@ -8,20 +8,54 @@
 
 @if (bruger == null)
 {
-    <p><em>Loading...</em></p>
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
 }
 else if (LogedIn.LoggetPå == true)
 {
     <p>Bruger_Id: @bruger.Bruger_Id</p>
-    <input type = "text" class="form-control" @bind="bruger.Fornavn">
-    <input type = "text" class="form-control" @bind="bruger.Efternavn">
-    <input type = "text" class="form-control" @bind="bruger.Telefon">
-    <input type = "text" class="form-control" @bind="bruger.Email">
-    <input type = "text" class="form-control" @bind="bruger.Adresse">
-    <input type = "checkbox" name = "Koordinator" @bind="bruger.Koordinator">
-    <label for = "Koordinator">Koordinator:</label>
     <p>HashPwd: @bruger.Kode</p>
-    <td><input type="button" class="btn btn-primary" value="Gem opdateringer" @onclick="() => OpdaterBruger(bruger)"></td>
+
+    <div class="profilContainer col-md-6">
+
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="floatingFornavn" @bind="bruger.Fornavn">
+            <label for="floatingFornavn">Fornavn</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="floatingEfternavn" @bind="bruger.Efternavn">
+            <label for="floatingEfternavn">Efternavn</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input type="tel" class="form-control" id="floatingTelefon" @bind="bruger.Telefon">
+            <label for="floatingTelefon">Telefon</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input type="email" class="form-control" id="floatingInput" @bind="bruger.Email">
+            <label for="floatingInput">Email adresse</label>
+        </div>
+
+        <div class="form-floating">
+              <input type="password" class="form-control" id="floatingPassword" @bind-value="bruger.Kode">
+              <label for="floatingPassword">Password</label>
+        </div>
+
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" @bind="bruger.Koordinator">
+            <label class="form-check-label" for="flexCheckDefault">
+            Koordinator
+            </label>
+        </div>
+
+        <div class="d-grid gap-2 col-6 mx-auto">
+          <button class="btn btn-primary" type="button" @onclick="() => OpdaterBruger(bruger)">Gem ændringer <i class="bi bi-check-circle-fill"></i></button>
+        </div>
+
+    </div>
 
 } else
 {
@@ -48,7 +82,6 @@ else if (LogedIn.LoggetPå == true)
         await OnInitializedAsync();
 
     }
-
 
 
 

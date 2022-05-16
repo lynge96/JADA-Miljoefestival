@@ -156,7 +156,9 @@ namespace MiljøFestival.Server.Controllers
         {
             var connString = "User ID=jbpzuakg;Password=7FunsLh3XcgblqOlN4WJ5dIMJr2v134O;Host=abul.db.elephantsql.com;Port=5432;Database=jbpzuakg;";
 
-            var sql = $"UPDATE bruger SET fornavn = @fornavn, efternavn = @efternavn, telefon = @telefon, email = @email, adresse = @adresse, koordinator = @koordinator where bruger_id = @bruger_id";
+            var sql = $"UPDATE bruger " +
+                $"SET fornavn = @fornavn, efternavn = @efternavn, telefon = @telefon, email = @email, adresse = @adresse, koordinator = @koordinator, hashpwd = crypt(@password, gen_salt('md5'))" +
+                $"WHERE bruger_id = @bruger_id,";
 
             var queryArguments = new
             {
@@ -166,7 +168,8 @@ namespace MiljøFestival.Server.Controllers
                 email = bruger.Email,
                 adresse = bruger.Adresse,
                 bruger_id = bruger.Bruger_Id,
-                koordinator = bruger.Koordinator
+                koordinator = bruger.Koordinator,
+                password = bruger.Kode
             };
 
             try
@@ -180,6 +183,7 @@ namespace MiljøFestival.Server.Controllers
             {
                 throw;
             }
+
 
 
         }
