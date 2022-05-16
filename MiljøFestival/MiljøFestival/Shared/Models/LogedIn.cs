@@ -1,4 +1,4 @@
-﻿namespace MiljøFestival.Client.Shared
+﻿namespace MiljøFestival.Shared.Models
 {
     public class LogedIn
     {

@@ -1,7 +1,7 @@
 ﻿@page "/profil"
 @using MiljøFestival.Shared.Models
 @inject HttpClient Http
-@inject Client.Shared.LogedIn LogedIn
+@inject MiljøFestival.Shared.Models.LogedIn LogedIn
 
 
 <h1>Proil for bruger:</h1>
@@ -19,7 +19,7 @@ else if (LogedIn.LoggetPå == true)
     <input type = "text" class="form-control" @bind="bruger.Email">
     <input type = "text" class="form-control" @bind="bruger.Adresse">
     <input type = "checkbox" name = "Koordinator" @bind="bruger.Koordinator">
-    <label for = "Koordinator">Koordinator:</label>
+    <label for = "Koordinator">Koordinator</label>
     <p>HashPwd: @bruger.Kode</p>
     <td><input type="button" class="btn btn-primary" value="Gem opdateringer" @onclick="() => OpdaterBruger(bruger)"></td>
 

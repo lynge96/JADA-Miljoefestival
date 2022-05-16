@@ -77,17 +77,17 @@ namespace MiljøFestival.Server.Controllers
 
         // Tjekker om email og kode tastet ind er korrekt -> om en bruger er oprettet
         [HttpGet("tjeklogin")]
-        public async Task<IEnumerable<string>> TjekLogin(string email, string kode)
+        public async Task<IEnumerable<Bruger>> TjekLogin(string email, string kode)
         {
             var connString = "User ID=jbpzuakg;Password=7FunsLh3XcgblqOlN4WJ5dIMJr2v134O;Host=abul.db.elephantsql.com;Port=5432;Database=jbpzuakg;";
 
-            var sql = $"SELECT tjek_login('{email}', '{kode}');";
+            var sql = $"SELECT * FROM ABC('{email}', '{kode}');";
 
             try
             {
                 using (var connection = new NpgsqlConnection(connString))
                 {
-                    var test = await connection.QueryAsync<string>(sql);
+                    var test = await connection.QueryAsync<Bruger>(sql);
 
                     return test;
                 }

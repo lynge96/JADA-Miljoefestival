@@ -2,7 +2,7 @@
 @using MiljøFestival.Shared.Models
 @inject HttpClient Http
 @inject NavigationManager UriHelper
-@inject Client.Shared.LogedIn LogedIn
+@inject MiljøFestival.Shared.Models.LogedIn LogedIn
 
 <p>Bruger Id: @LogedIn.Bruger_Id</p>
 <p>Koordinator?: @LogedIn.Koordinator</p>
@@ -60,24 +60,22 @@ else
         LogedIn.LoggetPå = false;
     }
 
-    protected async Task<List<string>> TjekLogin(Bruger user)
+    protected async Task<IEnumerable<Bruger>> TjekLogin(Bruger user)
     {
 
-        return await Http.GetFromJsonAsync<List<string>>($"Bruger/tjeklogin?email={bruger.Email}&kode={bruger.Kode}");
+        return await Http.GetFromJsonAsync<IEnumerable<Bruger>>($"Bruger/tjeklogin?email={bruger.Email}&kode={bruger.Kode}");
 
     }
 
     private async Task HandleSubmit()
     {
 
-        var verificerBruger = await TjekLogin(bruger);
+        IEnumerable<Bruger> verificerBruger = await TjekLogin(bruger);
 
-        if (verificerBruger.First() == "true")
+        if (verificerBruger.First().Bruger_Id != 0)
         {
-            var findBruger = await Http.GetFromJsonAsync<IEnumerable<Bruger>>($"Bruger/findBrugerEmail?email={bruger.Email}");
-
-            Bruger logedinBruger = findBruger.First();
-
+            Bruger logedinBruger = verificerBruger.First();
+            // Ændre det her og slet LogedIn klassen
             LogedIn.Bruger_Id = logedinBruger.Bruger_Id;
             LogedIn.Koordinator = logedinBruger.Koordinator;
             LogedIn.LoggetPå = true;
