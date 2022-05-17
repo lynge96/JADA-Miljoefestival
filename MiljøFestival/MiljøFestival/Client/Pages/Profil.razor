@@ -1,7 +1,7 @@
-﻿@page "/profil"
+@page "/profil"
 @using MiljøFestival.Shared.Models
 @inject HttpClient Http
-@inject Client.Shared.LogedIn LogedIn
+@inject MiljøFestival.Shared.Models.Bruger LogedInBruger
 
 
 <h1>Profil for bruger</h1>
@@ -12,9 +12,10 @@
       <span class="visually-hidden">Loading...</span>
     </div>
 }
-else if (LogedIn.LoggetPå == true)
+else if (LogedInBruger.ErLoggetPå())
 {
     <p>Bruger_Id: @bruger.Bruger_Id</p>
+
     <p>HashPwd: @bruger.Kode</p>
 
     <div class="profilContainer col-md-6">
@@ -57,7 +58,9 @@ else if (LogedIn.LoggetPå == true)
 
     </div>
 
-} else
+
+}
+else
 {
     <p>Log på for at se og redigere din profil</p>
 }
@@ -67,9 +70,9 @@ else if (LogedIn.LoggetPå == true)
 
     protected override async Task OnInitializedAsync()
     {
-        if (LogedIn.LoggetPå == true)
+        if (LogedInBruger.Bruger_Id != 0)
         {
-            var brugerListe = await Http.GetFromJsonAsync<IEnumerable<Bruger>>($"Bruger/findBrugerId?bruger_id={LogedIn.Bruger_Id}");
+            var brugerListe = await Http.GetFromJsonAsync<IEnumerable<Bruger>>($"Bruger/findBrugerId?bruger_id={LogedInBruger.Bruger_Id}");
 
             bruger = brugerListe.First();
         }
@@ -77,6 +80,15 @@ else if (LogedIn.LoggetPå == true)
 
     protected async Task OpdaterBruger(Bruger bruger)
     {
+        // Opdater nuværende bruger
+        LogedInBruger.Bruger_Id = bruger.Bruger_Id;
+        LogedInBruger.Fornavn = bruger.Fornavn;
+        LogedInBruger.Efternavn = bruger.Efternavn;
+        LogedInBruger.Telefon = bruger.Telefon;
+        LogedInBruger.Email = bruger.Email;
+        LogedInBruger.Adresse = bruger.Adresse;
+        LogedInBruger.Koordinator = bruger.Koordinator;
+
         await Http.PostAsJsonAsync<Bruger>("Bruger/opdaterBruger", bruger);
 
         await OnInitializedAsync();

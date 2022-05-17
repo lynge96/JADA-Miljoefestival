@@ -1,0 +1,108 @@
+﻿@page "/koordinatorStartside"
+@using MiljøFestival.Shared.Models
+@inject HttpClient Http
+@inject MiljøFestival.Shared.Models.Bruger LogedInBruger
+
+<p>Bruger Id: @LogedInBruger.Bruger_Id</p>
+<p>Koordinator?: @LogedInBruger.Koordinator</p>
+
+<h1>Overblik over alle vagter</h1>
+
+@if (vagtListe == null)
+{
+    <p><em>Loading...</em></p>
+}
+else if (!LogedInBruger.ErKoordinator())
+{
+    <p><em>Du skal være koordinator for at se denne side</em></p>
+}
+else if (LogedInBruger.ErLoggetPå())
+{
+    <div class="table-responsive rounded">
+        <table class="table table-striped">
+            <thead>
+                <tr class="table">
+                    <th>Slet</th>
+                    <th>Opdater</th>
+                    <th>Vagt ID</th>
+                    <th>Start</th>
+                    <th>Slut</th>
+                    <th>Taget af</th>
+                    <th>Opgave navn</th>
+                    <th>Bruger ID</th>
+                    <th>Opgave ID</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var vagt in vagtListe)
+                {
+                    <tr>
+                        <td><input type="button" class="btn btn-danger" value="Slet" @onclick="() => SletVagt(vagt)"></td>
+                        @if (editMode == false)
+                        {
+                            <td><input type="button" class="btn btn-primary" value="Opdater" @onclick="() => editMode = true"></td>
+                            <td>@vagt.Vagt_Id</td>
+                            <td>@vagt.Start</td>
+                            <td>@vagt.Slut</td>
+                            <td>@vagt.Taget_Af</td>
+                            <td>@vagt.Opgave_Navn</td>
+                            <td>@vagt.Bruger_Id</td>
+                            <td>@vagt.Opgave_Id</td>
+                        }
+                        else if (editMode == true)
+                        {
+                            <td><input type="button" class="btn btn-primary" value="Gem" @onclick="() => OpdaterVagt(vagt)"></td>
+                            <td>@vagt.Vagt_Id</td>
+                            <td> <input type="text" class="form-control" @bind="vagt.Start"></td>
+                            <td> <input type="text" class="form-control" @bind="vagt.Slut"></td>
+                            <td>@vagt.Taget_Af</td>
+                            <td>@vagt.Opgave_Navn</td>
+                            <td>@vagt.Bruger_Id</td>
+                            <td>@vagt.Opgave_Id</td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <p><em>Du skal være logget på for at kunne se denne side!</em></p>
+}
+
+
+
+@code {
+    private List<Vagt> vagtListe;
+    private List<Vagt> vagtListeUnsorted;
+    private bool editMode = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        vagtListeUnsorted = await Http.GetFromJsonAsync<List<Vagt>>("Vagt/all");
+
+        vagtListe = vagtListeUnsorted.OrderBy(q => q.Opgave_Id).ToList();
+
+    }
+
+
+    // Sletter vagt fra databasen
+    protected async Task SletVagt(Vagt vagt)
+    {
+        await Http.PostAsJsonAsync<Vagt>("Vagt/sletVagt", vagt);
+
+        await OnInitializedAsync();
+    }
+
+
+    // Sletter vagt fra databasen
+    protected async Task OpdaterVagt(Vagt vagt)
+    {
+        await Http.PostAsJsonAsync<Vagt>("Vagt/opdaterVagt", vagt);
+
+        await OnInitializedAsync();
+
+        editMode = false;
+    }
+}

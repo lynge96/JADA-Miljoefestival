@@ -1,4 +1,4 @@
-﻿@inject Client.Shared.LogedIn LogedIn
+﻿@inject MiljøFestival.Shared.Models.Bruger LogedInBruger
 
 <div class="top-row pl-4 navbar navbar-dark">
     <a class="navbar-brand" href="">MiljøFestival</a>
@@ -34,7 +34,7 @@
                 <span class="oi oi-list-rich" aria-hidden="true"></span> Login
             </NavLink>
         </li>
-        @if (LogedIn.LoggetPå == true)
+        @if (!LogedInBruger.ErKoordinator() && LogedInBruger.ErLoggetPå())
         {
             <li class="nav-item px-3">
                 <NavLink class="nav-link" href="frivilligStartside">
@@ -47,13 +47,22 @@
                 </NavLink>
             </li>
         }
-        @if (LogedIn.LoggetPå == true)
+        @if (LogedInBruger.ErKoordinator() && LogedInBruger.ErLoggetPå())
+        {
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="koordinatorStartside">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span> Startside (Koordinator)
+                </NavLink>
+            </li>
+        }
+        @if (LogedInBruger.ErLoggetPå())
         {
             <li class="nav-item px-3">
                 <NavLink class="nav-link" href="profil">
                     <span class="oi oi-person" aria-hidden="true"></span> Profil
                 </NavLink>
             </li>
+
         }
 
     </ul>

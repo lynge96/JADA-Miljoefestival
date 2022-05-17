@@ -2,6 +2,7 @@
 @using MiljøFestival.Shared.Models
 @inject HttpClient Http
 
+
 <h1>Overblik over alle vagter</h1>
 
 @if (VagtListe == null)
@@ -52,9 +53,4 @@ else
         VagtListe = VagtListeUnsorted.OrderBy(q => q.Vagt_Id).ToList();
 
     }
-
-
-    
-
-   
 }

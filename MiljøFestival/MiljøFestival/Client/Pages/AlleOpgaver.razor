@@ -10,28 +10,28 @@
 }
 else
 {
-<div class="table-responsive rounded">
+    <div class="table-responsive rounded">
         <table class="table table-striped">
             <thead>
                 <tr class="table">
-                <th>Opgave ID</th>
-                <th>Status</th>
-                <th>Type</th>
-                <th>Beskrivelse</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var opgave in opgaveListe)
-            {
-                <tr>
-                            <td>@opgave.Opgave_Id</td>
-                            <td>@opgave.Status</td>
-                            <td>@opgave.Type</td>
-                            <td>@opgave.Beskrivelse</td>
+                    <th>Opgave ID</th>
+                    <th>Status</th>
+                    <th>Type</th>
+                    <th>Beskrivelse</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var opgave in opgaveListe)
+                {
+                    <tr>
+                        <td>@opgave.Opgave_Id</td>
+                        <td>@opgave.Status</td>
+                        <td>@opgave.Type</td>
+                        <td>@opgave.Beskrivelse</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
 }
 

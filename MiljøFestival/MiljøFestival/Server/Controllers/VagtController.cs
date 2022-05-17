@@ -114,8 +114,8 @@ namespace MiljøFestival.Server.Controllers
 
 
         // Fjerner vagt fra brugeren og gør den ledig til andre
-        [HttpPost("sletVagt")]
-        public async Task FjernVagt(Vagt vagt)
+        [HttpPost("frigivVagt")]
+        public async Task FrigivVagt(Vagt vagt)
         {
             var connString = "User ID=jbpzuakg;Password=7FunsLh3XcgblqOlN4WJ5dIMJr2v134O;Host=abul.db.elephantsql.com;Port=5432;Database=jbpzuakg;";
 
@@ -126,6 +126,62 @@ namespace MiljøFestival.Server.Controllers
                 using (var connection = new NpgsqlConnection(connString))
                 {
                     await connection.ExecuteAsync(sql);
+                }
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }
+
+
+        }
+
+
+        // Sletter vagten
+        [HttpPost("sletVagt")]
+        public async Task SletVagt(Vagt vagt)
+        {
+            var connString = "User ID=jbpzuakg;Password=7FunsLh3XcgblqOlN4WJ5dIMJr2v134O;Host=abul.db.elephantsql.com;Port=5432;Database=jbpzuakg;";
+
+            var sql = $"DELETE FROM vagt WHERE vagt_id = {vagt.Vagt_Id};";
+
+            try
+            {
+                using (var connection = new NpgsqlConnection(connString))
+                {
+                    await connection.ExecuteAsync(sql);
+                }
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }
+
+        }
+
+
+
+        // Opdaterer vagt
+        [HttpPost("opdaterVagt")]
+        public async Task OpdaterBruger(Vagt vagt)
+        {
+            var connString = "User ID=jbpzuakg;Password=7FunsLh3XcgblqOlN4WJ5dIMJr2v134O;Host=abul.db.elephantsql.com;Port=5432;Database=jbpzuakg;";
+
+            var sql = $"UPDATE vagt SET start = @start, slut = @slut where vagt_id = @vagt_id";
+
+            var queryArguments = new
+            {
+                start = vagt.Start,
+                slut = vagt.Slut,
+                vagt_id = vagt.Vagt_Id
+                
+            };
+
+            try
+            {
+                using (var connection = new NpgsqlConnection(connString))
+                {
+                    await connection.ExecuteAsync(sql, queryArguments);
                 }
             }
             catch (System.Exception)
