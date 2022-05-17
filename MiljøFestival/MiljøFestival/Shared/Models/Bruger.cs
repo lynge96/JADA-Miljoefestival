@@ -32,7 +32,7 @@ namespace MiljøFestival.Shared.Models
         public string Kode { get; set; }
 
 
-        // Returnerer true / false om brugeren er logget på
+        // Returnerer true / false om brugeren er logget på (abstraktion?)
         public bool ErLoggetPå()
         {
             if (Bruger_Id > 1)
@@ -46,7 +46,7 @@ namespace MiljøFestival.Shared.Models
         }
 
 
-        // Returnerer true / false om brugeren er koordinator
+        // Returnerer true / false om brugeren er koordinator (abstraktion?)
         public bool ErKoordinator()
         {
             if (Koordinator == true)

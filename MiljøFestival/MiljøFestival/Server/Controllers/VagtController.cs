@@ -41,7 +41,7 @@ namespace MiljøFestival.Server.Controllers
 
         // Find vagter efter bruger id
         [HttpGet("brugerVagter")]
-        public async Task<IEnumerable<Vagt>> BrugerIdVagt(string brugerid)
+        public async Task<IEnumerable<Vagt>> BrugerIdVagt(string brugerid) // Ændre til int bruger_id
         {
 
             var connString = "User ID=jbpzuakg;Password=7FunsLh3XcgblqOlN4WJ5dIMJr2v134O;Host=abul.db.elephantsql.com;Port=5432;Database=jbpzuakg;";
@@ -159,29 +159,19 @@ namespace MiljøFestival.Server.Controllers
 
         }
 
-
-
         // Opdaterer vagt
         [HttpPost("opdaterVagt")]
         public async Task OpdaterBruger(Vagt vagt)
         {
             var connString = "User ID=jbpzuakg;Password=7FunsLh3XcgblqOlN4WJ5dIMJr2v134O;Host=abul.db.elephantsql.com;Port=5432;Database=jbpzuakg;";
 
-            var sql = $"UPDATE vagt SET start = @start, slut = @slut where vagt_id = @vagt_id";
-
-            var queryArguments = new
-            {
-                start = vagt.Start,
-                slut = vagt.Slut,
-                vagt_id = vagt.Vagt_Id
-                
-            };
+            var sql = $"UPDATE vagt SET start = '{vagt.Start}', slut = '{vagt.Slut}' where vagt_id = '{vagt.Vagt_Id}'";
 
             try
             {
                 using (var connection = new NpgsqlConnection(connString))
                 {
-                    await connection.ExecuteAsync(sql, queryArguments);
+                    await connection.ExecuteAsync(sql);
                 }
             }
             catch (System.Exception)
@@ -189,6 +179,29 @@ namespace MiljøFestival.Server.Controllers
                 throw;
             }
 
+
+        }
+
+
+        // Opret en vagt
+        [HttpPost("opret")]
+        public async Task OpretVagt(Vagt vagt)
+        {
+            var connString = "User ID=jbpzuakg;Password=7FunsLh3XcgblqOlN4WJ5dIMJr2v134O;Host=abul.db.elephantsql.com;Port=5432;Database=jbpzuakg;";
+
+            var sql = $"INSERT INTO vagt (start, slut, opgave_id) VALUES ('{vagt.Start}', '{vagt.Slut}', {vagt.Opgave_Id})";
+
+            try
+            {
+                using (var connection = new NpgsqlConnection(connString))
+                {
+                    await connection.ExecuteAsync(sql);
+                }
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }
 
         }
     }

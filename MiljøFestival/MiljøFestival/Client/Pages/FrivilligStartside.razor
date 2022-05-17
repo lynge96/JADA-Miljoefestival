@@ -3,9 +3,6 @@
 @inject HttpClient Http
 @inject MiljøFestival.Shared.Models.Bruger LogedInBruger
 
-<p>Bruger Id: @LogedInBruger.Bruger_Id</p>
-<p>Koordinator?: @LogedInBruger.Koordinator</p>
-
 @if (VagtListe == null)
 {
     <p><em>Loading...</em></p>

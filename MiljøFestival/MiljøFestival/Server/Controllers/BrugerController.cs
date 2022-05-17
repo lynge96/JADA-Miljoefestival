@@ -47,25 +47,13 @@ namespace MiljøFestival.Server.Controllers
         {
             var connString = "User ID=jbpzuakg;Password=7FunsLh3XcgblqOlN4WJ5dIMJr2v134O;Host=abul.db.elephantsql.com;Port=5432;Database=jbpzuakg;";
 
-            var sql = $"CALL opret_bruger(@fornavn, @efternavn, @telefon, @email, @adresse, @adresse)";
-
-            var queryArguments = new
-            {
-                fornavn = bruger.Fornavn,
-                efternavn = bruger.Efternavn,
-                telefon = bruger.Telefon,
-                email = bruger.Email,
-                adresse = bruger.Adresse,
-                kode = bruger.Kode
-
-            };
+            var sql = $"CALL opret_bruger('{bruger.Fornavn}', '{bruger.Efternavn}', '{bruger.Telefon}', '{bruger.Email}', '{bruger.Adresse}', '{bruger.Kode}')";
 
             try
             {
                 using (var connection = new NpgsqlConnection(connString))
                 {
-                    await connection.ExecuteAsync(sql, queryArguments);
-
+                    await connection.ExecuteAsync(sql);
                 }
             }
             catch (System.Exception)
@@ -132,24 +120,14 @@ namespace MiljøFestival.Server.Controllers
         {
             var connString = "User ID=jbpzuakg;Password=7FunsLh3XcgblqOlN4WJ5dIMJr2v134O;Host=abul.db.elephantsql.com;Port=5432;Database=jbpzuakg;";
 
-            var sql = $"UPDATE bruger SET fornavn = @fornavn, efternavn = @efternavn, telefon = @telefon, email = @email, adresse = @adresse, koordinator = @koordinator WHERE bruger_id = @bruger_id,";
-
-            var queryArguments = new
-            {
-                fornavn = bruger.Fornavn,
-                efternavn = bruger.Efternavn,
-                telefon = bruger.Telefon,
-                email = bruger.Email,
-                adresse = bruger.Adresse,
-                bruger_id = bruger.Bruger_Id,
-                koordinator = bruger.Koordinator
-            };
+            
+            var sql = $"UPDATE bruger SET fornavn = '{bruger.Fornavn}', efternavn = '{bruger.Efternavn}', telefon = '{bruger.Telefon}', email = '{bruger.Email}', adresse = '{bruger.Adresse}', koordinator = '{bruger.Koordinator}' WHERE bruger_id = '{bruger.Bruger_Id}'";
 
             try
             {
                 using (var connection = new NpgsqlConnection(connString))
                 {
-                    await connection.ExecuteAsync(sql, queryArguments);
+                    await connection.ExecuteAsync(sql);
                 }
             }
             catch (System.Exception)

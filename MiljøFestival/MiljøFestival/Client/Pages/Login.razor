@@ -4,10 +4,6 @@
 @inject NavigationManager UriHelper
 @inject MiljøFestival.Shared.Models.Bruger LogedInBruger
 
-<p>Bruger Id: @LogedInBruger.Bruger_Id</p>
-<p>Koordinator?: @LogedInBruger.Koordinator</p>
-
-
 <h1>Test dit login!</h1>
 
 <p> @godkendt </p>
@@ -57,23 +53,16 @@ else
     {
         godkendt = string.Empty;
 
-        // LogedInBruger = new Bruger(); Virker ikke??
-        LogedInBruger = new Bruger();
-        //LogedInBruger.Bruger_Id = 0;
-        //LogedInBruger.Fornavn = string.Empty;
-        //LogedInBruger.Efternavn = string.Empty;
-        //LogedInBruger.Telefon = string.Empty;
-        //LogedInBruger.Email = string.Empty;
-        //LogedInBruger.Adresse = string.Empty;
-        //LogedInBruger.Koordinator = false;
+        @*LogedInBruger = new Bruger(); Virker ikke??*@
+        LogedInBruger.Bruger_Id = 0;
+        LogedInBruger.Fornavn = string.Empty;
+        LogedInBruger.Efternavn = string.Empty;
+        LogedInBruger.Telefon = string.Empty;
+        LogedInBruger.Email = string.Empty;
+        LogedInBruger.Adresse = string.Empty;
+        LogedInBruger.Koordinator = false;
     }
 
-    protected async Task<IEnumerable<Bruger>> TjekLogin(Bruger user)
-    {
-
-        return await Http.GetFromJsonAsync<IEnumerable<Bruger>>($"Bruger/tjeklogin?email={bruger.Email}&kode={bruger.Kode}");
-
-    }
 
     private async Task HandleSubmit()
     {
@@ -102,6 +91,14 @@ else
         {
             godkendt = "Forkert, prøv igen...";
         }
+    }
+
+
+    protected async Task<IEnumerable<Bruger>> TjekLogin(Bruger user)
+    {
+
+        return await Http.GetFromJsonAsync<IEnumerable<Bruger>>($"Bruger/tjeklogin?email={bruger.Email}&kode={bruger.Kode}");
+
     }
 
 }
