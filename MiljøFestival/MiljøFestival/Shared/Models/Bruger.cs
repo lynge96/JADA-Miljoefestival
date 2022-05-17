@@ -12,6 +12,7 @@ namespace MiljøFestival.Shared.Models
         public int Bruger_Id { get; set; }
 
         [Required]
+        [StringLength(50, ErrorMessage = "Fornavn må ikke være længere 50 karakterer.")]
         public string Fornavn { get; set; }
 
         [Required]

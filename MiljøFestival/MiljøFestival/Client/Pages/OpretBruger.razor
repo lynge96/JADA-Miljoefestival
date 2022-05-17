@@ -2,75 +2,95 @@
 @using MiljøFestival.Shared.Models
 @inject HttpClient Http
 
-<h1>Opret en bruger</h1>
+<h1 class="display-1">Opret en bruger</h1>
 
-<EditForm EditContext="@EditContext" class="row p-3" OnSubmit="@HandleSubmit">
-    <DataAnnotationsValidator />
-    <div class="col-md-12 mb-3">
-        <label for="Fornavn">Fornavn</label>
-        <InputText id="Fornavn" @bind-Value="nyBruger.Fornavn" class="form-control" />
-        <ValidationMessage For="@(() => nyBruger.Fornavn)" />
-    </div>
-    <div class="col-md-12 mb-3">
-        <label for="Efternavn">Efternavn</label>
-        <InputText id="Efternavn" @bind-Value="nyBruger.Efternavn" class="form-control" />
-        <ValidationMessage For="@(() => nyBruger.Efternavn)" />
-    </div>
-    <div class="col-md-12 mb-3">
-        <label for="Telefon">Telefon</label>
-        <InputText id="Telefon" @bind-Value="nyBruger.Telefon" class="form-control" />
-        <ValidationMessage For="@(() => nyBruger.Telefon)" />
-    </div>
-    <div class="col-md-12 mb-3">
-        <label for="Email">Email</label>
-        <InputText id="Email" @bind-Value="nyBruger.Email" class="form-control" />
-        <ValidationMessage For="@(() => nyBruger.Email)" />
-    </div>
-    <div class="col-md-12 mb-3">
-        <label for="Adresse">Adresse</label>
-        <InputText id="Adresse" @bind-Value="nyBruger.Adresse" class="form-control" />
-        <ValidationMessage For="@(() => nyBruger.Adresse)" />
-    </div>
-    <div class="col-md-12 mb-3">
-        <label for="Kode">Kode</label>
-        <InputText id="Kode" @bind-Value="nyBruger.Kode" class="form-control" />
-        <ValidationMessage For="@(() => nyBruger.Kode)" />
-    </div>
-    <div class="col-12 mb-3">
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </div>
-</EditForm>
+<div class="opretBrugerContainer">
+    <form class="row g-2 col-md-6 was-validated">
+
+        <div class="col-md-6">
+            <label for="validationServer01" class="form-label">Fornavn</label>
+            <input type="text" class="form-control" id="validationServer01" @bind-value="nyBruger.Fornavn" required>
+            <div class="valid-feedback">
+            Sejt navn!
+            </div>
+            <div class="invalid-feedback">
+            Skriv dit fornavn
+            </div>
+        </div>
+
+
+        <div class="col-md-6">
+            <label for="validationServer02" class="form-label">Efternavn</label>
+            <input type="text" class="form-control" id="validationServer02" @bind-value="nyBruger.Efternavn" required>
+            <div class="valid-feedback">
+            ... og efternavn!
+            </div>
+            <div class="invalid-feedback">
+            Skriv dit efternavn
+            </div>
+        </div>
+     
+        <div class="col-md-6">
+            <label for="validationServer03" class="form-label">Telefon</label>
+            <input type="tel" class="form-control" id="validationServer03" @bind-value="nyBruger.Telefon" required>
+            <div class="valid-feedback">
+            Tak for dit nummer
+            </div>
+            <div class="invalid-feedback">
+            Skriv dit telefonnummer
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <label for="validationServer04" class="form-label">E-mail</label>
+            <input type="email" class="form-control" id="validationServer04" @bind-value="nyBruger.Email" required>
+            <div class="valid-feedback">
+            Den er modtaget!
+            </div>
+            <div class="invalid-feedback">
+            Skriv din e-mailadresse
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <label for="validationServer05" class="form-label">Adresse</label>
+            <input type="text" class="form-control" id="validationServer05" @bind-value="nyBruger.Adresse" required>
+            <div class="valid-feedback">
+            Ved hvor du bor nu.
+            </div>
+            <div class="invalid-feedback">
+            Skriv din adresse
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <label for="validationServer06" class="form-label">Password</label>
+            <input type="password" class="form-control" id="validationServer06" @bind-value="nyBruger.Kode" required>
+            <div class="valid-feedback">
+            Looks good!
+            </div>
+            <div class="invalid-feedback">
+            Skriv dit password
+            </div>
+        </div>
+
+        <div class="col-12">
+            <button class="btn btn-primary" type="button" @onclick="() => OpretUser(nyBruger)">Opret Bruger</button>
+        </div>
+
+    </form>
+</div>
 
 @code {
 
     private Bruger nyBruger = new Bruger();
-    private EditContext EditContext;
 
-    protected override void OnInitialized()
-    {
-        EditContext = new EditContext(nyBruger);
-    }
-    
     protected async Task OpretUser(Bruger bruger)
     {
         await Http.PostAsJsonAsync<Bruger>("Bruger/opret", bruger);
 
+        nyBruger = new Bruger();
+
     }
 
-    private async Task HandleSubmit()
-    {
-
-        if (EditContext.Validate())
-        {
-            await OpretUser(nyBruger);
-
-            nyBruger = new Bruger();
-
-        }
-        else
-        {
-            Console.WriteLine("Form is Invalid...");
-
-        }
-    }
 }
