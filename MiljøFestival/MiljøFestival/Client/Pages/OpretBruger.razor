@@ -3,54 +3,54 @@
 @inject HttpClient Http
 
 
-<div class="opretBrugerContainer my-3">
-    <h1 class="display-1">Opret en bruger</h1>
+<div class="opretBrugerContainer mx-auto col-4">
+    <h1 class="display-3">Opret en bruger</h1>
 
-    <form class="row g-2 col-md-6 was-validated">
+    <form class="row g-2 was-validated">
 
-        <div class="form-floating col-md-6">
+        <div class="form-floating col-md-6 mb-3">
             <input type="text" class="form-control" id="validationFornavn"  @bind-value="nyBruger.Fornavn" placeholder="Fornavn" required>
             <label for="validationFornavn">Fornavn</label>
             <div class="valid-feedback">Sejt navn!</div>
             <div class="invalid-feedback">Skriv dit fornavn</div>
         </div>
 
-        <div class="form-floating col-md-6">
+        <div class="form-floating col-md-6 mb-3">
             <input type="text" class="form-control" id="validationEfternavn" @bind-value="nyBruger.Efternavn" placeholder="Efternavn" required>
             <label for="validationEfternavn">Efternavn</label>
             <div class="valid-feedback">... og efternavn!</div>
             <div class="invalid-feedback">Skriv dit efternavn</div>
         </div>
      
-        <div class="form-floating col-md-6">
-            <input type="tel" class="form-control" id="validationTelefon" @bind-value="nyBruger.Telefon" placeholder="Telefon" required>
-            <label for="validationTelefon">Telefon</label>
-            <div class="valid-feedback">Tak for dit nummer</div>
-            <div class="invalid-feedback">Skriv dit telefonnummer</div>
-        </div>
-
-        <div class="form-floating col-md-6">
-            <input type="email" class="form-control" id="validationEmail" @bind-value="nyBruger.Email" placeholder="Email" required>
-            <label for="validationEmail">E-mail</label>
-            <div class="valid-feedback">Den er modtaget!</div>
-            <div class="invalid-feedback">Skriv din e-mailadresse</div>
-        </div>
-
-        <div class="form-floating col-md-6">
-            <input type="text" class="form-control" id="validationAdresse" @bind-value="nyBruger.Adresse" placeholder="Adresse" required>
-            <label for="validationAdresse">Adresse</label>
-            <div class="valid-feedback">Ved hvor du bor nu.</div>
-            <div class="invalid-feedback">Skriv din adresse</div>
-        </div>
-
-        <div class="form-floating col-md-6">
+        <div class="form-floating col-md-6 mb-3">
             <input type="password" class="form-control" id="validationPassword" @bind-value="nyBruger.Kode" placeholder="Password" required>
             <label for="validationPassword">Password</label>
             <div class="valid-feedback">Looks good!</div>
             <div class="invalid-feedback">Skriv dit password</div>
         </div>
 
-        <div class="col-12">
+        <div class="form-floating col-md-6 mb-3">
+            <input type="email" class="form-control" id="validationEmail" @bind-value="nyBruger.Email" placeholder="Email" required>
+            <label for="validationEmail">E-mail</label>
+            <div class="valid-feedback">Den er modtaget!</div>
+            <div class="invalid-feedback">Skriv din e-mailadresse</div>
+        </div>
+
+        <div class="form-floating col-md-6 mb-3">
+            <input type="tel" class="form-control" id="validationTelefon" @bind-value="nyBruger.Telefon" placeholder="Telefon" required>
+            <label for="validationTelefon">Telefon</label>
+            <div class="valid-feedback">Tak for dit nummer</div>
+            <div class="invalid-feedback">Skriv dit telefonnummer</div>
+        </div>
+
+        <div class="form-floating col-md-6 mb-3">
+            <input type="text" class="form-control" id="validationAdresse" @bind-value="nyBruger.Adresse" placeholder="Adresse" required>
+            <label for="validationAdresse">Adresse</label>
+            <div class="valid-feedback">Ved hvor du bor nu.</div>
+            <div class="invalid-feedback">Skriv din adresse</div>
+        </div>
+
+        <div class="mx-auto">
             <button class="btn btn-primary" type="button" @onclick="() => OpretUser(nyBruger)">Opret Bruger</button>
         </div>
 

@@ -4,31 +4,32 @@
 @inject NavigationManager UriHelper
 @inject MiljøFestival.Shared.Models.Bruger LogedInBruger
 
-<h1>Test dit login!</h1>
-
 <p> @godkendt </p>
 
 @if (!LogedInBruger.ErLoggetPå())
 {
-    <EditForm EditContext="@EditContext" class="row p-3" OnSubmit="@HandleSubmit">
-        <DataAnnotationsValidator />
-        <div class="col-md-12 mb-3">
-            <label for="Email">Email</label>
-            <InputText id="Email" @bind-Value="bruger.Email" class="form-control" />
-            <ValidationMessage For="@(() => bruger.Email)" />
+    <div class="loginContainer col-md-4">
+        <div class="col-9">
+            <h1 class="display-3">Log in</h1>
+            <div class="form-floating mt-4">
+                <input type="email" class="form-control" id="loginEmail" @bind-value="bruger.Email" placeholder="Email">
+                <label for="loginEmail">E-mail</label>
+            </div>
+            <div class="form-floating mt-4">
+                <input type="password" class="form-control" id="loginPassword" @bind-value="bruger.Kode" placeholder="Password">
+                <label for="loginPassword">Password</label>
+            </div>
+            <div class="row">
+                <div class="col 5 mt-4">
+                    <button class="btn btn-primary" type="button" @onclick="() => HandleSubmit()">Log in</button>
+                </div>
+                <div class="col-7 mt-4">
+                    <button class="btn btn-secondary" type="button"><a class="nav-link" href="OpretBruger">Opret bruger</a></button>
+                </div>
+            </div>
         </div>
-        <div class="col-md-12 mb-3">
-            <label for="Kode">Kode</label>
-            <InputText id="Kode" @bind-Value="bruger.Kode" class="form-control" />
-            <ValidationMessage For="@(() => bruger.Kode)" />
-        </div>
-        <div class="col-12 mb-3">
-            <button type="submit" class="btn btn-primary">Tjek</button>
-        </div>
-    </EditForm>
-    <NavLink class="nav-link" href="opretbruger">
-        <button class="btn btn-primary">Opret bruger</button>
-    </NavLink>
+    </div>
+
 }
 else
 {
