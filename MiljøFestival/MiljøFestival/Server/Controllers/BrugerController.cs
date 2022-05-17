@@ -166,7 +166,7 @@ namespace MiljøFestival.Server.Controllers
                 email = bruger.Email,
                 adresse = bruger.Adresse,
                 bruger_id = bruger.Bruger_Id,
-                koordinator = bruger.Koordinator,
+                koordinator = bruger.Koordinator
             };
 
             try
