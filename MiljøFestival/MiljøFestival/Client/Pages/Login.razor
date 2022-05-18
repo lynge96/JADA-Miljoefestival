@@ -4,32 +4,31 @@
 @inject NavigationManager UriHelper
 @inject MiljøFestival.Shared.Models.Bruger LogedInBruger
 
-<p> @godkendt </p>
-
 @if (!LogedInBruger.ErLoggetPå())
 {
-    <div class="loginContainer col-md-4">
-        <div class="col-9">
-            <h1 class="display-3">Log in</h1>
-            <div class="form-floating mt-4">
-                <input type="email" class="form-control" id="loginEmail" @bind-value="bruger.Email" placeholder="Email">
-                <label for="loginEmail">E-mail</label>
-            </div>
-            <div class="form-floating mt-4">
-                <input type="password" class="form-control" id="loginPassword" @bind-value="bruger.Kode" placeholder="Password">
-                <label for="loginPassword">Password</label>
-            </div>
-            <div class="row">
-                <div class="col 5 mt-4">
-                    <button class="btn btn-primary" type="button" @onclick="() => HandleSubmit()">Log in</button>
-                </div>
-                <div class="col-7 mt-4">
-                    <button class="btn btn-secondary" type="button"><a class="nav-link" href="OpretBruger">Opret bruger</a></button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <main class="form-signin col-md-3 m-auto">
+        <form>
+            <h1 class="text-center">Log ind</h1>
 
+            <div class="form-floating">
+                <input type="email" class="form-control" id="floatingInput" placeholder="Email" @bind-value="bruger.Email" required>
+                <label for="floatingInput">Email adresse</label>
+            </div>
+            <div class="form-floating">
+                <input type="password" class="form-control" id="floatingPassword" placeholder="Password" @bind-value="bruger.Kode" required>
+                <label for="floatingPassword">Password</label>
+            </div>
+            <button class="w-100 btn btn-primary mt-3" type="button" @onclick="() => HandleSubmit()">Log ind</button>
+            <p class="mt-3 mb-3 h6"><a class="nav-link text-decoration-underline" href="OpretBruger">Opret bruger</a></p>
+            @if (godkendt != string.Empty)
+            {
+            <div class="alert alert-warning">
+                <span class="oi oi-key" aria-hidden="true"></span>
+                <strong>Hov!</strong> - @godkendt
+            </div>
+            }
+        </form>
+    </main>
 }
 else
 {
@@ -40,15 +39,7 @@ else
 
 @code {
     private Bruger bruger = new Bruger();
-    private EditContext EditContext;
     private string godkendt = string.Empty;
-
-
-    protected override void OnInitialized()
-    {
-        EditContext = new EditContext(bruger);
-
-    }
 
     protected void LogAf()
     {
@@ -69,7 +60,7 @@ else
     {
 
         IEnumerable<Bruger> verificerBruger = await TjekLogin(bruger);
-
+        Console.WriteLine(verificerBruger);
         if (verificerBruger.Count() > 0)
         {
             var testbruger = verificerBruger.First();
@@ -90,7 +81,7 @@ else
         }
         else
         {
-            godkendt = "Forkert, prøv igen...";
+            godkendt = "Forkert login, prøv igen.";
         }
     }
 
