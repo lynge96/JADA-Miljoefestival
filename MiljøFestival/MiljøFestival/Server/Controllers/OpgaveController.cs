@@ -40,13 +40,13 @@ namespace MiljøFestival.Server.Controllers
         }
 
 
-        // Opret en opgave
-        [HttpPost("opret")]
-        public async Task OpretOpgave(Opgave opgave)
+        // Opdater en opgave
+        [HttpPost("opdaterOpgave")]
+        public async Task OpdaterOpgave(Opgave opgave)
         {
             var connString = "User ID=jbpzuakg;Password=7FunsLh3XcgblqOlN4WJ5dIMJr2v134O;Host=abul.db.elephantsql.com;Port=5432;Database=jbpzuakg;";
 
-            var sql = $"INSERT INTO opgave (status, type, beskrivelse) VALUES ('{opgave.Status}','{opgave.Type}','{opgave.Beskrivelse}')";
+            var sql = $"UPDATE opgave SET status = '{opgave.Status}' WHERE opgave_id = '{opgave.Opgave_Id}'";
 
             try
             {
@@ -58,6 +58,28 @@ namespace MiljøFestival.Server.Controllers
             catch (System.Exception)
             {
                 throw;  
+            }
+
+        }
+
+        // Opret en opgave
+        [HttpPost("opret")]
+        public async Task OpretOpgave(Opgave opgave)
+        {
+            var connString = "User ID=jbpzuakg;Password=7FunsLh3XcgblqOlN4WJ5dIMJr2v134O;Host=abul.db.elephantsql.com;Port=5432;Database=jbpzuakg;";
+
+            var sql = $"INSERT INTO opgave (status, type, beskrivelse) VALUES ('{opgave.Status}', '{opgave.Type}', '{opgave.Beskrivelse}')";
+
+            try
+            {
+                using (var connection = new NpgsqlConnection(connString))
+                {
+                    await connection.ExecuteAsync(sql);
+                }
+            }
+            catch (System.Exception)
+            {
+                throw;
             }
 
         }

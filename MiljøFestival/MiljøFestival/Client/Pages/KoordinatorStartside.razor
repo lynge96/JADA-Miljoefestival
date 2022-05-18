@@ -3,7 +3,6 @@
 @inject HttpClient Http
 @inject MiljøFestival.Shared.Models.Bruger LogedInBruger
 
-<h1>Overblik over alle vagter</h1>
 
 @if (vagtListe == null)
 {
@@ -15,81 +14,86 @@ else if (!LogedInBruger.ErKoordinator())
 }
 else if (LogedInBruger.ErLoggetPå())
 {
-    <div class="table-responsive rounded">
-        <table class="table table-striped">
-            <thead>
-                <tr class="table">
-                    <th>Opgave Type</th>
-                    <th>Status</th>
-                    <th>Opdater</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var opgave in opgaveListe)
-                {
-                    <tr>
-                        <td>@opgave.Type</td>
-                        <td>
+    <h1>Hej @LogedInBruger.Fornavn!</h1>
+    <h2>Her er en liste over alle opgaver og deres tilhørende vagter</h2>
+
+    @foreach (var opgave in opgaveListe)
+    {
+        <div class="table-responsive rounded">
+            <table class="table table-striped">
+                <thead>
+                    <tr class="table">
+                        <th class="col-3">Opgave: @opgave.Type</th>
+                        <th class="col-1">@FindAntalVagter(opgave.Opgave_Id, FindVagtOpgave(opgave, vagtListe))</th>
+                        <th class="col-2">
                             <select class="form-control" @bind="opgave.Status">
-                                <option selected>Vælg en status...</option>
+                                <option>@opgave.Status</option>
                                 <option>Planlægning</option>
                                 <option>I udførelse</option>
                                 <option>Udført</option>
                             </select>
-                        </td>
-                        <td><input type="button" class="btn btn-primary" value="Opdater" @onclick="() => OpdaterStatus(opgave)"></td>
+                        </th>
+                        <th>
+                            <input type="button" class="btn btn-primary" value="Opdater" @onclick="() => OpdaterStatus(opgave)">
+                            <input type="button" class="btn btn-primary" value="Vis/skjul" @onclick="() => visVagter = !visVagter">
+                            <input type="button" class="btn btn-danger" value="Slet opgave">
+
+
+                        </th>
                     </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-    <div class="table-responsive rounded">
-        <table class="table table-striped">
-            <thead>
-                <tr class="table">
-                    <th>Slet</th>
-                    <th>Opdater</th>
-                    <th>Vagt ID</th>
-                    <th>Start</th>
-                    <th>Slut</th>
-                    <th>Taget af</th>
-                    <th>Opgave navn</th>
-                    <th>Bruger ID</th>
-                    <th>Opgave ID</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var vagt in vagtListe)
-                {
-                    <tr>
-                        <td><input type="button" class="btn btn-danger" value="Slet" @onclick="() => SletVagt(vagt)"></td>
-                        @if (editMode == false)
+                </thead>
+            </table>
+
+            @if (visVagter == true)
+            {
+
+                <table class="table table-striped">
+                    <thead>
+                        <tr class="table">
+                            <th>Slet</th>
+                            <th>Opdater</th>
+                            <th>Vagt ID</th>
+                            <th>Start</th>
+                            <th>Slut</th>
+                            <th>Taget af</th>
+                            <th>Opgave navn</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var vagt in FindVagtOpgave(opgave, vagtListe))
                         {
-                            <td><input type="button" class="btn btn-primary" value="Opdater" @onclick="() => editMode = true"></td>
-                            <td>@vagt.Vagt_Id</td>
-                            <td>@vagt.Start</td>
-                            <td>@vagt.Slut</td>
-                            <td>@vagt.Taget_Af</td>
-                            <td>@vagt.Opgave_Navn</td>
-                            <td>@vagt.Bruger_Id</td>
-                            <td>@vagt.Opgave_Id</td>
+                            <tr>
+                                <td><input type="button" class="btn btn-danger" value="Slet" @onclick="() => SletVagt(vagt)"></td>
+                                @if (editMode == false)
+                                {
+                                    <td><input type="button" class="btn btn-primary" value="Opdater" @onclick="() => editMode = true"></td>
+                                    <td>@vagt.Vagt_Id</td>
+                                    <td>@vagt.Start</td>
+                                    <td>@vagt.Slut</td>
+                                    <td>@vagt.Taget_Af</td>
+                                    <td>@vagt.Opgave_Navn</td>
+                                }
+                                else if (editMode == true)
+                                {
+                                    <td><input type="button" class="btn btn-primary" value="Gem" @onclick="() => OpdaterVagt(vagt)"></td>
+                                    <td>@vagt.Vagt_Id</td>
+                                    <td> <input type="text" class="form-control" @bind="vagt.Start"></td>
+                                    <td> <input type="text" class="form-control" @bind="vagt.Slut"></td>
+                                    <td>@vagt.Taget_Af</td>
+                                    <td>@vagt.Opgave_Navn</td>
+
+                                }
+                            </tr>
                         }
-                        else if (editMode == true)
-                        {
-                            <td><input type="button" class="btn btn-primary" value="Gem" @onclick="() => OpdaterVagt(vagt)"></td>
-                            <td>@vagt.Vagt_Id</td>
-                            <td> <input type="text" class="form-control" @bind="vagt.Start"></td>
-                            <td> <input type="text" class="form-control" @bind="vagt.Slut"></td>
-                            <td>@vagt.Taget_Af</td>
-                            <td>@vagt.Opgave_Navn</td>
-                            <td>@vagt.Bruger_Id</td>
-                            <td>@vagt.Opgave_Id</td>
-                        }
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
+                    </tbody>
+                </table>
+                <br />
+                <br />
+                <br />
+                <br />
+            }
+        </div>
+    }
 }
 else
 {
@@ -104,8 +108,8 @@ else
     private List<Opgave> opgaveListe;
     private List<Opgave> opgaveListeUnsorted;
 
-
     private bool editMode = false;
+    private bool visVagter = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -116,6 +120,34 @@ else
         opgaveListeUnsorted = await Http.GetFromJsonAsync<List<Opgave>>("Opgave/all");
 
         opgaveListe = opgaveListeUnsorted.OrderBy(q => q.Opgave_Id).ToList();
+
+    }
+
+
+    // Finder vagter der tilhører en specifik opgave
+    protected List<Vagt> FindVagtOpgave(Opgave opgave, List<Vagt> vagtliste)
+    {
+        List<Vagt> vagtListe = new List<Vagt>();
+
+        vagtListe = vagtliste.FindAll(q => q.Opgave_Id == opgave.Opgave_Id).OrderBy(q => q.Vagt_Id).ToList();
+
+        return vagtListe;
+    }
+
+
+    // Finder antal vagter pr. opgave
+    protected string FindAntalVagter(int opgave_id, List<Vagt> vagtListe)
+    {
+        int antalVagter = vagtListe.Count(q => q.Opgave_Id == opgave_id);
+
+        if (antalVagter == 1)
+        {
+            return $"{antalVagter} vagt";
+        }
+        else
+        {
+            return $"{antalVagter} vagter";
+        }
 
     }
 
@@ -135,6 +167,8 @@ else
         await Http.PostAsJsonAsync<Vagt>("Vagt/opdaterVagt", vagt);
 
         await OnInitializedAsync();
+
+        editMode = false;
 
     }
 
