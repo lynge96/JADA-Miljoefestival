@@ -19,6 +19,34 @@ else if (LogedInBruger.ErLoggetPå())
         <table class="table table-striped">
             <thead>
                 <tr class="table">
+                    <th>Opgave Type</th>
+                    <th>Status</th>
+                    <th>Opdater</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var opgave in opgaveListe)
+                {
+                    <tr>
+                        <td>@opgave.Type</td>
+                        <td>
+                            <select class="form-control" @bind="opgave.Status">
+                                <option selected>Vælg en status...</option>
+                                <option>Planlægning</option>
+                                <option>I udførelse</option>
+                                <option>Udført</option>
+                            </select>
+                        </td>
+                        <td><input type="button" class="btn btn-primary" value="Opdater" @onclick="() => OpdaterStatus(opgave)"></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="table-responsive rounded">
+        <table class="table table-striped">
+            <thead>
+                <tr class="table">
                     <th>Slet</th>
                     <th>Opdater</th>
                     <th>Vagt ID</th>
@@ -73,6 +101,10 @@ else
 @code {
     private List<Vagt> vagtListe;
     private List<Vagt> vagtListeUnsorted;
+    private List<Opgave> opgaveListe;
+    private List<Opgave> opgaveListeUnsorted;
+
+
     private bool editMode = false;
 
     protected override async Task OnInitializedAsync()
@@ -80,6 +112,10 @@ else
         vagtListeUnsorted = await Http.GetFromJsonAsync<List<Vagt>>("Vagt/all");
 
         vagtListe = vagtListeUnsorted.OrderBy(q => q.Opgave_Id).ToList();
+
+        opgaveListeUnsorted = await Http.GetFromJsonAsync<List<Opgave>>("Opgave/all");
+
+        opgaveListe = opgaveListeUnsorted.OrderBy(q => q.Opgave_Id).ToList();
 
     }
 
@@ -97,6 +133,15 @@ else
     protected async Task OpdaterVagt(Vagt vagt)
     {
         await Http.PostAsJsonAsync<Vagt>("Vagt/opdaterVagt", vagt);
+
+        await OnInitializedAsync();
+
+    }
+
+    // Opdaterer status på opgave
+    protected async Task OpdaterStatus(Opgave opgave)
+    {
+        await Http.PostAsJsonAsync<Opgave>("Opgave/opdaterOpgave", opgave);
 
         await OnInitializedAsync();
 
