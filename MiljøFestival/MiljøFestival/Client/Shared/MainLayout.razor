@@ -1,4 +1,6 @@
 ﻿@inherits LayoutComponentBase
+@inject NavigationManager NavManager
+@inject MiljøFestival.Shared.Models.Bruger LogedInBruger
 
 <div class="page">
     <div class="sidebar">
@@ -6,8 +8,30 @@
     </div>
 
     <div class="main">
-        <div class="top-row px-4">
-            <a href="http://blazor.net" target="_blank" class="ml-md-auto">About</a>
+        <div class="container">
+            <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+                <a href="/" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none"></a>
+
+            <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0 h5">
+                <li><a href="#" class="nav-link px-2 link-dark"><span class="bi bi-house"></span> Home</a></li>
+                <li><a href="#" class="nav-link px-2 link-dark"><span class="bi bi-info-circle"></span> About</a></li>
+                @if (LogedInBruger.ErLoggetPå())
+                {
+                <li><a href="profil" class="nav-link px-2 link-dark"><span class="bi bi-person-lines-fill"></span> Profil</a></li>                       
+                }
+            </ul>
+
+            <div class="col-md-3 text-end">
+                    @if (LogedInBruger.ErLoggetPå())
+                    {
+                        <a class="btn btn-outline-primary me-2" href="#" role="button" @onclick="LogAf"><span class="oi oi-account-logout" aria-hidden="true"></span> Log af</a>
+                    } else
+                    {
+                        <a class="btn btn-outline-primary me-2" href="login" role="button"><span class="oi oi-account-login" aria-hidden="true"></span> Log ind</a>         
+                    }
+                <a class="btn btn-primary" href="opretbruger" role="button"><span class="oi oi-person" aria-hidden="true"></span> Opret profil</a>
+            </div>
+            </header>
         </div>
 
         <div class="content px-4">
@@ -15,3 +39,19 @@
         </div>
     </div>
 </div>
+
+@code {
+        protected void LogAf()
+    {
+        @*LogedInBruger = new Bruger(); Virker ikke??*@
+        LogedInBruger.Bruger_Id = 0;
+        LogedInBruger.Fornavn = string.Empty;
+        LogedInBruger.Efternavn = string.Empty;
+        LogedInBruger.Telefon = string.Empty;
+        LogedInBruger.Email = string.Empty;
+        LogedInBruger.Adresse = string.Empty;
+        LogedInBruger.Koordinator = false;
+
+        NavManager.NavigateTo("/");
+    }
+}
