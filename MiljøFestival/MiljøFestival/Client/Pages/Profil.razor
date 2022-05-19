@@ -17,7 +17,7 @@ else if (LogedInBruger.ErLoggetPå())
     <p>Bruger_Id: @bruger.Bruger_Id</p>
 
     <div class="profilContainer col-md-6">
-
+        
         <div class="form-floating mb-3">
             <input type="text" class="form-control" id="floatingFornavn" @bind="bruger.Fornavn">
             <label for="floatingFornavn">Fornavn</label>
@@ -50,12 +50,22 @@ else if (LogedInBruger.ErLoggetPå())
             </label>
         </div>
 
-        <div class="d-grid gap-2 col-6 mx-auto">
-            <button class="btn btn-primary" type="button" @onclick="() => OpdaterBruger(bruger)">Gem ændringer <i class="bi bi-check-circle-fill"></i></button>
+        <div class="col-6 my-3">
+            <button class="btn btn-primary" type="button" @onclick="() => OpdaterBruger(bruger)">Gem ændringer</button>
         </div>
 
     </div>
 
+    <div class="passwordContainer col-md-6">
+        <div class="form-floating mb-3">
+            <input type="password" class="form-control" id="floatingPassword" @bind="bruger.Kode">
+            <label for="floatingPassword">Password</label>
+        </div>
+        <div class="col-6">
+            <button class="btn btn-outline-primary" type="button" @onclick="() => OpdaterPassword(bruger.Bruger_Id, bruger.Kode)">Opdater password</button>
+        </div>
+
+    </div>
 
 }
 else
@@ -69,7 +79,6 @@ else
 
 @code {
     private Bruger bruger = new Bruger();
-
 
     // Kan slettes med LogedInBruger -> Virker ikke endnu
     protected override async Task OnInitializedAsync()
@@ -99,6 +108,14 @@ else
 
     }
 
+    private async Task OpdaterPassword(int bruger_id, string password)
+    {
+        await Http.PostAsJsonAsync<int>("Bruger/opdaterPassword", bruger_id);
+        await Http.PostAsJsonAsync<string>("Bruger/opdaterPassword", password);
+
+        await OnInitializedAsync();
+
+    }
 
 
 }
