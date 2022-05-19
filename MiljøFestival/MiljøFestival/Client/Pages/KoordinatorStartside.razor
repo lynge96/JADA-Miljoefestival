@@ -39,7 +39,7 @@ else if (LogedInBruger.ErLoggetPå())
                                         </th>
                                         <th>
                                             <input type="button" class="btn btn-primary" value="Opdater" @onclick="() => OpdaterStatus(opgave)">
-                                            <input type="button" class="btn btn-danger" value="Slet opgave">
+                                            <input type="button" class="btn btn-danger" value="Slet opgave" @onclick="() => SletOpgave(opgave)">
                                         </th>
                                     </tr>
                                 </thead>
@@ -162,6 +162,13 @@ else
         }
 
 
+    }
+    // Sletter opgave fra databasen
+    protected async Task SletOpgave(Opgave opgave)
+    {
+        await Http.PostAsJsonAsync<int>("Opgave/slet", opgave.Opgave_Id);
+
+        await OnInitializedAsync();
     }
 
 

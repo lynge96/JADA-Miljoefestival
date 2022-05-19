@@ -83,5 +83,27 @@ namespace MiljøFestival.Server.Controllers
             }
 
         }
+
+        // Slet opgave
+        [HttpPost("slet")]
+        public async Task SletOpgave(int opgaveID)
+        {
+            var connString = "User ID=jbpzuakg;Password=7FunsLh3XcgblqOlN4WJ5dIMJr2v134O;Host=abul.db.elephantsql.com;Port=5432;Database=jbpzuakg;";
+
+            var sql = $"CALL slet_opgave({opgaveID});";
+
+            try
+            {
+                using (var connection = new NpgsqlConnection(connString))
+                {
+                    await connection.ExecuteAsync(sql);
+                }
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }
+
+        }
     }
 }
