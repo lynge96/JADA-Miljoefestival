@@ -2,6 +2,7 @@
 @using MiljøFestival.Shared.Models
 @inject HttpClient Http
 @inject NavigationManager UriHelper
+@inject NavigationManager NavManager
 @inject MiljøFestival.Shared.Models.Bruger LogedInBruger
 
 @if (!LogedInBruger.ErLoggetPå())
@@ -19,11 +20,11 @@
             </div>
             <button class="w-100 btn btn-primary mt-3" type="button" @onclick="() => HandleSubmit()">Log ind</button>
             <p class="mt-3 mb-3 h6"><a class="nav-link text-decoration-underline" href="OpretBruger">Opret bruger</a></p>
-            @if (godkendt != string.Empty)
+            @if (feedback != string.Empty)
             {
             <div class="alert alert-warning">
                 <span class="oi oi-key" aria-hidden="true"></span>
-                <strong>Hov!</strong> - @godkendt
+                <strong>Hov!</strong> - @feedback
             </div>
             }
         </form>
@@ -31,65 +32,48 @@
 }
 else
 {
-    <div class="col-12 mb-3">
-        <button @onclick="LogAf" class="btn btn-primary">Log af</button>
-    </div>
+    NavManager.NavigateTo("/");
 }
 
 @code {
     private Bruger bruger = new Bruger();
-    private string godkendt = string.Empty;
-
-    protected void LogAf()
-    {
-        godkendt = string.Empty;
-
-        @*LogedInBruger = new Bruger(); Virker ikke??*@
-        LogedInBruger.Bruger_Id = 0;
-        LogedInBruger.Fornavn = string.Empty;
-        LogedInBruger.Efternavn = string.Empty;
-        LogedInBruger.Telefon = string.Empty;
-        LogedInBruger.Email = string.Empty;
-        LogedInBruger.Adresse = string.Empty;
-        LogedInBruger.Koordinator = false;
-    }
-
+    private string feedback = string.Empty;
 
     private async Task HandleSubmit()
     {
 
         IEnumerable<Bruger> verificerBruger = await TjekLogin(bruger);
-        Console.WriteLine(verificerBruger);
         if (verificerBruger.Count() > 0)
         {
-            var testbruger = verificerBruger.First();
+            var testBruger = verificerBruger.First();
 
-            LogedInBruger.Bruger_Id = testbruger.Bruger_Id;
-            LogedInBruger.Fornavn = testbruger.Fornavn;
-            LogedInBruger.Efternavn = testbruger.Efternavn;
-            LogedInBruger.Telefon = testbruger.Telefon;
-            LogedInBruger.Email = testbruger.Email;
-            LogedInBruger.Adresse = testbruger.Adresse;
-            LogedInBruger.Koordinator = testbruger.Koordinator;
+            LogedInBruger.Bruger_Id = testBruger.Bruger_Id;
+            LogedInBruger.Fornavn = testBruger.Fornavn;
+            LogedInBruger.Efternavn = testBruger.Efternavn;
+            LogedInBruger.Telefon = testBruger.Telefon;
+            LogedInBruger.Email = testBruger.Email;
+            LogedInBruger.Adresse = testBruger.Adresse;
+            LogedInBruger.Koordinator = testBruger.Koordinator;
 
-            godkendt = "Godkendt!";
+            feedback = "Godkendt!";
 
             bruger = new Bruger();
-
-
+            OnInitialized();
         }
         else
         {
-            godkendt = "Forkert login, prøv igen.";
+            feedback = "Forkert login, prøv igen.";
         }
     }
-
 
     protected async Task<IEnumerable<Bruger>> TjekLogin(Bruger user)
     {
 
         return await Http.GetFromJsonAsync<IEnumerable<Bruger>>($"Bruger/tjeklogin?email={bruger.Email}&kode={bruger.Kode}");
-
     }
 
+    protected override void OnInitialized()
+    {
+        NavManager.NavigateTo("/login");
+    }
 }
