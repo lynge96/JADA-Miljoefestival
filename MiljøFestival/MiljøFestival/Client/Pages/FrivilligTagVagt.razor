@@ -13,6 +13,8 @@ else if (LogedInBruger.ErKoordinator())
 }
 else if (LogedInBruger.ErLoggetPå())
 {
+    <h1>Hej @LogedInBruger.Fornavn</h1>
+    <p>Her er en liste over dine ledige vagter for dit team: @LogedInBruger.Team</p>
     <div class="table-responsive rounded">
         <table class="table table-striped">
             <thead>
@@ -22,7 +24,7 @@ else if (LogedInBruger.ErLoggetPå())
                     <th>Slut</th>
                     <th>Opgave</th>
                     <th>Beskrivelse</th>
-                    <th> Tag vagt </th>
+                    <th>Tag vagt</th>
                 </tr>
             </thead>
             <tbody>
@@ -32,8 +34,8 @@ else if (LogedInBruger.ErLoggetPå())
                         <td>@vagt.Start.ToShortDateString()</td>
                         <td>@vagt.Start.ToShortTimeString()</td>
                         <td>@vagt.Slut.ToShortTimeString()</td>
-                        <td>@vagt.Opgave_Navn</td>
-                        <td>Coming soon</td>
+                        <td>@vagt.Opgave</td>
+                        <td>@vagt.Beskrivelse</td>
                         <td><input type="button" class="btn btn-primary" value="Tag vagt" @onclick="() => TagVagt(vagt)"></td>
                     </tr>
                 }
@@ -54,7 +56,7 @@ else
     // Henter alle ledige vagter (taget_af == null)
     protected override async Task OnInitializedAsync()
     {
-        VagtListeUnsorted = await Http.GetFromJsonAsync<List<Vagt>>("Vagt/ledigeVagter");
+        VagtListeUnsorted = await Http.GetFromJsonAsync<List<Vagt>>($"Vagt/ledigeVagter?team_id={LogedInBruger.Team_Id}");
 
         VagtListe = VagtListeUnsorted.OrderBy(q => q.Vagt_Id).ToList();
 
@@ -64,7 +66,6 @@ else
     // Tager vagt og opdaterer ledige vagter
     protected async Task TagVagt(Vagt vagt)
     {
-
         vagt.Bruger_Id = LogedInBruger.Bruger_Id;
 
         await Http.PostAsJsonAsync<Vagt>("Vagt/tagVagt", vagt);

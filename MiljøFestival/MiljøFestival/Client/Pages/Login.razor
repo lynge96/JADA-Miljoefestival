@@ -21,10 +21,10 @@
             <p class="mt-3 mb-3 h6"><a class="nav-link text-decoration-underline" href="OpretBruger">Opret bruger</a></p>
             @if (godkendt != string.Empty)
             {
-            <div class="alert alert-warning">
-                <span class="oi oi-key" aria-hidden="true"></span>
-                <strong>Hov!</strong> - @godkendt
-            </div>
+                <div class="alert alert-warning">
+                    <span class="oi oi-key" aria-hidden="true"></span>
+                    <strong>Hov!</strong> - @godkendt
+                </div>
             }
         </form>
     </main>
@@ -51,7 +51,10 @@ else
         LogedInBruger.Telefon = string.Empty;
         LogedInBruger.Email = string.Empty;
         LogedInBruger.Adresse = string.Empty;
-        LogedInBruger.Koordinator = false;
+        LogedInBruger.Rolle_Id = 0;
+        LogedInBruger.Rolle = string.Empty;
+        LogedInBruger.Team_Id = 0;
+        LogedInBruger.Team = string.Empty;
     }
 
 
@@ -70,7 +73,10 @@ else
             LogedInBruger.Telefon = testbruger.Telefon;
             LogedInBruger.Email = testbruger.Email;
             LogedInBruger.Adresse = testbruger.Adresse;
-            LogedInBruger.Koordinator = testbruger.Koordinator;
+            LogedInBruger.Rolle_Id = testbruger.Rolle_Id;
+            LogedInBruger.Rolle = testbruger.Rolle;
+            LogedInBruger.Team_Id = testbruger.Team_Id;
+            LogedInBruger.Team = testbruger.Team;
 
             godkendt = "Godkendt!";
 

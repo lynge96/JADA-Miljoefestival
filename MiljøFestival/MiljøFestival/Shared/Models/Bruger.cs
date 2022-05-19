@@ -10,26 +10,23 @@ namespace MiljøFestival.Shared.Models
     public class Bruger
     {
         public int Bruger_Id { get; set; }
-
-        [Required]
-        [StringLength(50, ErrorMessage = "Fornavn må ikke være længere 50 karakterer.")]
         public string Fornavn { get; set; }
 
-        [Required]
         public string Efternavn { get; set; }
 
-        [Required]
         public string Telefon { get; set; }
 
-        [Required]
         public string Email { get; set; }
 
-        [Required]
         public string Adresse { get; set; }
 
-        public bool Koordinator { get; set; }
+        public int? Rolle_Id { get; set; }
 
-        [Required]
+        public string Rolle { get; set; }
+
+        public int? Team_Id { get; set; }
+
+        public string Team { get; set; }
         public string Kode { get; set; }
 
 
@@ -50,7 +47,7 @@ namespace MiljøFestival.Shared.Models
         // Returnerer true / false om brugeren er koordinator (abstraktion?)
         public bool ErKoordinator()
         {
-            if (Koordinator == true)
+            if (Rolle == "Koordinator")
             {
                 return true;
             } else

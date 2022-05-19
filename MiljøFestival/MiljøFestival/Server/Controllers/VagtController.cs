@@ -14,14 +14,14 @@ namespace MiljøFestival.Server.Controllers
     [Route("[controller]")]
     public class VagtController : ControllerBase
     {
+        private string connString = "User ID=systemadmin;Password=Festival987;Host=jadafestival-db.postgres.database.azure.com;Port=5432;Database=postgres;";
+
         // Hent alle vagter
         [HttpGet("all")]
         public async Task<IEnumerable<Vagt>> GetAll()
         {
             
-            var connString = "User ID=jbpzuakg;Password=7FunsLh3XcgblqOlN4WJ5dIMJr2v134O;Host=abul.db.elephantsql.com;Port=5432;Database=jbpzuakg;";
-
-            var sql = "SELECT vagt.vagt_id, vagt.start, vagt.slut, bruger.fornavn AS taget_af, opgave.type AS opgave_navn, vagt.bruger_id, vagt.opgave_id FROM vagt LEFT JOIN bruger USING(bruger_id ) LEFT JOIN opgave USING(opgave_id )";
+            var sql = "SELECT vagt_id, start, slut, (bruger.fornavn || ' ' || bruger.efternavn) AS taget_af, bruger_id, opgave.navn AS opgave, opgave_id, opgave.beskrivelse FROM vagt LEFT JOIN bruger USING (bruger_id) LEFT JOIN opgave USING (opgave_id);";
 
             try
             {
@@ -43,10 +43,7 @@ namespace MiljøFestival.Server.Controllers
         [HttpGet("brugerVagter")]
         public async Task<IEnumerable<Vagt>> BrugerIdVagt(string brugerid) // Ændre til int bruger_id
         {
-
-            var connString = "User ID=jbpzuakg;Password=7FunsLh3XcgblqOlN4WJ5dIMJr2v134O;Host=abul.db.elephantsql.com;Port=5432;Database=jbpzuakg;";
-
-            var sql = $"SELECT vagt.vagt_id, vagt.start, vagt.slut, bruger.fornavn AS taget_af, opgave.type AS opgave_navn, vagt.bruger_id, vagt.opgave_id FROM vagt LEFT JOIN bruger USING(bruger_id ) LEFT JOIN opgave USING(opgave_id ) WHERE bruger.bruger_id = {brugerid}";
+            var sql = $"SELECT vagt_id, start, slut, (bruger.fornavn || ' ' || bruger.efternavn) AS taget_af, bruger_id, opgave.navn AS opgave, opgave_id, opgave.beskrivelse FROM vagt LEFT JOIN bruger USING(bruger_id ) LEFT JOIN opgave USING(opgave_id ) WHERE bruger_id = {brugerid};";
 
             try
             {
@@ -64,14 +61,11 @@ namespace MiljøFestival.Server.Controllers
         }
 
 
-        // Find alle ledige vagter
+        // Find alle ledige vagter baseret på team ID
         [HttpGet("ledigeVagter")]
-        public async Task<IEnumerable<Vagt>> LedigeVagter()
+        public async Task<IEnumerable<Vagt>> LedigeVagter(int team_id)
         {
-
-            var connString = "User ID=jbpzuakg;Password=7FunsLh3XcgblqOlN4WJ5dIMJr2v134O;Host=abul.db.elephantsql.com;Port=5432;Database=jbpzuakg;";
-
-            var sql = $"SELECT vagt.vagt_id, vagt.start, vagt.slut, bruger.fornavn AS taget_af, opgave.type AS opgave_navn, vagt.bruger_id, vagt.opgave_id FROM vagt LEFT JOIN bruger USING(bruger_id ) LEFT JOIN opgave USING(opgave_id )WHERE bruger_id IS NULL;";
+            var sql = $"SELECT vagt_id, start, slut, (bruger.fornavn || ' ' || bruger.efternavn) AS taget_af, bruger_id, opgave.navn AS opgave, opgave_id, opgave.beskrivelse FROM vagt LEFT JOIN bruger USING(bruger_id ) LEFT JOIN opgave USING(opgave_id )WHERE bruger_id IS NULL AND opgave.team_id = {team_id};"; 
 
             try
             {
@@ -93,8 +87,6 @@ namespace MiljøFestival.Server.Controllers
         [HttpPost("tagVagt")]
         public async Task TagVagt(Vagt vagt)
         {
-            var connString = "User ID=jbpzuakg;Password=7FunsLh3XcgblqOlN4WJ5dIMJr2v134O;Host=abul.db.elephantsql.com;Port=5432;Database=jbpzuakg;";
-
             var sql = $"UPDATE vagt SET bruger_id = {vagt.Bruger_Id} WHERE vagt_id = {vagt.Vagt_Id};";
 
             try
@@ -117,8 +109,6 @@ namespace MiljøFestival.Server.Controllers
         [HttpPost("frigivVagt")]
         public async Task FrigivVagt(Vagt vagt)
         {
-            var connString = "User ID=jbpzuakg;Password=7FunsLh3XcgblqOlN4WJ5dIMJr2v134O;Host=abul.db.elephantsql.com;Port=5432;Database=jbpzuakg;";
-
             var sql = $"UPDATE vagt SET bruger_id = null WHERE vagt_id = {vagt.Vagt_Id};";
 
             try
@@ -141,8 +131,6 @@ namespace MiljøFestival.Server.Controllers
         [HttpPost("sletVagt")]
         public async Task SletVagt(Vagt vagt)
         {
-            var connString = "User ID=jbpzuakg;Password=7FunsLh3XcgblqOlN4WJ5dIMJr2v134O;Host=abul.db.elephantsql.com;Port=5432;Database=jbpzuakg;";
-
             var sql = $"DELETE FROM vagt WHERE vagt_id = {vagt.Vagt_Id};";
 
             try
@@ -163,8 +151,6 @@ namespace MiljøFestival.Server.Controllers
         [HttpPost("opdaterVagt")]
         public async Task OpdaterBruger(Vagt vagt)
         {
-            var connString = "User ID=jbpzuakg;Password=7FunsLh3XcgblqOlN4WJ5dIMJr2v134O;Host=abul.db.elephantsql.com;Port=5432;Database=jbpzuakg;";
-
             var sql = $"UPDATE vagt SET start = '{vagt.Start}', slut = '{vagt.Slut}' where vagt_id = '{vagt.Vagt_Id}'";
 
             try
@@ -187,8 +173,6 @@ namespace MiljøFestival.Server.Controllers
         [HttpPost("opret")]
         public async Task OpretVagt(Vagt vagt)
         {
-            var connString = "User ID=jbpzuakg;Password=7FunsLh3XcgblqOlN4WJ5dIMJr2v134O;Host=abul.db.elephantsql.com;Port=5432;Database=jbpzuakg;";
-
             var sql = $"INSERT INTO vagt (start, slut, opgave_id) VALUES ('{vagt.Start}', '{vagt.Slut}', {vagt.Opgave_Id})";
 
             try

@@ -32,8 +32,8 @@ else if (LogedInBruger.ErLoggetPå())
                         <td>@vagt.Start.ToShortDateString()</td>
                         <td>@vagt.Start.ToShortTimeString()</td>
                         <td>@vagt.Slut.ToShortTimeString()</td>
-                        <td>@vagt.Opgave_Navn</td>
-                        <td>Coming soon</td>
+                        <td>@vagt.Opgave</td>
+                        <td>@vagt.Beskrivelse</td>
                         <td><input type="button" class="btn btn-danger" value="Slet" @onclick="() => FrigivVagt(vagt)"></td>
                     </tr>
                 }

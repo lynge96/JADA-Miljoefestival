@@ -27,20 +27,24 @@ else if (LogedInBruger.ErLoggetPå())
                             <table class="table table-striped">
                                 <thead>
                                     <tr class="table">
-                                        <th class="col-3">Opgave: @opgave.Type</th>
+                                        <th class="col-3">Opgave: @opgave.Navn</th>
                                         <th class="col-1">@FindAntalVagter(opgave.Opgave_Id, FindVagtOpgave(opgave, vagtListe))</th>
                                         <th class="col-2">
                                             <select class="form-control" @bind="opgave.Status">
-                                                <option>@opgave.Status</option>
-                                                <option>Planlægning</option>
-                                                <option>I udførelse</option>
-                                                <option>Udført</option>
+                                                <option selected>@opgave.Status</option>
+                                                @foreach (var status in status)
+                                                {
+                                                    <option>@status</option>
+
+                                                }
                                             </select>
                                         </th>
                                         <th>
                                             <input type="button" class="btn btn-primary" value="Opdater" @onclick="() => OpdaterStatus(opgave)">
                                             <input type="button" class="btn btn-danger" value="Slet opgave" @onclick="() => SletOpgave(opgave)">
                                         </th>
+                                        <th class="col-3">Ansvarlig team: @opgave.Team</th>
+
                                     </tr>
                                 </thead>
                             </table>
@@ -72,7 +76,7 @@ else if (LogedInBruger.ErLoggetPå())
                                                 <td>@vagt.Start</td>
                                                 <td>@vagt.Slut</td>
                                                 <td>@vagt.Taget_Af</td>
-                                                <td>@vagt.Opgave_Navn</td>
+                                                <td>@vagt.Opgave</td>
                                             }
                                             else if (editMode == true)
                                             {
@@ -81,7 +85,7 @@ else if (LogedInBruger.ErLoggetPå())
                                                 <td> <input type="text" class="form-control" @bind="vagt.Start"></td>
                                                 <td> <input type="text" class="form-control" @bind="vagt.Slut"></td>
                                                 <td>@vagt.Taget_Af</td>
-                                                <td>@vagt.Opgave_Navn</td>
+                                                <td>@vagt.Opgave</td>
                                             }
                                         </tr>
                                     }
@@ -106,6 +110,7 @@ else
     private List<Vagt> vagtListeUnsorted;
     private List<Opgave> opgaveListe;
     private List<Opgave> opgaveListeUnsorted;
+    private List<string> status;
 
     private bool editMode = false;
     private bool visVagter = false;
@@ -119,6 +124,9 @@ else
         opgaveListeUnsorted = await Http.GetFromJsonAsync<List<Opgave>>("Opgave/all");
 
         opgaveListe = opgaveListeUnsorted.OrderBy(q => q.Opgave_Id).ToList();
+
+        status = await Http.GetFromJsonAsync<List<string>>("Status/all");
+
 
     }
 
@@ -166,7 +174,7 @@ else
     // Sletter opgave fra databasen
     protected async Task SletOpgave(Opgave opgave)
     {
-        await Http.PostAsJsonAsync<int>("Opgave/slet", opgave.Opgave_Id);
+        await Http.PostAsJsonAsync<Opgave>("Opgave/slet", opgave);
 
         await OnInitializedAsync();
     }
