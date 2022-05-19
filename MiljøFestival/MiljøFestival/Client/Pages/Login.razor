@@ -6,10 +6,9 @@
 
 @if (!LogedInBruger.ErLoggetPå())
 {
-    <main class="form-signin col-md-3 mx-auto">
+    <main class="form-signin col-md-3 m-auto">
         <form>
             <h1 class="text-center">Log ind</h1>
-
             <div class="form-floating">
                 <input type="email" class="form-control" id="floatingInput" placeholder="Email" @bind-value="bruger.Email" required>
                 <label for="floatingInput">Email adresse</label>

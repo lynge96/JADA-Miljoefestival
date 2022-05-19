@@ -19,79 +19,78 @@ else if (LogedInBruger.ErLoggetPå())
 
     @foreach (var opgave in opgaveListe)
     {
-        <div class="table-responsive rounded">
-            <table class="table table-striped">
-                <thead>
-                    <tr class="table">
-                        <th class="col-3">Opgave: @opgave.Type</th>
-                        <th class="col-1">@FindAntalVagter(opgave.Opgave_Id, FindVagtOpgave(opgave, vagtListe))</th>
-                        <th class="col-2">
-                            <select class="form-control" @bind="opgave.Status">
-                                <option>@opgave.Status</option>
-                                <option>Planlægning</option>
-                                <option>I udførelse</option>
-                                <option>Udført</option>
-                            </select>
-                        </th>
-                        <th>
-                            <input type="button" class="btn btn-primary" value="Opdater" @onclick="() => OpdaterStatus(opgave)">
-                            <input type="button" class="btn btn-primary" value="Vis/skjul" @onclick="() => visVagter = !visVagter">
-                            <input type="button" class="btn btn-danger" value="Slet opgave">
-
-
-                        </th>
-                    </tr>
-                </thead>
-            </table>
-
-            @if (visVagter == true)
-            {
-
-                <table class="table table-striped">
-                    <thead>
-                        <tr class="table">
-                            <th>Slet</th>
-                            <th>Opdater</th>
-                            <th>Vagt ID</th>
-                            <th>Start</th>
-                            <th>Slut</th>
-                            <th>Taget af</th>
-                            <th>Opgave navn</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var vagt in FindVagtOpgave(opgave, vagtListe))
-                        {
-                            <tr>
-                                <td><input type="button" class="btn btn-danger" value="Slet" @onclick="() => SletVagt(vagt)"></td>
-                                @if (editMode == false)
-                                {
-                                    <td><input type="button" class="btn btn-primary" value="Opdater" @onclick="() => editMode = true"></td>
-                                    <td>@vagt.Vagt_Id</td>
-                                    <td>@vagt.Start</td>
-                                    <td>@vagt.Slut</td>
-                                    <td>@vagt.Taget_Af</td>
-                                    <td>@vagt.Opgave_Navn</td>
-                                }
-                                else if (editMode == true)
-                                {
-                                    <td><input type="button" class="btn btn-primary" value="Gem" @onclick="() => OpdaterVagt(vagt)"></td>
-                                    <td>@vagt.Vagt_Id</td>
-                                    <td> <input type="text" class="form-control" @bind="vagt.Start"></td>
-                                    <td> <input type="text" class="form-control" @bind="vagt.Slut"></td>
-                                    <td>@vagt.Taget_Af</td>
-                                    <td>@vagt.Opgave_Navn</td>
-
-                                }
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-                <br />
-                <br />
-                <br />
-                <br />
-            }
+        <div class="table-responsive rounded mb-3">
+            <div class="accordion" id="accordionPanelsStayOpenExample">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="panelsStayOpen-heading-@opgave.Opgave_Id">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-@opgave.Opgave_Id" aria-expanded="false" aria-controls="panelsStayOpen-@opgave.Opgave_Id">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr class="table">
+                                        <th class="col-3">Opgave: @opgave.Type</th>
+                                        <th class="col-1">@FindAntalVagter(opgave.Opgave_Id, FindVagtOpgave(opgave, vagtListe))</th>
+                                        <th class="col-2">
+                                            <select class="form-control" @bind="opgave.Status">
+                                                <option>@opgave.Status</option>
+                                                <option>Planlægning</option>
+                                                <option>I udførelse</option>
+                                                <option>Udført</option>
+                                            </select>
+                                        </th>
+                                        <th>
+                                            <input type="button" class="btn btn-primary" value="Opdater" @onclick="() => OpdaterStatus(opgave)">
+                                            <input type="button" class="btn btn-danger" value="Slet opgave">
+                                        </th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </button>
+                    </h2>
+                    <div id="panelsStayOpen-@opgave.Opgave_Id" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-heading-@opgave.Opgave_Id">
+                        <div class="accordion-body">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr class="table">
+                                        <th>Slet</th>
+                                        <th>Opdater</th>
+                                        <th>Vagt ID</th>
+                                        <th>Start</th>
+                                        <th>Slut</th>
+                                        <th>Taget af</th>
+                                        <th>Opgave navn</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var vagt in FindVagtOpgave(opgave, vagtListe))
+                                    {
+                                        <tr>
+                                            <td><input type="button" class="btn btn-danger" value="Slet" @onclick="() => SletVagt(vagt)"></td>
+                                            @if (editMode == false)
+                                            {
+                                                <td><input type="button" class="btn btn-primary" value="Opdater" @onclick="() => editMode = true"></td>
+                                                <td>@vagt.Vagt_Id</td>
+                                                <td>@vagt.Start</td>
+                                                <td>@vagt.Slut</td>
+                                                <td>@vagt.Taget_Af</td>
+                                                <td>@vagt.Opgave_Navn</td>
+                                            }
+                                            else if (editMode == true)
+                                            {
+                                                <td><input type="button" class="btn btn-primary" value="Gem" @onclick="() => OpdaterVagt(vagt)"></td>
+                                                <td>@vagt.Vagt_Id</td>
+                                                <td> <input type="text" class="form-control" @bind="vagt.Start"></td>
+                                                <td> <input type="text" class="form-control" @bind="vagt.Slut"></td>
+                                                <td>@vagt.Taget_Af</td>
+                                                <td>@vagt.Opgave_Navn</td>
+                                            }
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     }
 }
@@ -139,15 +138,29 @@ else
     protected string FindAntalVagter(int opgave_id, List<Vagt> vagtListe)
     {
         int antalVagter = vagtListe.Count(q => q.Opgave_Id == opgave_id);
+        int antalLedigeVagter = vagtListe.FindAll(q => q.Bruger_Id == null).Count();
 
-        if (antalVagter == 1)
+        if (antalVagter == 0)
         {
-            return $"{antalVagter} vagt";
+            return "0 vagter i alt";
+        }
+        else if (antalVagter == 1 && antalLedigeVagter == 1)
+        {
+            return "1 / 1 vagter ledig";
+        }
+        else if (antalVagter == 1 && antalLedigeVagter == 0)
+        {
+            return "1 / 1 vagt dækket";
+        }
+        else if (antalVagter > 1 && antalLedigeVagter > 0)
+        {
+            return $"{antalLedigeVagter} / {antalVagter} vagter ledige";
         }
         else
         {
-            return $"{antalVagter} vagter";
+            return $"{antalVagter} / {antalVagter} vagter dækket";
         }
+
 
     }
 
