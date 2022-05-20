@@ -17,8 +17,19 @@
                 <li><a href="#" class="nav-link px-2 link-dark"><span class="bi bi-info-circle"></span> About</a></li>
                 @if (LogedInBruger.ErLoggetPå())
                 {
-                <li><a href="profil" class="nav-link px-2 link-dark"><span class="bi bi-person-lines-fill"></span> Profil</a></li>                       
+                    <li><a href="profil" class="nav-link px-2 link-dark"><span class="bi bi-person-lines-fill"></span> Profil</a></li>                 
                 }
+                @if (LogedInBruger.ErKoordinator() && LogedInBruger.ErLoggetPå())
+                {
+                    <li><a href="koordinatorVagtOpgave" class="nav-link px-2 link-dark"><span class="bi bi-plus-circle"></span> Opret</a></li>
+                    <li><a href="koordinatorStartside" class="nav-link px-2 link-dark"><span class="bi bi-layout-text-window"></span> Dashboard</a></li>
+                    <li><a href="AlleBruger" class="nav-link px-2 link-dark"><span class="bi bi-"></span> Frivillige</a></li>
+                } else if (LogedInBruger.ErLoggetPå() && !LogedInBruger.ErKoordinator())
+                {
+                    <li><a href="FrivilligStartside" class="nav-link px-2 link-dark"><span class="bi bi-person-lines-fill"></span> Dashboard</a></li>
+                    <li><a href="FrivilligTagVagt" class="nav-link px-2 link-dark"><span class="bi bi-person-lines-fill"></span> Vagter</a></li>
+                }
+
             </ul>
 
             <div class="col-md-3 text-end">
@@ -43,7 +54,7 @@
 @code {
         protected void LogAf()
     {
-        @*LogedInBruger = new Bruger(); Virker ikke??*@
+    @*LogedInBruger = new Bruger(); Virker ikke??*@
     LogedInBruger.Bruger_Id = 0;
     LogedInBruger.Fornavn = string.Empty;
     LogedInBruger.Efternavn = string.Empty;
