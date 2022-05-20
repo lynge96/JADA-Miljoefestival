@@ -27,6 +27,7 @@ namespace MiljøFestival.Shared.Models
         public int? Team_Id { get; set; }
 
         public string Team { get; set; }
+
         public string Kode { get; set; }
 
 

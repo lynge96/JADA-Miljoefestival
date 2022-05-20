@@ -44,14 +44,17 @@
         protected void LogAf()
     {
         @*LogedInBruger = new Bruger(); Virker ikke??*@
-        LogedInBruger.Bruger_Id = 0;
-        LogedInBruger.Fornavn = string.Empty;
-        LogedInBruger.Efternavn = string.Empty;
-        LogedInBruger.Telefon = string.Empty;
-        LogedInBruger.Email = string.Empty;
-        LogedInBruger.Adresse = string.Empty;
-        LogedInBruger.Koordinator = false;
+    LogedInBruger.Bruger_Id = 0;
+    LogedInBruger.Fornavn = string.Empty;
+    LogedInBruger.Efternavn = string.Empty;
+    LogedInBruger.Telefon = string.Empty;
+    LogedInBruger.Email = string.Empty;
+    LogedInBruger.Adresse = string.Empty;
+    LogedInBruger.Team = string.Empty;
+    LogedInBruger.Team_Id = 0;
+    LogedInBruger.Rolle_Id = 0;
+    LogedInBruger.Rolle = string.Empty;
 
-        NavManager.NavigateTo("/");
-    }
+    NavManager.NavigateTo("/");
+}
 }
