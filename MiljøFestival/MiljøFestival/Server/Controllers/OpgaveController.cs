@@ -15,14 +15,14 @@ namespace MiljøFestival.Server.Controllers
     public class OpgaveController : ControllerBase
     {
 
+        private string connString = "User ID=systemadmin;Password=Festival987;Host=jadafestival-db.postgres.database.azure.com;Port=5432;Database=postgres;";
+
+
         // Henter alle opgaver
         [HttpGet("all")]
         public async Task<IEnumerable<Opgave>> GetAll()
         {
-
-            var connString = "User ID=jbpzuakg;Password=7FunsLh3XcgblqOlN4WJ5dIMJr2v134O;Host=abul.db.elephantsql.com;Port=5432;Database=jbpzuakg;";
-
-            var sql = "SELECT opgave_id, status, type, beskrivelse FROM opgave";
+            var sql = "SELECT opgave_id, navn, beskrivelse, status_id, status.status AS status, team_id, team.team AS team FROM opgave LEFT JOIN status USING (status_id) LEFT JOIN team USING (team_id);";
 
             try
             {
@@ -44,9 +44,7 @@ namespace MiljøFestival.Server.Controllers
         [HttpPost("opdaterOpgave")]
         public async Task OpdaterOpgave(Opgave opgave)
         {
-            var connString = "User ID=jbpzuakg;Password=7FunsLh3XcgblqOlN4WJ5dIMJr2v134O;Host=abul.db.elephantsql.com;Port=5432;Database=jbpzuakg;";
-
-            var sql = $"UPDATE opgave SET status = '{opgave.Status}' WHERE opgave_id = '{opgave.Opgave_Id}'";
+            var sql = $"CALL opdater_opgave_status({opgave.Opgave_Id}, '{opgave.Status}')";
 
             try
             {
@@ -66,9 +64,7 @@ namespace MiljøFestival.Server.Controllers
         [HttpPost("opret")]
         public async Task OpretOpgave(Opgave opgave)
         {
-            var connString = "User ID=jbpzuakg;Password=7FunsLh3XcgblqOlN4WJ5dIMJr2v134O;Host=abul.db.elephantsql.com;Port=5432;Database=jbpzuakg;";
-
-            var sql = $"INSERT INTO opgave (status, type, beskrivelse) VALUES ('{opgave.Status}', '{opgave.Type}', '{opgave.Beskrivelse}')";
+            var sql = $"CALL opret_opgave('{opgave.Navn}', '{opgave.Beskrivelse}', '{opgave.Status}', '{opgave.Team}')";
 
             try
             {
@@ -86,11 +82,9 @@ namespace MiljøFestival.Server.Controllers
 
         // Slet opgave
         [HttpPost("slet")]
-        public async Task SletOpgave(int opgaveID)
+        public async Task SletOpgave(Opgave opgave)
         {
-            var connString = "User ID=jbpzuakg;Password=7FunsLh3XcgblqOlN4WJ5dIMJr2v134O;Host=abul.db.elephantsql.com;Port=5432;Database=jbpzuakg;";
-
-            var sql = $"CALL slet_opgave({opgaveID});";
+            var sql = $"CALL slet_opgave({opgave.Opgave_Id});";
 
             try
             {

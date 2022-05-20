@@ -22,10 +22,12 @@
             <p class="mt-3 mb-3 h6"><a class="nav-link text-decoration-underline" href="OpretBruger">Opret bruger</a></p>
             @if (feedback != string.Empty)
             {
+
             <div class="alert alert-warning">
                 <span class="oi oi-key" aria-hidden="true"></span>
                 <strong>Hov!</strong> - @feedback
             </div>
+
             }
         </form>
     </main>
@@ -37,7 +39,27 @@ else
 
 @code {
     private Bruger bruger = new Bruger();
+
+    protected void LogAf()
+    {
+        godkendt = string.Empty;
+
+        @*LogedInBruger = new Bruger(); Virker ikke??*@
+        LogedInBruger.Bruger_Id = 0;
+        LogedInBruger.Fornavn = string.Empty;
+        LogedInBruger.Efternavn = string.Empty;
+        LogedInBruger.Telefon = string.Empty;
+        LogedInBruger.Email = string.Empty;
+        LogedInBruger.Adresse = string.Empty;
+        LogedInBruger.Rolle_Id = 0;
+        LogedInBruger.Rolle = string.Empty;
+        LogedInBruger.Team_Id = 0;
+        LogedInBruger.Team = string.Empty;
+    }
+
+
     private string feedback = string.Empty;
+
 
     private async Task HandleSubmit()
     {
@@ -47,13 +69,16 @@ else
         {
             var testBruger = verificerBruger.First();
 
-            LogedInBruger.Bruger_Id = testBruger.Bruger_Id;
-            LogedInBruger.Fornavn = testBruger.Fornavn;
-            LogedInBruger.Efternavn = testBruger.Efternavn;
-            LogedInBruger.Telefon = testBruger.Telefon;
-            LogedInBruger.Email = testBruger.Email;
-            LogedInBruger.Adresse = testBruger.Adresse;
-            LogedInBruger.Koordinator = testBruger.Koordinator;
+            LogedInBruger.Bruger_Id = testbruger.Bruger_Id;
+            LogedInBruger.Fornavn = testbruger.Fornavn;
+            LogedInBruger.Efternavn = testbruger.Efternavn;
+            LogedInBruger.Telefon = testbruger.Telefon;
+            LogedInBruger.Email = testbruger.Email;
+            LogedInBruger.Adresse = testbruger.Adresse;
+            LogedInBruger.Rolle_Id = testbruger.Rolle_Id;
+            LogedInBruger.Rolle = testbruger.Rolle;
+            LogedInBruger.Team_Id = testbruger.Team_Id;
+            LogedInBruger.Team = testbruger.Team;
 
             feedback = "Godkendt!";
 

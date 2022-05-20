@@ -16,14 +16,13 @@ namespace MiljøFestival.Server.Controllers
     [Route("[controller]")]
     public class BrugerController : ControllerBase
     {
+        private string connString = "User ID=systemadmin;Password=Festival987;Host=jadafestival-db.postgres.database.azure.com;Port=5432;Database=postgres;";
 
         // Hent alle brugere
         [HttpGet("all")]
         public async Task<IEnumerable<Bruger>> HentAlle()
         {
-            var connString = "User ID=jbpzuakg;Password=7FunsLh3XcgblqOlN4WJ5dIMJr2v134O;Host=abul.db.elephantsql.com;Port=5432;Database=jbpzuakg;";
-
-            var sql = "SELECT bruger_id, fornavn, efternavn, telefon, email, adresse, koordinator FROM bruger";
+            var sql = "SELECT bruger_id, fornavn, efternavn, telefon, email, adresse, rolle_id, team_id, rolle.rolle AS rolle, team.team AS team FROM bruger LEFT JOIN rolle USING (rolle_id) LEFT JOIN team USING (team_id);";
 
             try
             {
@@ -45,9 +44,7 @@ namespace MiljøFestival.Server.Controllers
         [HttpPost("opret")]
         public async Task OpretBruger(Bruger bruger)
         {
-            var connString = "User ID=jbpzuakg;Password=7FunsLh3XcgblqOlN4WJ5dIMJr2v134O;Host=abul.db.elephantsql.com;Port=5432;Database=jbpzuakg;";
-
-            var sql = $"CALL opret_bruger('{bruger.Fornavn}', '{bruger.Efternavn}', '{bruger.Telefon}', '{bruger.Email}', '{bruger.Adresse}', '{bruger.Kode}')";
+            var sql = $"CALL opret_bruger('{bruger.Fornavn}', '{bruger.Efternavn}', '{bruger.Telefon}', '{bruger.Email}', '{bruger.Adresse}', '{bruger.Rolle}', '{bruger.Team}', '{bruger.Kode}')";
 
             try
             {
@@ -68,8 +65,6 @@ namespace MiljøFestival.Server.Controllers
         [HttpGet("tjeklogin")]
         public async Task<IEnumerable<Bruger>> TjekLogin(string email, string kode)
         {
-            var connString = "User ID=jbpzuakg;Password=7FunsLh3XcgblqOlN4WJ5dIMJr2v134O;Host=abul.db.elephantsql.com;Port=5432;Database=jbpzuakg;";
-
             var sql = $"SELECT * FROM tjek_login('{email}', '{kode}');";
 
             try
@@ -93,9 +88,7 @@ namespace MiljøFestival.Server.Controllers
         [HttpGet("findBrugerId")]
         public async Task<IEnumerable<Bruger>> HentBrugerBrugerId(int bruger_id)
         {
-            var connString = "User ID=jbpzuakg;Password=7FunsLh3XcgblqOlN4WJ5dIMJr2v134O;Host=abul.db.elephantsql.com;Port=5432;Database=jbpzuakg;";
-
-            var sql = $"SELECT bruger_id, fornavn, efternavn, telefon, email, adresse, koordinator, hashpwd AS kode FROM bruger WHERE bruger_id = '{bruger_id}'";
+            var sql = $"SELECT bruger_id, fornavn, efternavn, telefon, email, adresse, rolle_id, team_id, rolle.rolle AS rolle, team.team AS team FROM bruger LEFT JOIN rolle USING (rolle_id) LEFT JOIN team USING (team_id) WHERE bruger_id = '{bruger_id}';";
 
             try
             {
@@ -115,13 +108,10 @@ namespace MiljøFestival.Server.Controllers
 
 
         // Opdaterer oplysninger for brugers profil
-        [HttpPost("opdaterBruger")]
+        [HttpPost("opdater")]
         public async Task OpdaterBruger(Bruger bruger)
         {
-            var connString = "User ID=jbpzuakg;Password=7FunsLh3XcgblqOlN4WJ5dIMJr2v134O;Host=abul.db.elephantsql.com;Port=5432;Database=jbpzuakg;";
-
-            
-            var sql = $"UPDATE bruger SET fornavn = '{bruger.Fornavn}', efternavn = '{bruger.Efternavn}', telefon = '{bruger.Telefon}', email = '{bruger.Email}', adresse = '{bruger.Adresse}', koordinator = '{bruger.Koordinator}' WHERE bruger_id = '{bruger.Bruger_Id}'";
+            var sql = $"CALL opdater_bruger({bruger.Bruger_Id}, '{bruger.Fornavn}', '{bruger.Efternavn}', '{bruger.Telefon}', '{bruger.Email}', '{bruger.Adresse}', '{bruger.Rolle}', '{bruger.Team}')";
 
             try
             {
