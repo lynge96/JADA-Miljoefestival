@@ -3,9 +3,6 @@
 @inject MiljøFestival.Shared.Models.Bruger LogedInBruger
 
 <div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
 
     <div class="main">
         <div class="container">
@@ -23,11 +20,11 @@
                 {
                     <li><a href="koordinatorVagtOpgave" class="nav-link px-2 link-dark"><span class="bi bi-plus-circle"></span> Opret</a></li>
                     <li><a href="koordinatorStartside" class="nav-link px-2 link-dark"><span class="bi bi-layout-text-window"></span> Dashboard</a></li>
-                    <li><a href="AlleBruger" class="nav-link px-2 link-dark"><span class="bi bi-"></span> Frivillige</a></li>
+                    <li><a href="AlleBruger" class="nav-link px-2 link-dark"><span class="bi bi-people"></span> Frivillige</a></li>
                 } else if (LogedInBruger.ErLoggetPå() && !LogedInBruger.ErKoordinator())
                 {
-                    <li><a href="FrivilligStartside" class="nav-link px-2 link-dark"><span class="bi bi-person-lines-fill"></span> Dashboard</a></li>
-                    <li><a href="FrivilligTagVagt" class="nav-link px-2 link-dark"><span class="bi bi-person-lines-fill"></span> Vagter</a></li>
+                    <li><a href="FrivilligStartside" class="nav-link px-2 link-dark"><span class="bi bi-signpost-2"></span> Dashboard</a></li>
+                    <li><a href="FrivilligTagVagt" class="nav-link px-2 link-dark"><span class="bi bi-layout-text-window"></span> Vagter</a></li>
                 }
 
             </ul>
@@ -35,12 +32,12 @@
             <div class="col-md-3 text-end">
                     @if (LogedInBruger.ErLoggetPå())
                     {
-                        <a class="btn btn-outline-primary me-2" href="#" role="button" @onclick="LogAf"><span class="oi oi-account-logout" aria-hidden="true"></span> Log af</a>
+                        <a class="btn btn-outline-primary me-2" href="#" role="button" @onclick="LogAf"><span class="bi bi-box-arrow-left" aria-hidden="true"></span> Log af</a>
                     } else
                     {
-                        <a class="btn btn-outline-primary me-2" href="login" role="button"><span class="oi oi-account-login" aria-hidden="true"></span> Log ind</a>         
+                        <a class="btn btn-outline-primary me-2" href="login" role="button"><span class="bi bi-box-arrow-in-right" aria-hidden="true"></span> Log ind</a>         
                     }
-                <a class="btn btn-primary" href="opretbruger" role="button"><span class="oi oi-person" aria-hidden="true"></span> Opret profil</a>
+                <a class="btn btn-primary" href="opretbruger" role="button"><span class="bi bi-person-plus-fill" aria-hidden="true"></span> Opret profil</a>
             </div>
             </header>
         </div>
