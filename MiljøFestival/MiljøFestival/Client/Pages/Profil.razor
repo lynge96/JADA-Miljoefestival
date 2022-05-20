@@ -16,70 +16,83 @@ else if (LogedInBruger.ErLoggetPå())
 {
     <p>Bruger_Id: @bruger.Bruger_Id</p>
 
-    <div class="profilContainer col-md-6">
-        
-        <div class="form-floating mb-3">
-            <input type="text" class="form-control" id="floatingFornavn" @bind="bruger.Fornavn">
-            <label for="floatingFornavn">Fornavn</label>
+    <div class="row">
+        <div class="profilContainer col-md-6">
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="floatingFornavn" @bind="bruger.Fornavn">
+                <label for="floatingFornavn">Fornavn</label>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="floatingEfternavn" @bind="bruger.Efternavn">
+                <label for="floatingEfternavn">Efternavn</label>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input type="tel" class="form-control" id="floatingTelefon" @bind="bruger.Telefon">
+                <label for="floatingTelefon">Telefon</label>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="floatingInput" @bind="bruger.Adresse">
+                <label for="floatingInput">Adresse</label>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input type="email" class="form-control" id="floatingInput" @bind="bruger.Email">
+                <label for="floatingInput">Email adresse</label>
+            </div>
+            <div class="form-floating mb-3">
+                <select class="form-control" id="Rolle" @bind="bruger.Rolle" required>
+                    <option selected>@bruger.Rolle</option>
+                    @foreach (var rolle in roller)
+                    {
+                        <option>@rolle</option>
+                    }
+                </select>
+                <label for="Rolle">Rolle</label>
+            </div>
+            <div class="form-floating mb-3">
+                <select class="form-control" id="Team" @bind="bruger.Team" required>
+                    <option selected>@bruger.Team</option>
+                    @foreach (var team in teams)
+                    {
+                        <option>@team</option>
+                    }
+                </select>
+                <label for="Team">Team</label>
+            </div>
+            <div class="col-6 my-3">
+                <button class="btn btn-primary" type="button" @onclick="() => OpdaterBruger(bruger)">Gem ændringer</button>
+            </div>
+            <div class="passwordContainer col-md-6">
+                <div class="form-floating mb-3">
+                    <input type="password" class="form-control" id="floatingPassword" @bind="bruger.Kode">
+                    <label for="floatingPassword">Password</label>
+                </div>
+                <div class="col-6">
+                    <button class="btn btn-outline-primary" type="button" @onclick="() => OpdaterPassword(bruger.Bruger_Id, bruger.Kode)">Opdater password</button>
+                </div>
+            </div>
         </div>
 
-        <div class="form-floating mb-3">
-            <input type="text" class="form-control" id="floatingEfternavn" @bind="bruger.Efternavn">
-            <label for="floatingEfternavn">Efternavn</label>
-        </div>
-
-        <div class="form-floating mb-3">
-            <input type="tel" class="form-control" id="floatingTelefon" @bind="bruger.Telefon">
-            <label for="floatingTelefon">Telefon</label>
-        </div>
-
-        <div class="form-floating mb-3">
-            <input type="text" class="form-control" id="floatingInput" @bind="bruger.Adresse">
-            <label for="floatingInput">Adresse</label>
-        </div>
-
-        <div class="form-floating mb-3">
-            <input type="email" class="form-control" id="floatingInput" @bind="bruger.Email">
-            <label for="floatingInput">Email adresse</label>
-        </div>
-        <div class="form-floating mb-3">
-            <select class="form-control" id="Rolle" @bind="bruger.Rolle" required>
-                <option selected>@bruger.Rolle</option>
-                @foreach (var rolle in roller)
+        <div class="kompetenceContainer col-md-6">
+            <p>Kompetencer</p>
+            <form method="post">
+                @foreach (var kompetence in kompetencer)
                 {
-                    <option>@rolle</option>
+                    <div class="form-floating mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="valgteKomptencer" id="@kompetence">
+                            <label class="form-check-label" for="@kompetence">@kompetence</label>
+                        </div>
+                    </div>
                 }
-            </select>
-            <label for="Rolle">Rolle</label>
+                <div class="col-md-6">
+                    <inu class="btn btn-outline-primary" type="submit">Opdater kompetencer</inu>
+                </div>
+            </form>
         </div>
-        <div class="form-floating mb-3">
-            <select class="form-control" id="Team" @bind="bruger.Team" required>
-                <option selected>@bruger.Team</option>
-                @foreach (var team in teams)
-                {
-                    <option>@team</option>
-                }
-            </select>
-            <label for="Team">Team</label>
-        </div>
-
-
-        <div class="col-6 my-3">
-            <button class="btn btn-primary" type="button" @onclick="() => OpdaterBruger(bruger)">Gem ændringer</button>
-
-        </div>
-
-    </div>
-
-    <div class="passwordContainer col-md-6">
-        <div class="form-floating mb-3">
-            <input type="password" class="form-control" id="floatingPassword" @bind="bruger.Kode">
-            <label for="floatingPassword">Password</label>
-        </div>
-        <div class="col-6">
-            <button class="btn btn-outline-primary" type="button" @onclick="() => OpdaterPassword(bruger.Bruger_Id, bruger.Kode)">Opdater password</button>
-        </div>
-
     </div>
 
 }
@@ -98,7 +111,9 @@ else
 
     private List<string> teams = new List<string>();
     private List<string> roller = new List<string>();
+    private List<string> kompetencer = new List<string>();
 
+    public List<string> valgteKomptencer = new List<string>();
 
     // Kan slettes med LogedInBruger -> Virker ikke endnu
     protected override async Task OnInitializedAsync()
@@ -109,8 +124,10 @@ else
 
             bruger = brugerListe.First();
 
-            teams = await Http.GetFromJsonAsync<List<string>>("team/all");
-            roller = await Http.GetFromJsonAsync<List<string>>("rolle/all");
+            teams = await Http.GetFromJsonAsync<List<string>>("Team/all");
+            roller = await Http.GetFromJsonAsync<List<string>>("Rolle/all");
+            kompetencer = await Http.GetFromJsonAsync<List<string>>("Kompetence/all");
+
         }
     }
 
@@ -142,4 +159,18 @@ else
 
     }
 
+    private void ValgteKompetencer()
+    {
+        Console.WriteLine("Valgte kompetencer:");
+        foreach (var kompetence in valgteKomptencer)
+        {
+            Console.WriteLine(kompetence);
+        }
+    }
+
+
+    public void OnPost()
+    {
+        Console.WriteLine(valgteKomptencer);
+    }
 }

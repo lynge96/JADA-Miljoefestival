@@ -189,7 +189,7 @@ else
     }
 
 
-    // Sletter vagt fra databasen
+    // Opdaterer vagt fra databasen
     protected async Task OpdaterVagt(Vagt vagt)
     {
         await Http.PostAsJsonAsync<Vagt>("Vagt/opdaterVagt", vagt);
