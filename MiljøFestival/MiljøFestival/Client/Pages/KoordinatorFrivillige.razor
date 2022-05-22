@@ -1,0 +1,116 @@
+﻿@page "/koordinatorfrivillige"
+@using MiljøFestival.Shared.Models
+@inject HttpClient Http
+@inject MiljøFestival.Shared.Models.Bruger LogedInBruger
+
+<h1>Overblik over alle brugere</h1>
+
+@if (BrugerListeUnsorted == null)
+{
+    <p><em>Loading...</em></p>
+}
+else if (!LogedInBruger.ErKoordinator())
+{
+    <p><em>Du skal være koordinator for at se denne side</em></p>
+}
+else if (LogedInBruger.ErLoggetPå())
+{
+    <h1>Frivillige</h1>
+    <div class="table-responsive rounded">
+        <table class="table table-striped">
+            <thead>
+                <tr class="table">
+                    <th>Bruger ID</th>
+                    <th>Fornavn</th>
+                    <th>Efternavn</th>
+                    <th>Telefon</th>
+                    <th>Email</th>
+                    <th>Adresse</th>
+                    <th>Team</th>
+                    <th>Koordinator?</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var bruger in FrivilligListe)
+                {
+                    <tr>
+                        <td>@bruger.Bruger_Id</td>
+                        <td>@bruger.Fornavn</td>
+                        <td>@bruger.Efternavn</td>
+                        <td>@bruger.Telefon</td>
+                        <td>@bruger.Email</td>
+                        <td>@bruger.Adresse</td>
+                        <td>@bruger.Team</td>
+                        <td><input type="button" class="btn btn-primary" value="Ændre" @onclick="() => GørKoordinator(bruger)"></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <h1>Koordinatorer</h1>
+    <div class="table-responsive rounded">
+        <table class="table table-striped">
+            <thead>
+                <tr class="table">
+                    <th>Bruger ID</th>
+                    <th>Fornavn</th>
+                    <th>Efternavn</th>
+                    <th>Telefon</th>
+                    <th>Email</th>
+                    <th>Adresse</th>
+                    <th>Team</th>
+                    <th>Frivillig?</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var bruger in KoordinatorListe)
+                {
+                    <tr>
+                        <td>@bruger.Bruger_Id</td>
+                        <td>@bruger.Fornavn</td>
+                        <td>@bruger.Efternavn</td>
+                        <td>@bruger.Telefon</td>
+                        <td>@bruger.Email</td>
+                        <td>@bruger.Adresse</td>
+                        <td>@bruger.Team</td>
+                        <td><input type="button" class="btn btn-danger" value="Ændre" @onclick="() => GørFrivillig(bruger)"></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+@code {
+    private List<Bruger> FrivilligListe;
+    private List<Bruger> KoordinatorListe;
+    private List<Bruger> BrugerListeUnsorted;
+
+    protected override async Task OnInitializedAsync()
+    {
+        BrugerListeUnsorted = await Http.GetFromJsonAsync<List<Bruger>>("Bruger/all");
+
+        FrivilligListe = BrugerListeUnsorted.FindAll(q => q.Rolle_Id == 2);
+        KoordinatorListe = BrugerListeUnsorted.FindAll(q => q.Rolle_Id == 1);
+
+
+    }
+
+    protected async Task GørFrivillig(Bruger bruger)
+    {
+        bruger.Rolle_Id = 2;
+
+        await Http.PostAsJsonAsync<Bruger>("Bruger/opdaterrolle", bruger);
+
+        await OnInitializedAsync();
+    }
+
+    protected async Task GørKoordinator(Bruger bruger)
+    {
+        bruger.Rolle_Id = 1;
+
+        await Http.PostAsJsonAsync<Bruger>("Bruger/opdaterrolle", bruger);
+
+        await OnInitializedAsync();
+    }
+}

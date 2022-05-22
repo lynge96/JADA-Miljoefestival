@@ -131,11 +131,9 @@ namespace MiljøFestival.Server.Controllers
 
         // Opdaterer brugerens password.
         [HttpPost("opdaterPassword")]
-        public async Task OpdaterPassword(int bruger_id, string password)
+        public async Task OpdaterPassword(Bruger bruger)
         {
-            var connString = "User ID=jbpzuakg;Password=7FunsLh3XcgblqOlN4WJ5dIMJr2v134O;Host=abul.db.elephantsql.com;Port=5432;Database=jbpzuakg;";
-
-            var sql = $"CALL opdater_password('{password}', '{bruger_id}')";
+            var sql = $"CALL opdater_password('{bruger.Bruger_Id}', '{bruger.Kode}')";
 
             try
             {
@@ -148,11 +146,27 @@ namespace MiljøFestival.Server.Controllers
             {
                 throw;
             }
-
-
-
         }
 
+
+        // Opdaterer brugerens rolle (koordinator / frivillig)
+        [HttpPost("opdaterrolle")]
+        public async Task GørKoordinator(Bruger bruger)
+        {
+            var sql = $"UPDATE bruger SET rolle_id = {bruger.Rolle_Id} WHERE bruger_id = {bruger.Bruger_Id}";
+
+            try
+            {
+                using (var connection = new NpgsqlConnection(connString))
+                {
+                    await connection.ExecuteAsync(sql);
+                }
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }
+        }
 
     }
 }

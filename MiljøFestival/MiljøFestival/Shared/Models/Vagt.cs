@@ -23,5 +23,6 @@ namespace MiljøFestival.Shared.Models
         public int Opgave_Id { get; set; }
 
         public string Beskrivelse { get; set; }
+
     }
 }

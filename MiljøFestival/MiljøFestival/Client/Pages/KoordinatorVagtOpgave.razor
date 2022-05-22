@@ -18,11 +18,11 @@ else if (LogedInBruger.ErLoggetPå())
         <div class="opretvagtContainer col-md-6">
             <h1>Opret vagt</h1>
             <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="floatingStartdato" @bind="nyVagt.Start">
+                <input type="datetime" class="form-control" id="floatingStartdato" @bind="nyVagt.Start">
                 <label for="floatingStartdato">Start</label>
             </div>
             <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="floatingSlutdato" @bind="nyVagt.Slut">
+                <input type="datetime" class="form-control" id="floatingSlutdato" @bind="nyVagt.Slut">
                 <label for="floatingSlutdato">Slut</label>
             </div>
             <div class="form-group">
@@ -38,7 +38,7 @@ else if (LogedInBruger.ErLoggetPå())
             <div class="form-group">
                 <label for="exampleFormControlSelect1">Opgave Type </label>
                 <select class="form-control" @bind="nyVagt.Opgave">
-                    <option selected>Vælg en opgave...</option>
+                    <option selected hidden>Vælg en opgave...</option>
                     @foreach (var item in opgaveListe)
                     {
                         <option>@item.Navn</option>
@@ -94,6 +94,7 @@ else
 
 @code {
     private Vagt nyVagt = new Vagt();
+
     private Opgave nyOpgave = new Opgave();
     private List<Opgave> opgaveListe;
     private int antalVagter = 1;
@@ -105,21 +106,29 @@ else
 
     protected async Task OpretVagt(Vagt vagt)
     {
-        Opgave valgteOpgave = new Opgave();
-
-        valgteOpgave = opgaveListe.Find(q => q.Navn == vagt.Opgave);
-
-        vagt.Opgave_Id = valgteOpgave.Opgave_Id;
-
-        for (int i = 1; i <= antalVagter; i++)
+        if (vagt.Opgave == "Vælg en opgave...")
         {
-            await Http.PostAsJsonAsync<Vagt>("Vagt/opret", vagt);
+            return;
         }
+        else
+        {
+            Opgave valgteOpgave = new Opgave();
 
-        nyVagt = new Vagt();
-        antalVagter = 1;
-        nyVagt.Opgave = "Vælg en opgave...";
+            valgteOpgave = opgaveListe.Find(q => q.Navn == vagt.Opgave);
 
+            vagt.Opgave_Id = valgteOpgave.Opgave_Id;
+
+            for (int i = 1; i <= antalVagter; i++)
+            {
+                await Http.PostAsJsonAsync<Vagt>("Vagt/opret", vagt);
+            }
+
+            nyVagt = new Vagt();
+            antalVagter = 1;
+            nyVagt.Opgave = "Vælg en opgave...";
+            nyVagt.Start = DateTime.Today;
+            nyVagt.Slut = DateTime.Today;
+        }
     }
 
     protected async Task OpretOpgave(Opgave opgave)
@@ -142,6 +151,9 @@ else
         status = await Http.GetFromJsonAsync<List<string>>("Status/all");
 
         teams = await Http.GetFromJsonAsync<List<string>>("Team/all");
+
+        nyVagt.Start = DateTime.Today;
+        nyVagt.Slut = DateTime.Today;
 
 
     }

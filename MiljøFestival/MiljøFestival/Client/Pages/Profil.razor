@@ -14,8 +14,6 @@
 }
 else if (LogedInBruger.ErLoggetPå())
 {
-    <p>Bruger_Id: @bruger.Bruger_Id</p>
-
     <div class="row">
         <div class="profilContainer col-md-6">
             <div class="form-floating mb-3">
@@ -43,16 +41,6 @@ else if (LogedInBruger.ErLoggetPå())
                 <label for="floatingInput">Email adresse</label>
             </div>
             <div class="form-floating mb-3">
-                <select class="form-control" id="Rolle" @bind="bruger.Rolle" required>
-                    <option selected>@bruger.Rolle</option>
-                    @foreach (var rolle in roller)
-                    {
-                        <option>@rolle</option>
-                    }
-                </select>
-                <label for="Rolle">Rolle</label>
-            </div>
-            <div class="form-floating mb-3">
                 <select class="form-control" id="Team" @bind="bruger.Team" required>
                     <option selected>@bruger.Team</option>
                     @foreach (var team in teams)
@@ -71,14 +59,14 @@ else if (LogedInBruger.ErLoggetPå())
                     <label for="floatingPassword">Password</label>
                 </div>
                 <div class="col-6">
-                    <button class="btn btn-outline-primary" type="button" @onclick="() => OpdaterPassword(bruger.Bruger_Id, bruger.Kode)">Opdater password</button>
+                    <button class="btn btn-outline-primary" type="button" @onclick="() => OpdaterPassword(bruger)">Opdater password</button>
                 </div>
             </div>
         </div>
 
         <div class="kompetenceContainer col-md-6">
             <p>Kompetencer</p>
-            <form method="post">
+            <form method="get">
                 @foreach (var kompetence in kompetencer)
                 {
                     <div class="form-floating mb-3">
@@ -107,13 +95,8 @@ else
 
 @code {
     private Bruger bruger = new Bruger();
-
-
     private List<string> teams = new List<string>();
-    private List<string> roller = new List<string>();
     private List<string> kompetencer = new List<string>();
-
-    public List<string> valgteKomptencer = new List<string>();
 
     // Kan slettes med LogedInBruger -> Virker ikke endnu
     protected override async Task OnInitializedAsync()
@@ -125,7 +108,6 @@ else
             bruger = brugerListe.First();
 
             teams = await Http.GetFromJsonAsync<List<string>>("Team/all");
-            roller = await Http.GetFromJsonAsync<List<string>>("Rolle/all");
             kompetencer = await Http.GetFromJsonAsync<List<string>>("Kompetence/all");
 
         }
@@ -140,8 +122,6 @@ else
         LogedInBruger.Telefon = bruger.Telefon;
         LogedInBruger.Email = bruger.Email;
         LogedInBruger.Adresse = bruger.Adresse;
-        LogedInBruger.Rolle_Id = bruger.Rolle_Id;
-        LogedInBruger.Rolle = bruger.Rolle;
         LogedInBruger.Team_Id = bruger.Team_Id;
         LogedInBruger.Team = bruger.Team;
 
@@ -150,27 +130,11 @@ else
         await OnInitializedAsync();
     }
 
-    private async Task OpdaterPassword(int bruger_id, string password)
+    private async Task OpdaterPassword(Bruger bruger)
     {
-        await Http.PostAsJsonAsync<int>("Bruger/opdaterPassword", bruger_id);
-        await Http.PostAsJsonAsync<string>("Bruger/opdaterPassword", password);
+        await Http.PostAsJsonAsync<Bruger>("Bruger/opdaterPassword", bruger);
 
         await OnInitializedAsync();
 
-    }
-
-    private void ValgteKompetencer()
-    {
-        Console.WriteLine("Valgte kompetencer:");
-        foreach (var kompetence in valgteKomptencer)
-        {
-            Console.WriteLine(kompetence);
-        }
-    }
-
-
-    public void OnPost()
-    {
-        Console.WriteLine(valgteKomptencer);
     }
 }
