@@ -82,6 +82,15 @@ else if (LogedInBruger.ErLoggetPå())
             </form>
         </div>
     </div>
+    <form method="get">
+        @for (var i = 1; i <= 10; i++)
+        {
+            <input name="AreChecked" type="checkbox" value="@i" /> @i
+
+            <br />
+        }
+        <button>Click</button>
+    </form>
 
 }
 else
@@ -97,6 +106,8 @@ else
     private Bruger bruger = new Bruger();
     private List<string> teams = new List<string>();
     private List<string> kompetencer = new List<string>();
+    public bool IsChecked { get; set; }
+
 
     // Kan slettes med LogedInBruger -> Virker ikke endnu
     protected override async Task OnInitializedAsync()

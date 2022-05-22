@@ -40,7 +40,15 @@ else if (LogedInBruger.ErLoggetPå())
                         <td>@bruger.Telefon</td>
                         <td>@bruger.Email</td>
                         <td>@bruger.Adresse</td>
-                        <td>@bruger.Team</td>
+                        <td>
+                            <select class="form-control" id="Team" @bind="bruger.Team" required>
+                                <option selected>@bruger.Team</option>
+                                @foreach (var team in teams)
+                                {
+                                    <option>@team</option>
+                                }
+                            </select>
+                        </td>
                         <td><input type="button" class="btn btn-primary" value="Ændre" @onclick="() => GørKoordinator(bruger)"></td>
                     </tr>
                 }
@@ -85,15 +93,15 @@ else if (LogedInBruger.ErLoggetPå())
     private List<Bruger> FrivilligListe;
     private List<Bruger> KoordinatorListe;
     private List<Bruger> BrugerListeUnsorted;
+    private List<string> teams = new List<string>();
+
 
     protected override async Task OnInitializedAsync()
     {
         BrugerListeUnsorted = await Http.GetFromJsonAsync<List<Bruger>>("Bruger/all");
-
         FrivilligListe = BrugerListeUnsorted.FindAll(q => q.Rolle_Id == 2);
         KoordinatorListe = BrugerListeUnsorted.FindAll(q => q.Rolle_Id == 1);
-
-
+        teams = await Http.GetFromJsonAsync<List<string>>("Team/all");
     }
 
     protected async Task GørFrivillig(Bruger bruger)
