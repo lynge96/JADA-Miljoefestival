@@ -66,31 +66,23 @@ else if (LogedInBruger.ErLoggetPå())
 
         <div class="kompetenceContainer col-md-6">
             <p>Kompetencer</p>
-            <form method="get">
-                @foreach (var kompetence in kompetencer)
+            <form method="post">
+                @foreach (var nykompetence in kompetencer)
                 {
                     <div class="form-floating mb-3">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="valgteKomptencer" id="@kompetence">
-                            <label class="form-check-label" for="@kompetence">@kompetence</label>
+                            <input class="form-check-input" type="checkbox" name="valgteKomptencer" id="@nykompetence.Kompetence_Navn">
+                            <label class="form-check-label" for="@nykompetence.Kompetence_Navn">@nykompetence.Kompetence_Navn</label>
                         </div>
                     </div>
+                    <p>@nykompetence.IsChecked</p>
                 }
                 <div class="col-md-6">
-                    <inu class="btn btn-outline-primary" type="submit">Opdater kompetencer</inu>
+                    <button class="btn btn-outline-primary" type="submit">Opdater kompetencer</button>
                 </div>
             </form>
         </div>
     </div>
-    <form method="get">
-        @for (var i = 1; i <= 10; i++)
-        {
-            <input name="AreChecked" type="checkbox" value="@i" /> @i
-
-            <br />
-        }
-        <button>Click</button>
-    </form>
 
 }
 else
@@ -105,8 +97,9 @@ else
 @code {
     private Bruger bruger = new Bruger();
     private List<string> teams = new List<string>();
-    private List<string> kompetencer = new List<string>();
-    public bool IsChecked { get; set; }
+    private List<Kompetence> kompetencer = new List<Kompetence>();
+    private List<Kompetence> nykompetencer = new List<Kompetence>();
+
 
 
     // Kan slettes med LogedInBruger -> Virker ikke endnu
@@ -117,11 +110,21 @@ else
             var brugerListe = await Http.GetFromJsonAsync<IEnumerable<Bruger>>($"Bruger/findBrugerId?bruger_id={LogedInBruger.Bruger_Id}");
 
             bruger = brugerListe.First();
-
             teams = await Http.GetFromJsonAsync<List<string>>("Team/all");
-            kompetencer = await Http.GetFromJsonAsync<List<string>>("Kompetence/all");
+            kompetencer = await Http.GetFromJsonAsync<List<Kompetence>>("Kompetence/all");
 
+            nykompetencer = await HentKompetencer(kompetencer);
         }
+    }
+
+    protected async Task<List<Kompetence>> HentKompetencer(List<Kompetence> kompetenceListe)
+    {
+        foreach (var kompetence in kompetenceListe)
+        {
+            var kompetencer = await Http.GetFromJsonAsync<IEnumerable<Kompetence>>($"Kompetence/brugerkompetence?bruger_id={LogedInBruger.Bruger_Id}&kompetence_id={kompetence.Kompetence_Id}");
+        }
+
+        return kompetencer;
     }
 
     protected async Task OpdaterBruger(Bruger bruger)

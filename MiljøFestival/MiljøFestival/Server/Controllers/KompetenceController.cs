@@ -20,22 +20,43 @@ namespace MiljøFestival.Server.Controllers
 
         // Hent alle kompetencer
         [HttpGet("all")]
-        public async Task<IEnumerable<string>> HentAlle()
+        public async Task<IEnumerable<Kompetence>> HentAlle()
         {
-            var sql = "SELECT kompetence FROM kompetence;";
+            var sql = "SELECT kompetence_id, kompetence AS kompetence_navn FROM kompetence;";
 
             try
             {
                 using (var connection = new NpgsqlConnection(connString))
                 {
-                    var kompetenceListe = await connection.QueryAsync<string>(sql);
+                    var kompetenceListe = await connection.QueryAsync<Kompetence>(sql);
 
                     return kompetenceListe;
                 }
             }
             catch (System.Exception)
             {
-                return new List<string>();
+                return new List<Kompetence>();
+            }
+        }
+
+
+       [HttpGet("brugerkompetence")]
+        public async Task<IEnumerable<Kompetence>> HentKompetencer(int bruger_id, int kompetence_id)
+        {
+            var sql = $"SELECT * FROM hent_kompetencer({bruger_id}, {kompetence_id})";
+
+            try
+            {
+                using (var connection = new NpgsqlConnection(connString))
+                {
+                    var kompetenceListe = await connection.QueryAsync<Kompetence>(sql);
+
+                    return kompetenceListe;
+                }
+            }
+            catch (System.Exception)
+            {
+                return new List<Kompetence>();
             }
         }
 

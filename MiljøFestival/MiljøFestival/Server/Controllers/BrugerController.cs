@@ -44,7 +44,7 @@ namespace MiljøFestival.Server.Controllers
         [HttpPost("opret")]
         public async Task OpretBruger(Bruger bruger)
         {
-            var sql = $"CALL opret_bruger('{bruger.Fornavn}', '{bruger.Efternavn}', '{bruger.Telefon}', '{bruger.Email}', '{bruger.Adresse}', '{bruger.Rolle}', '{bruger.Team}', '{bruger.Kode}')";
+            var sql = $"CALL opret_bruger('{bruger.Fornavn}', '{bruger.Efternavn}', '{bruger.Telefon}', '{bruger.Email}', '{bruger.Adresse}', '{bruger.Rolle}', '{bruger.Team}', '{bruger.Kode}');";
 
             try
             {
