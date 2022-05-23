@@ -102,13 +102,11 @@
     private List<string> roller = new List<string>();
     private List<Kompetence> alleKompetencer = new List<Kompetence>();
 
-
-
-
     protected async Task OpretUser(Bruger bruger, List<Kompetence> kompetenceListe)
     {
         await Http.PostAsJsonAsync<Bruger>("Bruger/opret", bruger);
 
+        // Henter bruger_id'et for den nyoprettede bruger og kobler det op på kompetencelisten
         int bruger_id = (await Http.GetFromJsonAsync<List<int>>($"Bruger/findBrugerIdMail?email={bruger.Email}")).First();
 
         foreach (var kompetence in alleKompetencer)
@@ -118,6 +116,7 @@
 
         await Http.PostAsJsonAsync<List<Kompetence>>("Kompetence/opdater", alleKompetencer);
 
+        // Resetter opret-formularen
         nyBruger = new Bruger();
 
     }

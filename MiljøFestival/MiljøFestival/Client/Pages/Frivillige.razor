@@ -1,4 +1,4 @@
-﻿@page "/koordinatorfrivillige"
+﻿@page "/frivillige"
 @using MiljøFestival.Shared.Models
 @inject HttpClient Http
 @inject MiljøFestival.Shared.Models.Bruger LogedInBruger
@@ -8,10 +8,6 @@
 @if (BrugerListeUnsorted == null)
 {
     <p><em>Loading...</em></p>
-}
-else if (!LogedInBruger.ErKoordinator())
-{
-    <p><em>Du skal være koordinator for at se denne side</em></p>
 }
 else if (LogedInBruger.ErLoggetPå())
 {
@@ -26,41 +22,12 @@ else if (LogedInBruger.ErLoggetPå())
                     <th>Telefon</th>
                     <th>Email</th>
                     <th>Adresse</th>
+                    <th>Team</th>
                     <th>Koordinator?</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var bruger in FrivilligListe)
-                {
-                    <tr>
-                        <td>@bruger.Bruger_Id</td>
-                        <td>@bruger.Fornavn</td>
-                        <td>@bruger.Efternavn</td>
-                        <td>@bruger.Telefon</td>
-                        <td>@bruger.Email</td>
-                        <td>@bruger.Adresse</td>
-                        <td><input type="button" class="btn btn-primary" value="Ændre" @onclick="() => GørKoordinator(bruger)"></td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-    <h1>Koordinatorer</h1>
-    <div class="table-responsive rounded">
-        <table class="table table-striped">
-            <thead>
-                <tr class="table">
-                    <th>Bruger ID</th>
-                    <th>Fornavn</th>
-                    <th>Efternavn</th>
-                    <th>Telefon</th>
-                    <th>Email</th>
-                    <th>Adresse</th>
-                    <th>Frivillig?</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var bruger in KoordinatorListe)
                 {
                     <tr>
                         <td>@bruger.Bruger_Id</td>
@@ -78,6 +45,38 @@ else if (LogedInBruger.ErLoggetPå())
                                 }
                             </select>
                         </td>
+                        <td><input type="button" class="btn btn-primary" value="Ændre" @onclick="() => GørKoordinator(bruger)"></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <h1>Koordinatorer</h1>
+    <div class="table-responsive rounded">
+        <table class="table table-striped">
+            <thead>
+                <tr class="table">
+                    <th>Bruger ID</th>
+                    <th>Fornavn</th>
+                    <th>Efternavn</th>
+                    <th>Telefon</th>
+                    <th>Email</th>
+                    <th>Adresse</th>
+                    <th>Team</th>
+                    <th>Frivillig?</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var bruger in KoordinatorListe)
+                {
+                    <tr>
+                        <td>@bruger.Bruger_Id</td>
+                        <td>@bruger.Fornavn</td>
+                        <td>@bruger.Efternavn</td>
+                        <td>@bruger.Telefon</td>
+                        <td>@bruger.Email</td>
+                        <td>@bruger.Adresse</td>
+                        <td>@bruger.Team</td>
                         <td><input type="button" class="btn btn-danger" value="Ændre" @onclick="() => GørFrivillig(bruger)"></td>
                     </tr>
                 }

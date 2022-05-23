@@ -149,26 +149,6 @@ namespace MiljøFestival.Server.Controllers
         }
 
 
-        // Opdaterer brugerens rolle (koordinator / frivillig)
-        [HttpPost("opdaterrolle")]
-        public async Task GørKoordinator(Bruger bruger)
-        {
-            var sql = $"UPDATE bruger SET rolle_id = {bruger.Rolle_Id} WHERE bruger_id = {bruger.Bruger_Id}";
-
-            try
-            {
-                using (var connection = new NpgsqlConnection(connString))
-                {
-                    await connection.ExecuteAsync(sql);
-                }
-            }
-            catch (System.Exception)
-            {
-                throw;
-            }
-        }
-
-
         // Find bruger_id med email
         [HttpGet("findBrugerIdMail")]
         public async Task<IEnumerable<int>> HentBrugerIdMail(string email)

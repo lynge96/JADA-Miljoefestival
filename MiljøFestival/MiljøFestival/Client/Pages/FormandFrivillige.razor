@@ -1,0 +1,157 @@
+﻿@page "/formandfrivillige"
+@using MiljøFestival.Shared.Models
+@inject HttpClient Http
+@inject MiljøFestival.Shared.Models.Bruger LogedInBruger
+
+<h1>Overblik over alle brugere</h1>
+
+@if (BrugerListeUnsorted == null)
+{
+    <p><em>Loading...</em></p>
+}
+else if (!LogedInBruger.ErFormand())
+{
+    <p><em>Du skal være koordinator for at se denne side</em></p>
+}
+else if (LogedInBruger.ErLoggetPå())
+{
+    <h1>Frivillige</h1>
+    <div class="table-responsive rounded">
+        <table class="table table-striped">
+            <thead>
+                <tr class="table">
+                    <th>Fornavn</th>
+                    <th>Efternavn</th>
+                    <th>Telefon</th>
+                    <th>Email</th>
+                    <th>Adresse</th>
+                    <th>Team</th>
+                    <th>Koordinator?</th>
+                    <th>Opdater</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var bruger in FrivilligListe)
+                {
+                    <tr>
+                        <td>@bruger.Fornavn</td>
+                        <td>@bruger.Efternavn</td>
+                        <td>@bruger.Telefon</td>
+                        <td>@bruger.Email</td>
+                        <td>@bruger.Adresse</td>
+                        <td>
+                            <select class="form-control" id="Team" @bind="bruger.Team" required>
+                                <option selected>@bruger.Team</option>
+                                @foreach (var team in teams)
+                                {
+                                    <option>@team</option>
+                                }
+                            </select>
+                        </td>
+                        <td>
+                            <div class="form-check form-switch">
+                                @if (!bruger.ErKoordinator())
+                                {
+                                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @onchange="eventArgs => { CheckboxClicked(bruger, eventArgs.Value); }">
+                                }
+                                else
+                                {
+                                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @onchange="eventArgs => { CheckboxClicked(bruger, eventArgs.Value); }" checked>
+
+                                }
+                            </div>
+
+                        </td>
+                        <td>
+                            <button class="btn btn-primary" @onclick="()=>OpdaterBruger(bruger)">Opdater</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <h1>Koordinatorer</h1>
+    <div class="table-responsive rounded">
+        <table class="table table-striped">
+            <thead>
+                <tr class="table">
+                    <th>Fornavn</th>
+                    <th>Efternavn</th>
+                    <th>Telefon</th>
+                    <th>Email</th>
+                    <th>Adresse</th>
+                    <th>Koordinator?</th>
+                    <th>Opdater</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var bruger in KoordinatorListe)
+                {
+                    <tr>
+                        <td>@bruger.Fornavn</td>
+                        <td>@bruger.Efternavn</td>
+                        <td>@bruger.Telefon</td>
+                        <td>@bruger.Email</td>
+                        <td>@bruger.Adresse</td>
+                        <td>
+                            <div class="form-check form-switch">
+                                @if (bruger.ErKoordinator())
+                                {
+                                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @onchange="eventArgs => { CheckboxClicked(bruger, eventArgs.Value); }" checked>
+                                }
+                                else
+                                {
+                                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @onchange="eventArgs => { CheckboxClicked(bruger, eventArgs.Value); }">
+
+                                }
+                            </div>
+                        </td>
+                        <td>
+                            <button class="btn btn-primary" @onclick="()=>OpdaterBruger(bruger)">Opdater</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+@code {
+    private List<Bruger> FrivilligListe;
+    private List<Bruger> KoordinatorListe;
+    private List<Bruger> BrugerListeUnsorted;
+    private List<string> teams = new List<string>();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        BrugerListeUnsorted = await Http.GetFromJsonAsync<List<Bruger>>("Bruger/all");
+        FrivilligListe = BrugerListeUnsorted.FindAll(q => q.Rolle_Id == 2);
+        KoordinatorListe = BrugerListeUnsorted.FindAll(q => q.Rolle_Id == 1);
+        teams = await Http.GetFromJsonAsync<List<string>>("Team/all");
+    }
+
+    // Gemmer ændringer som koordinator
+    void CheckboxClicked(Bruger bruger, object checkedValue)
+    {
+        if ((bool)checkedValue)
+        {
+            bruger.Rolle_Id = 1;
+            bruger.Rolle = "Koordinator";
+        }
+        else
+        {
+            bruger.Rolle_Id = 2;
+            bruger.Rolle = "Frivillig";
+
+        }
+    }
+
+    protected async Task OpdaterBruger(Bruger bruger)
+    {
+        await Http.PostAsJsonAsync<Bruger>("Bruger/opdater", bruger);
+
+        await OnInitializedAsync();
+    }
+}

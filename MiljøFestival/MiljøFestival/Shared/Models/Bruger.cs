@@ -55,6 +55,19 @@ namespace MiljøFestival.Shared.Models
             }
         }
 
+
+        // Returnerer true / false om brugeren er formand (abstraktion?)
+        public bool ErFormand()
+        {
+            if (Rolle == "Formand")
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 
 

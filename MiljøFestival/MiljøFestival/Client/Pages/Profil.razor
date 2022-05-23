@@ -40,16 +40,19 @@ else if (LogedInBruger.ErLoggetPå())
                 <input type="email" class="form-control" id="floatingInput" @bind="bruger.Email">
                 <label for="floatingInput">Email adresse</label>
             </div>
-            <div class="form-floating mb-3">
-                <select class="form-control" id="Team" @bind="bruger.Team" required>
-                    <option selected>@bruger.Team</option>
-                    @foreach (var team in teams)
-                    {
-                        <option>@team</option>
-                    }
-                </select>
-                <label for="Team">Team</label>
-            </div>
+            @if (!LogedInBruger.ErKoordinator() && !LogedInBruger.ErFormand())
+            {
+                <div class="form-floating mb-3">
+                    <select class="form-control" id="Team" @bind="bruger.Team" required>
+                        <option selected>@bruger.Team</option>
+                        @foreach (var team in teams)
+                        {
+                            <option>@team</option>
+                        }
+                    </select>
+                    <label for="Team">Team</label>
+                </div>
+            }
             <div class="col-6 my-3">
                 <button class="btn btn-primary" type="button" @onclick="() => OpdaterBruger(bruger)">Gem ændringer</button>
             </div>
