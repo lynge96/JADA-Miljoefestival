@@ -56,7 +56,7 @@
                 {
                     <option>@rolle</option>
                 }
-            </select>            
+            </select>
             <label for="validationRolle">Rolle</label>
             <div class="valid-tooltip">Godt valg!.</div>
             <div class="invalid-tooltip">Vælg en team</div>
@@ -75,9 +75,23 @@
             <div class="invalid-tooltip">Vælg et team</div>
         </div>
 
-        <div class="mx-auto">
-            <button class="btn btn-primary" type="button" @onclick="() => OpretUser(nyBruger)">Opret Bruger</button>
+        <div class="kompetenceContainer col-md-6">
+            <p>Kompetencer</p>
+            @foreach (var kompetence in alleKompetencer)
+            {
+                <div class="form-floating mb-3">
+                    <div class="form-check">
+                        <input type="checkbox" @onchange="eventArgs => { CheckboxClicked(kompetence, eventArgs.Value); }" />
+                        @kompetence.Kompetence_Navn
+                    </div>
+                </div>
+            }
         </div>
+
+        <div class="mx-auto">
+            <button class="btn btn-primary" type="button" @onclick="() => OpretUser(nyBruger, alleKompetencer)">Opret Bruger</button>
+        </div>
+
 
     </form>
 </main>
@@ -86,13 +100,23 @@
     private Bruger nyBruger = new Bruger();
     private List<string> teams = new List<string>();
     private List<string> roller = new List<string>();
+    private List<Kompetence> alleKompetencer = new List<Kompetence>();
 
 
 
 
-    protected async Task OpretUser(Bruger bruger)
+    protected async Task OpretUser(Bruger bruger, List<Kompetence> kompetenceListe)
     {
         await Http.PostAsJsonAsync<Bruger>("Bruger/opret", bruger);
+
+        int bruger_id = (await Http.GetFromJsonAsync<List<int>>($"Bruger/findBrugerIdMail?email={bruger.Email}")).First();
+
+        foreach (var kompetence in alleKompetencer)
+        {
+            kompetence.Bruger_Id = bruger_id;
+        }
+
+        await Http.PostAsJsonAsync<List<Kompetence>>("Kompetence/opdater", alleKompetencer);
 
         nyBruger = new Bruger();
 
@@ -102,8 +126,23 @@
     {
         teams = await Http.GetFromJsonAsync<List<string>>("team/all");
         roller = await Http.GetFromJsonAsync<List<string>>("rolle/all");
+        alleKompetencer = await Http.GetFromJsonAsync<List<Kompetence>>("Kompetence/all");
 
 
+    }
+
+
+    // Gemmer ændringer i kompetencevalg
+    void CheckboxClicked(Kompetence kompetence, object checkedValue)
+    {
+        if ((bool)checkedValue)
+        {
+            kompetence.IsChecked = true;
+        }
+        else
+        {
+            kompetence.IsChecked = false;
+        }
     }
 
 }

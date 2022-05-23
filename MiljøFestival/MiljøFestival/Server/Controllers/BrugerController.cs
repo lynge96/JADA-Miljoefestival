@@ -168,5 +168,27 @@ namespace MiljøFestival.Server.Controllers
             }
         }
 
+
+        // Find bruger_id med email
+        [HttpGet("findBrugerIdMail")]
+        public async Task<IEnumerable<int>> HentBrugerIdMail(string email)
+        {
+            var sql = $"SELECT bruger_id FROM bruger WHERE email = '{email}'";
+
+            try
+            {
+                using (var connection = new NpgsqlConnection(connString))
+                {
+                    var bruger_id = await connection.QueryAsync<int>(sql);
+
+                    return bruger_id;
+                }
+            }
+            catch (System.Exception)
+            {
+                return new List<int>();
+            }
+
+        }
     }
 }

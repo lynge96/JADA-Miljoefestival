@@ -66,21 +66,26 @@ else if (LogedInBruger.ErLoggetPå())
 
         <div class="kompetenceContainer col-md-6">
             <p>Kompetencer</p>
-            <form method="post">
-                @foreach (var nykompetence in kompetencer)
-                {
-                    <div class="form-floating mb-3">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="valgteKomptencer" id="@nykompetence.Kompetence_Navn">
-                            <label class="form-check-label" for="@nykompetence.Kompetence_Navn">@nykompetence.Kompetence_Navn</label>
-                        </div>
+            @foreach (var kompetence in valgteKompetencer)
+            {
+                <div class="form-floating mb-3">
+                    <div class="form-check">
+                        @if (kompetence.IsChecked == true)
+                        {
+                            <input type="checkbox" @onchange="eventArgs => { CheckboxClicked(kompetence, eventArgs.Value); }" checked />
+                            @kompetence.Kompetence_Navn
+                        }
+                        else
+                        {
+                            <input type="checkbox" @onchange="eventArgs => { CheckboxClicked(kompetence, eventArgs.Value); }" />
+                            @kompetence.Kompetence_Navn
+                        }
                     </div>
-                    <p>@nykompetence.IsChecked</p>
-                }
-                <div class="col-md-6">
-                    <button class="btn btn-outline-primary" type="submit">Opdater kompetencer</button>
                 </div>
-            </form>
+            }
+            <div class="col-md-6">
+                <button class="btn btn-outline-primary" @onclick="() => OpdaterKompetencer(valgteKompetencer)">Opdater kompetencer</button>
+            </div>
         </div>
     </div>
 
@@ -97,12 +102,9 @@ else
 @code {
     private Bruger bruger = new Bruger();
     private List<string> teams = new List<string>();
-    private List<Kompetence> kompetencer = new List<Kompetence>();
-    private List<Kompetence> nykompetencer = new List<Kompetence>();
+    private List<Kompetence> alleKompetencer = new List<Kompetence>();
+    public List<Kompetence> valgteKompetencer = new List<Kompetence>();
 
-
-
-    // Kan slettes med LogedInBruger -> Virker ikke endnu
     protected override async Task OnInitializedAsync()
     {
         if (LogedInBruger.Bruger_Id != 0)
@@ -111,21 +113,48 @@ else
 
             bruger = brugerListe.First();
             teams = await Http.GetFromJsonAsync<List<string>>("Team/all");
-            kompetencer = await Http.GetFromJsonAsync<List<Kompetence>>("Kompetence/all");
-
-            nykompetencer = await HentKompetencer(kompetencer);
+            alleKompetencer = await Http.GetFromJsonAsync<List<Kompetence>>("Kompetence/all");
+            valgteKompetencer = await HentKompetencer(alleKompetencer);
         }
     }
 
+    // Henter en liste over alle de komptencer, som man har valgt ved oprettelse
     protected async Task<List<Kompetence>> HentKompetencer(List<Kompetence> kompetenceListe)
     {
+        List<Kompetence> valgteKompetencer = new List<Kompetence>();
+
         foreach (var kompetence in kompetenceListe)
         {
             var kompetencer = await Http.GetFromJsonAsync<IEnumerable<Kompetence>>($"Kompetence/brugerkompetence?bruger_id={LogedInBruger.Bruger_Id}&kompetence_id={kompetence.Kompetence_Id}");
+
+            valgteKompetencer.Add(kompetencer.First());
         }
 
-        return kompetencer;
+        return valgteKompetencer;
     }
+
+
+    // Gemmer ændringer i kompetencevalg
+    void CheckboxClicked(Kompetence kompetence, object checkedValue)
+    {
+        if ((bool)checkedValue)
+        {
+            kompetence.IsChecked = true;
+        }
+        else
+        {
+            kompetence.IsChecked = false;
+        }
+    }
+
+
+    // Opdaterer valget af kompetencer
+    protected async Task OpdaterKompetencer(List<Kompetence> kompetenceListe)
+    {
+        // Sender listen af nuværende valgte kompetencer til controlleren
+        await Http.PostAsJsonAsync<List<Kompetence>>("Kompetence/opdater", kompetenceListe);
+    }
+
 
     protected async Task OpdaterBruger(Bruger bruger)
     {
