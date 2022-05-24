@@ -162,17 +162,6 @@ else if (LogedInBruger.ErLoggetPå())
         formandListe = brugerListeUnsorted.FindAll(q => q.Rolle_Id == 3);
         teams = await Http.GetFromJsonAsync<List<string>>("Team/all");
         alleKompetencer = await Http.GetFromJsonAsync<List<Kompetence>>("Kompetence/all");
-
-        foreach (var bruger in brugerListeUnsorted)
-        {
-            foreach (var kompetence in alleKompetencer)
-            {
-                var kompetencer = await Http.GetFromJsonAsync<IEnumerable<Kompetence>>($"Kompetence/brugerkompetence?bruger_id={bruger.Bruger_Id}&kompetence_id={kompetence.Kompetence_Id}");
-
-                bruger.Kompetencer.Add(kompetencer.First());
-            }
-        }
-
     }
 
     // Gemmer ændringer som koordinator
@@ -205,23 +194,7 @@ else if (LogedInBruger.ErLoggetPå())
         if ((bool)checkedValue)
         {
             kompetence.IsChecked = true;
-
-            List<Bruger> nyliste = new List<Bruger>();
-
-            foreach (var frivillig in frivilligListe)
-            {
-                Kompetence komp = frivillig.Kompetencer.Find(q => q.Kompetence_Id == kompetence.Kompetence_Id);
-
-                if(komp.IsChecked == true)
-                {
-                    nyliste.Add(frivillig);
-                }
-
-            }
-
-
-
-    }
+        }
         else
         {
             kompetence.IsChecked = false;
