@@ -8,28 +8,30 @@
 @if (!LogedInBruger.ErLoggetPå())
 {
     <main class="form-signin col-md-3 m-auto">
-        <form>
-            <h1 class="text-center">Log ind</h1>
-            <div class="form-floating">
-                <input type="email" class="form-control" id="floatingInput" placeholder="Email" @bind-value="bruger.Email" required>
-                <label for="floatingInput">Email adresse</label>
-            </div>
-            <div class="form-floating">
-                <input type="password" class="form-control" id="floatingPassword" placeholder="Password" @bind-value="bruger.Kode" required>
-                <label for="floatingPassword">Password</label>
-            </div>
-            <button class="w-100 btn btn-primary mt-3" type="button" @onclick="() => HandleSubmit()">Log ind</button>
-            <p class="mt-3 mb-3 h6"><a class="nav-link text-decoration-underline" href="OpretBruger">Opret bruger</a></p>
-            @if (feedback != string.Empty)
-            {
+        <div class="my-3 p-3 bg-body rounded shadow-sm">
+            <form>
+                <h1 class="text-center">Log ind</h1>
+                <div class="form-floating">
+                    <input type="email" class="form-control" id="floatingInput" placeholder="Email" @bind-value="bruger.Email" required>
+                    <label for="floatingInput">Email adresse</label>
+                </div>
+                <div class="form-floating">
+                    <input type="password" class="form-control" id="floatingPassword" placeholder="Password" @bind-value="bruger.Kode" required>
+                    <label for="floatingPassword">Password</label>
+                </div>
+                <button class="w-100 btn btn-primary mt-3" type="button" @onclick="() => HandleSubmit()">Log ind</button>
+                <p class="mt-3 mb-3 h6"><a class="nav-link text-decoration-underline" href="OpretBruger">Opret bruger</a></p>
+                @if (feedback != string.Empty)
+                {
 
-            <div class="alert alert-warning">
-                <span class="oi oi-key" aria-hidden="true"></span>
-                <strong>Hov!</strong> - @feedback
-            </div>
+                <div class="alert alert-warning">
+                    <span class="oi oi-key" aria-hidden="true"></span>
+                    <strong>Hov!</strong> - @feedback
+                </div>
 
-            }
-        </form>
+                }
+            </form>
+        </div>
     </main>
 }
 else
