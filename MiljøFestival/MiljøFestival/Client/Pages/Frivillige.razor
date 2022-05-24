@@ -11,41 +11,42 @@
 }
 else if (LogedInBruger.ErLoggetPå())
 {
+    <h1>Formand</h1>
+    <div class="table-responsive rounded">
+        <table class="table table-striped">
+            <thead>
+                <tr class="table">
+                    <th>Navn</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var bruger in FormandListe)
+                {
+                    <tr>
+                        <td>@bruger.Fornavn @bruger.Efternavn</td>
+                        <td>@bruger.Email</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
     <h1>Frivillige</h1>
     <div class="table-responsive rounded">
         <table class="table table-striped">
             <thead>
                 <tr class="table">
-                    <th>Bruger ID</th>
-                    <th>Fornavn</th>
-                    <th>Efternavn</th>
-                    <th>Telefon</th>
-                    <th>Email</th>
-                    <th>Adresse</th>
+                    <th>Navn</th>
                     <th>Team</th>
-                    <th>Koordinator?</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var bruger in FrivilligListe)
                 {
                     <tr>
-                        <td>@bruger.Bruger_Id</td>
-                        <td>@bruger.Fornavn</td>
-                        <td>@bruger.Efternavn</td>
-                        <td>@bruger.Telefon</td>
-                        <td>@bruger.Email</td>
-                        <td>@bruger.Adresse</td>
-                        <td>
-                            <select class="form-control" id="Team" @bind="bruger.Team" required>
-                                <option selected>@bruger.Team</option>
-                                @foreach (var team in teams)
-                                {
-                                    <option>@team</option>
-                                }
-                            </select>
-                        </td>
-                        <td><input type="button" class="btn btn-primary" value="Ændre" @onclick="() => GørKoordinator(bruger)"></td>
+                        <td>@bruger.Fornavn @bruger.Efternavn</td>
+                        <td>@bruger.Team</td>
                     </tr>
                 }
             </tbody>
@@ -56,28 +57,18 @@ else if (LogedInBruger.ErLoggetPå())
         <table class="table table-striped">
             <thead>
                 <tr class="table">
-                    <th>Bruger ID</th>
-                    <th>Fornavn</th>
-                    <th>Efternavn</th>
+                    <th>Navn</th>
                     <th>Telefon</th>
                     <th>Email</th>
-                    <th>Adresse</th>
-                    <th>Team</th>
-                    <th>Frivillig?</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var bruger in KoordinatorListe)
                 {
                     <tr>
-                        <td>@bruger.Bruger_Id</td>
-                        <td>@bruger.Fornavn</td>
-                        <td>@bruger.Efternavn</td>
+                        <td>@bruger.Fornavn @bruger.Efternavn</td>
                         <td>@bruger.Telefon</td>
                         <td>@bruger.Email</td>
-                        <td>@bruger.Adresse</td>
-                        <td>@bruger.Team</td>
-                        <td><input type="button" class="btn btn-danger" value="Ændre" @onclick="() => GørFrivillig(bruger)"></td>
                     </tr>
                 }
             </tbody>
@@ -88,6 +79,7 @@ else if (LogedInBruger.ErLoggetPå())
 @code {
     private List<Bruger> FrivilligListe;
     private List<Bruger> KoordinatorListe;
+    private List<Bruger> FormandListe;
     private List<Bruger> BrugerListeUnsorted;
     private List<string> teams = new List<string>();
 
@@ -95,26 +87,10 @@ else if (LogedInBruger.ErLoggetPå())
     protected override async Task OnInitializedAsync()
     {
         BrugerListeUnsorted = await Http.GetFromJsonAsync<List<Bruger>>("Bruger/all");
-        FrivilligListe = BrugerListeUnsorted.FindAll(q => q.Rolle_Id == 2);
+        FrivilligListe = BrugerListeUnsorted.FindAll(q => q.Rolle_Id == 2).OrderBy(q => q.Team).ToList();
         KoordinatorListe = BrugerListeUnsorted.FindAll(q => q.Rolle_Id == 1);
+        FormandListe = BrugerListeUnsorted.FindAll(q => q.Rolle_Id == 3);
         teams = await Http.GetFromJsonAsync<List<string>>("Team/all");
     }
 
-    protected async Task GørFrivillig(Bruger bruger)
-    {
-        bruger.Rolle_Id = 2;
-
-        await Http.PostAsJsonAsync<Bruger>("Bruger/opdaterrolle", bruger);
-
-        await OnInitializedAsync();
-    }
-
-    protected async Task GørKoordinator(Bruger bruger)
-    {
-        bruger.Rolle_Id = 1;
-
-        await Http.PostAsJsonAsync<Bruger>("Bruger/opdaterrolle", bruger);
-
-        await OnInitializedAsync();
-    }
 }

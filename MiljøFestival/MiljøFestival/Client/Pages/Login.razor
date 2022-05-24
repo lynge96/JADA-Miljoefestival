@@ -46,6 +46,7 @@ else
     {
 
         IEnumerable<Bruger> verificerBruger = await TjekLogin(bruger);
+
         if (verificerBruger.Count() > 0)
         {
             var testBruger = verificerBruger.First();

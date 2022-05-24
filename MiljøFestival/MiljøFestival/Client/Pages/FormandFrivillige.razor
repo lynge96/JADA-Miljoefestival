@@ -5,7 +5,7 @@
 
 <h1>Overblik over alle brugere</h1>
 
-@if (BrugerListeUnsorted == null)
+@if (brugerListeUnsorted == null)
 {
     <p><em>Loading...</em></p>
 }
@@ -15,14 +15,34 @@ else if (!LogedInBruger.ErFormand())
 }
 else if (LogedInBruger.ErLoggetPå())
 {
+    <h1>Formand</h1>
+    <div class="table-responsive rounded">
+        <table class="table table-striped">
+            <thead>
+                <tr class="table">
+                    <th>Navn</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var bruger in formandListe)
+                {
+                    <tr>
+                        <td>@bruger.Fornavn @bruger.Efternavn</td>
+                        <td>@bruger.Email</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
     <h1>Frivillige</h1>
     <div class="table-responsive rounded">
         <table class="table table-striped">
             <thead>
                 <tr class="table">
                     <th>ID</th>
-                    <th>Fornavn</th>
-                    <th>Efternavn</th>
+                    <th>Navn</th>
                     <th>Telefon</th>
                     <th>Email</th>
                     <th>Adresse</th>
@@ -32,12 +52,11 @@ else if (LogedInBruger.ErLoggetPå())
                 </tr>
             </thead>
             <tbody>
-                @foreach (var bruger in FrivilligListe)
+                @foreach (var bruger in frivilligListe)
                 {
                     <tr>
                         <td>@bruger.Bruger_Id</td>
-                        <td>@bruger.Fornavn</td>
-                        <td>@bruger.Efternavn</td>
+                        <td>@bruger.Fornavn @bruger.Efternavn</td>
                         <td>@bruger.Telefon</td>
                         <td>@bruger.Email</td>
                         <td>@bruger.Adresse</td>
@@ -78,8 +97,7 @@ else if (LogedInBruger.ErLoggetPå())
             <thead>
                 <tr class="table">
                     <th>ID</th>
-                    <th>Fornavn</th>
-                    <th>Efternavn</th>
+                    <th>Navn</th>
                     <th>Telefon</th>
                     <th>Email</th>
                     <th>Adresse</th>
@@ -89,12 +107,11 @@ else if (LogedInBruger.ErLoggetPå())
                 </tr>
             </thead>
             <tbody>
-                @foreach (var bruger in KoordinatorListe)
+                @foreach (var bruger in koordinatorListe)
                 {
                     <tr>
                         <td>@bruger.Bruger_Id</td>
-                        <td>@bruger.Fornavn</td>
-                        <td>@bruger.Efternavn</td>
+                        <td>@bruger.Fornavn @bruger.Efternavn</td>
                         <td>@bruger.Telefon</td>
                         <td>@bruger.Email</td>
                         <td>@bruger.Adresse</td>
@@ -122,17 +139,19 @@ else if (LogedInBruger.ErLoggetPå())
 }
 
 @code {
-    private List<Bruger> FrivilligListe;
-    private List<Bruger> KoordinatorListe;
-    private List<Bruger> BrugerListeUnsorted;
+    private List<Bruger> frivilligListe;
+    private List<Bruger> koordinatorListe;
+    private List<Bruger> formandListe;
+    private List<Bruger> brugerListeUnsorted;
     private List<string> teams = new List<string>();
 
 
     protected override async Task OnInitializedAsync()
     {
-        BrugerListeUnsorted = await Http.GetFromJsonAsync<List<Bruger>>("Bruger/all");
-        FrivilligListe = BrugerListeUnsorted.FindAll(q => q.Rolle_Id == 2);
-        KoordinatorListe = BrugerListeUnsorted.FindAll(q => q.Rolle_Id == 1);
+        brugerListeUnsorted = await Http.GetFromJsonAsync<List<Bruger>>("Bruger/all");
+        frivilligListe = brugerListeUnsorted.FindAll(q => q.Rolle_Id == 2).OrderBy(q => q.Team).ToList();
+        koordinatorListe = brugerListeUnsorted.FindAll(q => q.Rolle_Id == 1);
+        formandListe = brugerListeUnsorted.FindAll(q => q.Rolle_Id == 3);
         teams = await Http.GetFromJsonAsync<List<string>>("Team/all");
     }
 

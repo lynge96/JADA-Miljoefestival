@@ -15,6 +15,27 @@ else if (!LogedInBruger.ErKoordinator())
 }
 else if (LogedInBruger.ErLoggetPå())
 {
+    <h1>Formand</h1>
+    <div class="table-responsive rounded">
+        <table class="table table-striped">
+            <thead>
+                <tr class="table">
+                    <th>Navn</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var bruger in FormandListe)
+                {
+                    <tr>
+                        <td>@bruger.Fornavn @bruger.Efternavn</td>
+                        <td>@bruger.Email</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
     <h1>Frivillige</h1>
     <div class="table-responsive rounded">
         <table class="table table-striped">
@@ -26,41 +47,12 @@ else if (LogedInBruger.ErLoggetPå())
                     <th>Telefon</th>
                     <th>Email</th>
                     <th>Adresse</th>
-                    <th>Koordinator?</th>
+                    <th>Team</th>
+                    <th>Opdater</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var bruger in FrivilligListe)
-                {
-                    <tr>
-                        <td>@bruger.Bruger_Id</td>
-                        <td>@bruger.Fornavn</td>
-                        <td>@bruger.Efternavn</td>
-                        <td>@bruger.Telefon</td>
-                        <td>@bruger.Email</td>
-                        <td>@bruger.Adresse</td>
-                        <td><input type="button" class="btn btn-primary" value="Ændre" @onclick="() => GørKoordinator(bruger)"></td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-    <h1>Koordinatorer</h1>
-    <div class="table-responsive rounded">
-        <table class="table table-striped">
-            <thead>
-                <tr class="table">
-                    <th>Bruger ID</th>
-                    <th>Fornavn</th>
-                    <th>Efternavn</th>
-                    <th>Telefon</th>
-                    <th>Email</th>
-                    <th>Adresse</th>
-                    <th>Frivillig?</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var bruger in KoordinatorListe)
                 {
                     <tr>
                         <td>@bruger.Bruger_Id</td>
@@ -78,7 +70,37 @@ else if (LogedInBruger.ErLoggetPå())
                                 }
                             </select>
                         </td>
-                        <td><input type="button" class="btn btn-danger" value="Ændre" @onclick="() => GørFrivillig(bruger)"></td>
+                        <td>
+                            <button class="btn btn-primary" @onclick="()=>OpdaterBruger(bruger)">Opdater</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <h1>Koordinatorer</h1>
+    <div class="table-responsive rounded">
+        <table class="table table-striped">
+            <thead>
+                <tr class="table">
+                    <th>Bruger ID</th>
+                    <th>Fornavn</th>
+                    <th>Efternavn</th>
+                    <th>Telefon</th>
+                    <th>Email</th>
+                    <th>Adresse</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var bruger in KoordinatorListe)
+                {
+                    <tr>
+                        <td>@bruger.Bruger_Id</td>
+                        <td>@bruger.Fornavn</td>
+                        <td>@bruger.Efternavn</td>
+                        <td>@bruger.Telefon</td>
+                        <td>@bruger.Email</td>
+                        <td>@bruger.Adresse</td>
                     </tr>
                 }
             </tbody>
@@ -90,32 +112,25 @@ else if (LogedInBruger.ErLoggetPå())
     private List<Bruger> FrivilligListe;
     private List<Bruger> KoordinatorListe;
     private List<Bruger> BrugerListeUnsorted;
+    private List<Bruger> FormandListe;
     private List<string> teams = new List<string>();
 
 
     protected override async Task OnInitializedAsync()
     {
         BrugerListeUnsorted = await Http.GetFromJsonAsync<List<Bruger>>("Bruger/all");
-        FrivilligListe = BrugerListeUnsorted.FindAll(q => q.Rolle_Id == 2);
+        FrivilligListe = BrugerListeUnsorted.FindAll(q => q.Rolle_Id == 2).OrderBy(q => q.Team).ToList();
         KoordinatorListe = BrugerListeUnsorted.FindAll(q => q.Rolle_Id == 1);
+        FormandListe = BrugerListeUnsorted.FindAll(q => q.Rolle_Id == 3);
         teams = await Http.GetFromJsonAsync<List<string>>("Team/all");
     }
 
-    protected async Task GørFrivillig(Bruger bruger)
-    {
-        bruger.Rolle_Id = 2;
 
-        await Http.PostAsJsonAsync<Bruger>("Bruger/opdaterrolle", bruger);
+    protected async Task OpdaterBruger(Bruger bruger)
+    {
+        await Http.PostAsJsonAsync<Bruger>("Bruger/opdater", bruger);
 
         await OnInitializedAsync();
     }
-
-    protected async Task GørKoordinator(Bruger bruger)
-    {
-        bruger.Rolle_Id = 1;
-
-        await Http.PostAsJsonAsync<Bruger>("Bruger/opdaterrolle", bruger);
-
-        await OnInitializedAsync();
-    }
+}
 }

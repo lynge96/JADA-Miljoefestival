@@ -26,8 +26,6 @@ namespace MiljøFestival.Shared.Models
 
         public string Kode { get; set; }
 
-        public List<Kompetence> KompetenceListe { get; set; }
-
 
         // Returnerer true / false om brugeren er logget på (abstraktion?)
         public bool ErLoggetPå()

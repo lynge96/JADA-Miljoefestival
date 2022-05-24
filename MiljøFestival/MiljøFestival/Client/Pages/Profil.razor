@@ -40,19 +40,6 @@ else if (LogedInBruger.ErLoggetPå())
                 <input type="email" class="form-control" id="floatingInput" @bind="bruger.Email">
                 <label for="floatingInput">Email adresse</label>
             </div>
-            @if (!LogedInBruger.ErKoordinator() && !LogedInBruger.ErFormand())
-            {
-                <div class="form-floating mb-3">
-                    <select class="form-control" id="Team" @bind="bruger.Team" required>
-                        <option selected>@bruger.Team</option>
-                        @foreach (var team in teams)
-                        {
-                            <option>@team</option>
-                        }
-                    </select>
-                    <label for="Team">Team</label>
-                </div>
-            }
             <div class="col-6 my-3">
                 <button class="btn btn-primary" type="button" @onclick="() => OpdaterBruger(bruger)">Gem ændringer</button>
             </div>
@@ -121,7 +108,7 @@ else
         }
     }
 
-    // Henter en liste over alle de komptencer, som man har valgt ved oprettelse
+    // Henter en liste over alle de komptencer, som man har valgt ved oprettelse og samtidigt dem man ikke har
     protected async Task<List<Kompetence>> HentKompetencer(List<Kompetence> kompetenceListe)
     {
         List<Kompetence> valgteKompetencer = new List<Kompetence>();
