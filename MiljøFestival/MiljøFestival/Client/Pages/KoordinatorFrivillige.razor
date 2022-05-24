@@ -47,7 +47,6 @@ else if (LogedInBruger.ErLoggetPå())
                     <th>Email</th>
                     <th>Adresse</th>
                     <th>Team</th>
-                    <th>Opdater</th>
                 </tr>
             </thead>
             <tbody>
@@ -60,16 +59,14 @@ else if (LogedInBruger.ErLoggetPå())
                         <td>@bruger.Email</td>
                         <td>@bruger.Adresse</td>
                         <td>
-                            <select class="form-control" @bind="bruger.Team">
+                            <select class="form-control" @bind-value="bruger.Team" @onchange="() => OpdaterBruger(bruger)" @bind-value:event="oninput">
                                 @foreach (var team in teams)
                                 {
                                     <option value="@team" selected=@(bruger.Team == team)>@team</option>
                                 }
                             </select>
                         </td>
-                        <td>
-                            <button class="btn btn-primary" @onclick="()=>OpdaterBruger(bruger)">Opdater</button>
-                        </td>
+
                     </tr>
                 }
             </tbody>

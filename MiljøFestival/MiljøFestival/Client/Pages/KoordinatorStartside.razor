@@ -37,7 +37,7 @@ else if (LogedInBruger.ErLoggetPå())
                                         <th class="col-3">Opgave: @opgave.Navn</th>
                                         <th class="col-1">@FindAntalVagter(opgave.Opgave_Id, FindVagtOpgave(opgave, vagtListe))</th>
                                         <th class="col-2">
-                                            <select class="form-control" @bind="opgave.Status">
+                                            <select class="form-control" @bind-value="opgave.Status" @onchange="() => OpdaterStatus(opgave)" @bind-value:event="oninput">
                                                 @foreach (var status in status)
                                                 {
                                                     <option value=@status selected=@(opgave.Status == status)>@status</option>
@@ -46,11 +46,9 @@ else if (LogedInBruger.ErLoggetPå())
                                             </select>
                                         </th>
                                         <th>
-                                            <input type="button" class="btn btn-primary" value="Opdater" @onclick="() => OpdaterStatus(opgave)">
                                             <input type="button" class="btn btn-danger" value="Slet opgave" @onclick="() => SletOpgave(opgave)">
                                         </th>
                                         <th class="col-3">Ansvarlig team: @opgave.Team</th>
-
                                     </tr>
                                 </thead>
                             </table>

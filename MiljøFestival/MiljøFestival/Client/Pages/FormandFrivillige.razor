@@ -37,6 +37,20 @@ else if (LogedInBruger.ErLoggetPå())
     </div>
 
     <h1>Frivillige</h1>
+    <table>
+        <tbody>
+            <tr class="table">
+                <td>Sorter efter kompetencer:</td>
+                @foreach (var kompetence in alleKompetencer)
+                {
+                    <td>
+                        <input type="checkbox" @onchange="async eventArgs => { await CheckboxClicked(kompetence, eventArgs.Value); }" />
+                        @kompetence.Kompetence_Navn
+                    </td>
+                }
+            </tr>
+        </tbody>
+    </table>
     <div class="table-responsive rounded">
         <table class="table table-striped">
             <thead>
@@ -48,7 +62,6 @@ else if (LogedInBruger.ErLoggetPå())
                     <th>Adresse</th>
                     <th>Team</th>
                     <th>Koordinator?</th>
-                    <th>Opdater</th>
                 </tr>
             </thead>
             <tbody>
@@ -61,7 +74,7 @@ else if (LogedInBruger.ErLoggetPå())
                         <td>@bruger.Email</td>
                         <td>@bruger.Adresse</td>
                         <td>
-                            <select class="form-control" id="Team" @bind="bruger.Team" required>
+                            <select class="form-control" @bind-value="bruger.Team" @onchange="() => OpdaterBruger(bruger)" @bind-value:event="oninput">
                                 @foreach (var team in teams)
                                 {
                                     <option value="@team" selected=@(bruger.Team == team)>@team</option>
@@ -72,18 +85,15 @@ else if (LogedInBruger.ErLoggetPå())
                             <div class="form-check form-switch">
                                 @if (!bruger.ErKoordinator())
                                 {
-                                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @onchange="eventArgs => { CheckboxClicked(bruger, eventArgs.Value); }">
+                                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @onchange="async eventArgs => { await CheckboxClicked(bruger, eventArgs.Value); }">
                                 }
                                 else
                                 {
-                                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @onchange="eventArgs => { CheckboxClicked(bruger, eventArgs.Value); }" checked>
+                                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @onchange="async eventArgs => { await CheckboxClicked(bruger, eventArgs.Value); }" checked>
 
                                 }
                             </div>
 
-                        </td>
-                        <td>
-                            <button class="btn btn-primary" @onclick="()=>OpdaterBruger(bruger)">Opdater</button>
                         </td>
                     </tr>
                 }
@@ -101,7 +111,6 @@ else if (LogedInBruger.ErLoggetPå())
                     <th>Email</th>
                     <th>Adresse</th>
                     <th>Koordinator?</th>
-                    <th>Opdater</th>
 
                 </tr>
             </thead>
@@ -118,17 +127,14 @@ else if (LogedInBruger.ErLoggetPå())
                             <div class="form-check form-switch">
                                 @if (bruger.ErKoordinator())
                                 {
-                                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @onchange="eventArgs => { CheckboxClicked(bruger, eventArgs.Value); }" checked>
+                                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @onchange="async eventArgs => { await CheckboxClicked(bruger, eventArgs.Value); }" checked>
                                 }
                                 else
                                 {
-                                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @onchange="eventArgs => { CheckboxClicked(bruger, eventArgs.Value); }">
+                                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @onchange="async eventArgs => { await CheckboxClicked(bruger, eventArgs.Value); }">
 
                                 }
                             </div>
-                        </td>
-                        <td>
-                            <button class="btn btn-primary" @onclick="()=>OpdaterBruger(bruger)">Opdater</button>
                         </td>
                     </tr>
                 }
@@ -142,6 +148,9 @@ else if (LogedInBruger.ErLoggetPå())
     private List<Bruger> koordinatorListe;
     private List<Bruger> formandListe;
     private List<Bruger> brugerListeUnsorted;
+    private List<Kompetence> alleKompetencer = new List<Kompetence>();
+
+
     private List<string> teams = new List<string>();
 
 
@@ -149,24 +158,37 @@ else if (LogedInBruger.ErLoggetPå())
     {
         brugerListeUnsorted = await Http.GetFromJsonAsync<List<Bruger>>("Bruger/all");
         frivilligListe = brugerListeUnsorted.FindAll(q => q.Rolle_Id == 2).OrderBy(q => q.Team).ToList();
-        koordinatorListe = brugerListeUnsorted.FindAll(q => q.Rolle_Id == 1);
+        koordinatorListe = brugerListeUnsorted.FindAll(q => q.Rolle_Id == 1).OrderBy(q => q.Fornavn).ToList();
         formandListe = brugerListeUnsorted.FindAll(q => q.Rolle_Id == 3);
         teams = await Http.GetFromJsonAsync<List<string>>("Team/all");
+        alleKompetencer = await Http.GetFromJsonAsync<List<Kompetence>>("Kompetence/all");
+
+        foreach (var bruger in brugerListeUnsorted)
+        {
+            foreach (var kompetence in alleKompetencer)
+            {
+                var kompetencer = await Http.GetFromJsonAsync<IEnumerable<Kompetence>>($"Kompetence/brugerkompetence?bruger_id={bruger.Bruger_Id}&kompetence_id={kompetence.Kompetence_Id}");
+
+                bruger.Kompetencer.Add(kompetencer.First());
+            }
+        }
+
     }
 
     // Gemmer ændringer som koordinator
-    void CheckboxClicked(Bruger bruger, object checkedValue)
+    protected async Task CheckboxClicked(Bruger bruger, object checkedValue)
     {
         if ((bool)checkedValue)
         {
             bruger.Rolle_Id = 1;
             bruger.Rolle = "Koordinator";
+            await OpdaterBruger(bruger);
         }
         else
         {
             bruger.Rolle_Id = 2;
             bruger.Rolle = "Frivillig";
-
+            await OpdaterBruger(bruger);
         }
     }
 
@@ -176,4 +198,35 @@ else if (LogedInBruger.ErLoggetPå())
 
         await OnInitializedAsync();
     }
+
+    // Gemmer ændringer i kompetencevalg
+    protected async Task CheckboxClicked(Kompetence kompetence, object checkedValue)
+    {
+        if ((bool)checkedValue)
+        {
+            kompetence.IsChecked = true;
+
+            List<Bruger> nyliste = new List<Bruger>();
+
+            foreach (var frivillig in frivilligListe)
+            {
+                Kompetence komp = frivillig.Kompetencer.Find(q => q.Kompetence_Id == kompetence.Kompetence_Id);
+
+                if(komp.IsChecked == true)
+                {
+                    nyliste.Add(frivillig);
+                }
+
+            }
+
+
+
+    }
+        else
+        {
+            kompetence.IsChecked = false;
+        }
+    }
+
+
 }
