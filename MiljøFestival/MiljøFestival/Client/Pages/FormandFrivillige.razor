@@ -62,10 +62,9 @@ else if (LogedInBruger.ErLoggetPå())
                         <td>@bruger.Adresse</td>
                         <td>
                             <select class="form-control" id="Team" @bind="bruger.Team" required>
-                                <option selected>@bruger.Team</option>
                                 @foreach (var team in teams)
                                 {
-                                    <option>@team</option>
+                                    <option value="@team" selected=@(bruger.Team == team)>@team</option>
                                 }
                             </select>
                         </td>
@@ -173,7 +172,7 @@ else if (LogedInBruger.ErLoggetPå())
 
     protected async Task OpdaterBruger(Bruger bruger)
     {
-        await Http.PostAsJsonAsync<Bruger>("Bruger/opdater", bruger);
+        await Http.PostAsJsonAsync<Bruger>("Bruger/opdaterFrivillig", bruger);
 
         await OnInitializedAsync();
     }

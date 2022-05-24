@@ -38,10 +38,9 @@ else if (LogedInBruger.ErLoggetPå())
                                         <th class="col-1">@FindAntalVagter(opgave.Opgave_Id, FindVagtOpgave(opgave, vagtListe))</th>
                                         <th class="col-2">
                                             <select class="form-control" @bind="opgave.Status">
-                                                <option selected>@opgave.Status</option>
                                                 @foreach (var status in status)
                                                 {
-                                                    <option>@status</option>
+                                                    <option value=@status selected=@(opgave.Status == status)>@status</option>
 
                                                 }
                                             </select>

@@ -124,9 +124,26 @@ namespace MiljøFestival.Server.Controllers
             {
                 throw;
             }
+        }
 
 
+        // Opdaterer oplysninger for frivillige fra koordinator/formandens-frivilligeside
+        [HttpPost("opdaterFrivillig")]
+        public async Task OpdaterFrivillig(Bruger bruger)
+        {
+            var sql = $"CALL opdater_frivillig({bruger.Bruger_Id}, '{bruger.Rolle}', '{bruger.Team}')";
 
+            try
+            {
+                using (var connection = new NpgsqlConnection(connString))
+                {
+                    await connection.ExecuteAsync(sql);
+                }
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }
         }
 
         // Opdaterer brugerens password.

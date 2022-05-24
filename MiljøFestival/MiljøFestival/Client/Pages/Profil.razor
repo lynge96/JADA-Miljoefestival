@@ -102,6 +102,7 @@ else
             var brugerListe = await Http.GetFromJsonAsync<IEnumerable<Bruger>>($"Bruger/findBrugerId?bruger_id={LogedInBruger.Bruger_Id}");
 
             bruger = brugerListe.First();
+
             teams = await Http.GetFromJsonAsync<List<string>>("Team/all");
             alleKompetencer = await Http.GetFromJsonAsync<List<Kompetence>>("Kompetence/all");
             valgteKompetencer = await HentKompetencer(alleKompetencer);
