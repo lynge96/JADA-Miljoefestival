@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace MiljøFestival.Shared.Models
 {
+
     public class Bruger
     {
         public int Bruger_Id { get; set; }
