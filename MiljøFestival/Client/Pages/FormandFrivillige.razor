@@ -37,20 +37,6 @@ else if (LogedInBruger.ErLoggetPå())
     </div>
 
     <h1>Frivillige</h1>
-    <table>
-        <tbody>
-            <tr class="table">
-                <td>Sorter efter kompetencer:</td>
-                @foreach (var kompetence in alleKompetencer)
-                {
-                    <td>
-                        <input type="checkbox" @onchange="async eventArgs => { await CheckboxClicked(kompetence, eventArgs.Value); }" />
-                        @kompetence.Kompetence_Navn
-                    </td>
-                }
-            </tr>
-        </tbody>
-    </table>
     <div class="table-responsive rounded">
         <table class="table table-striped">
             <thead>
@@ -186,19 +172,6 @@ else if (LogedInBruger.ErLoggetPå())
         await Http.PostAsJsonAsync<Bruger>("Bruger/opdaterFrivillig", bruger);
 
         await OnInitializedAsync();
-    }
-
-    // Gemmer ændringer i kompetencevalg
-    protected async Task CheckboxClicked(Kompetence kompetence, object checkedValue)
-    {
-        if ((bool)checkedValue)
-        {
-            kompetence.IsChecked = true;
-        }
-        else
-        {
-            kompetence.IsChecked = false;
-        }
     }
 
 
