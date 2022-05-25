@@ -53,11 +53,13 @@ else if (LogedInBruger.ErLoggetPå())
                     {
                         <input type="checkbox" class="form-check-input" id="defaultCheck" @onchange="eventArgs => { CheckboxClicked(kompetence, eventArgs.Value); }" checked />
                         <label class="form-check-label" for="defaultcheck">@kompetence.Kompetence_Navn</label>
+                        <br />
                     }
                     else
                     {
                         <input type="checkbox" class="form-check-input" @onchange="eventArgs => { CheckboxClicked(kompetence, eventArgs.Value); }" />
-                        <label class="form-check-label" for="defaultcheck">@kompetence.Kompetence_Navn</label>
+                        <label class="form-check-label" for="defaultcheck">@kompetence.Kompetence_Navn</label
+                        <br />
                     }
                 </div>
             }
@@ -66,14 +68,23 @@ else if (LogedInBruger.ErLoggetPå())
             </div>
         </div>
 
-        <div class="passwordContainer col-md-6 my-4">
-            <h2 class="my-3">Ændre Password</h2>
-            <div class="form-floating mb-3">
-                <input type="password" class="form-control" id="floatingPassword" @bind="bruger.Kode">
-                <label for="floatingPassword">Password</label>
-            </div>
-            <div>
-                <button class="btn btn-outline-primary" type="button" @onclick="() => OpdaterPassword(bruger)">Opdater password</button>
+        <div class="row">
+            <div class="passwordContainer col-md-6 my-4">
+                <h2 class="my-3">Ændre Password</h2>
+                <div class="form-floating mb-3">
+                    <input type="password" class="form-control" id="floatingPassword" @bind="bruger.Kode">
+                    <label for="floatingPassword">Password</label>
+                </div>
+                <div>
+                    <button class="btn btn-outline-primary" type="button" @onclick="() => OpdaterPassword(bruger)">Opdater password</button>
+                </div>
+                @if (passwordÆndring == true)
+                {
+                    <div class="alert alert-success col-md-9 my-3">
+                        <span class="bi bi-shield-lock" aria-hidden="true"></span>
+                        <strong> Succes!</strong> Dit password er ændret!
+                    </div>
+                }
             </div>
         </div>
 
@@ -94,6 +105,7 @@ else
     private List<string> teams = new List<string>();
     private List<Kompetence> alleKompetencer = new List<Kompetence>();
     public List<Kompetence> valgteKompetencer = new List<Kompetence>();
+    private bool passwordÆndring = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -167,6 +179,8 @@ else
     private async Task OpdaterPassword(Bruger bruger)
     {
         await Http.PostAsJsonAsync<Bruger>("Bruger/opdaterPassword", bruger);
+
+        passwordÆndring = true;
 
         await OnInitializedAsync();
 
