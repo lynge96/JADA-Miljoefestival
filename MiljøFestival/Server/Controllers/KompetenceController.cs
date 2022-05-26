@@ -62,6 +62,28 @@ namespace MiljøFestival.Server.Controllers
         }
 
 
+        // Henter de kompetencer, som brugeren allerede har valgt til (kun med bruger_id)
+        [HttpGet("brugerIDkompetence")]
+        public async Task<IEnumerable<Kompetence>> HentKompetencer(int bruger_id)
+        {
+
+            var sql = $"SELECT * FROM hent_bruger_kompetence({bruger_id})";
+
+            try
+            {
+                using (var connection = new NpgsqlConnection(connString))
+                {
+                    var kompetenceListe = await connection.QueryAsync<Kompetence>(sql);
+
+                    return kompetenceListe;
+                }
+            }
+            catch (System.Exception)
+            {
+                return new List<Kompetence>();
+            }
+        }
+
         // Opdaterer kompetencer for en bruger
         [HttpPost("opdater")]
         public async Task OpretBruger(List<Kompetence> kompetenceListe)

@@ -134,18 +134,19 @@ else if (LogedInBruger.ErLoggetPå())
     private List<Bruger> koordinatorListe;
     private List<Bruger> formandListe;
     private List<Bruger> brugerListeUnsorted;
+    private List<Bruger> brugerListe;
     private List<Kompetence> alleKompetencer = new List<Kompetence>();
-
-
     private List<string> teams = new List<string>();
 
 
     protected override async Task OnInitializedAsync()
     {
         brugerListeUnsorted = await Http.GetFromJsonAsync<List<Bruger>>("Bruger/all");
-        frivilligListe = brugerListeUnsorted.FindAll(q => q.Rolle_Id == 2).OrderBy(q => q.Team).ToList();
-        koordinatorListe = brugerListeUnsorted.FindAll(q => q.Rolle_Id == 1).OrderBy(q => q.Fornavn).ToList();
-        formandListe = brugerListeUnsorted.FindAll(q => q.Rolle_Id == 3);
+        brugerListe = await HentKompetencer(brugerListeUnsorted);
+
+        frivilligListe = brugerListe.FindAll(q => q.Rolle_Id == 2).OrderBy(q => q.Team).ToList();
+        koordinatorListe = brugerListe.FindAll(q => q.Rolle_Id == 1).OrderBy(q => q.Fornavn).ToList();
+        formandListe = brugerListe.FindAll(q => q.Rolle_Id == 3);
         teams = await Http.GetFromJsonAsync<List<string>>("Team/all");
         alleKompetencer = await Http.GetFromJsonAsync<List<Kompetence>>("Kompetence/all");
     }
@@ -166,6 +167,18 @@ else if (LogedInBruger.ErLoggetPå())
             await OpdaterBruger(bruger);
         }
     }
+
+    // Indsætter kompetencer på alle brugere
+    protected async Task<List<Bruger>> HentKompetencer(List<Bruger> brugerListe)
+    {
+        foreach (var bruger in brugerListe)
+        {
+            bruger.Kompetences = await Http.GetFromJsonAsync<List<Kompetence>>($"Kompetence/brugerIDkompetence?bruger_id={bruger.Bruger_Id}");
+        }
+
+        return brugerListe;
+    }
+
 
     protected async Task OpdaterBruger(Bruger bruger)
     {
