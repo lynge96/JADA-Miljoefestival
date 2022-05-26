@@ -16,7 +16,12 @@ namespace MiljøFestival.Server.Controllers
     [Route("[controller]")]
     public class StatusController : ControllerBase
     {
-        private string connString = "User ID=systemadmin;Password=Festival987;Host=jadafestival-db.postgres.database.azure.com;Port=5432;Database=postgres;";
+        private string connString;
+
+        public StatusController(IConfiguration configuration)
+        {
+            connString = configuration.GetConnectionString("miljøDB");
+        }
 
         // Hent alle statusser
         [HttpGet("all")]

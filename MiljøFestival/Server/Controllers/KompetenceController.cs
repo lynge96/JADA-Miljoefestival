@@ -16,7 +16,12 @@ namespace MiljøFestival.Server.Controllers
     [Route("[controller]")]
     public class KompetenceController : ControllerBase
     {
-        private string connString = "User ID=systemadmin;Password=Festival987;Host=jadafestival-db.postgres.database.azure.com;Port=5432;Database=postgres;";
+        private string connString;
+
+        public KompetenceController(IConfiguration configuration)
+        {
+            connString = configuration.GetConnectionString("miljøDB");
+        }
 
         // Hent alle kompetencer
         [HttpGet("all")]

@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using MiljøFestival.Shared.Models;
 using Npgsql;
@@ -15,7 +16,12 @@ namespace MiljøFestival.Server.Controllers
     public class OpgaveController : ControllerBase
     {
 
-        private string connString = "User ID=systemadmin;Password=Festival987;Host=jadafestival-db.postgres.database.azure.com;Port=5432;Database=postgres;";
+        private string connString;
+
+        public OpgaveController(IConfiguration configuration)
+        {
+            connString = configuration.GetConnectionString("miljøDB");
+        }
 
 
         // Henter alle opgaver

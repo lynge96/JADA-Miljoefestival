@@ -37,6 +37,20 @@ else if (LogedInBruger.ErLoggetPå())
     </div>
 
     <h1>Frivillige</h1>
+        <table>
+            <thead>
+                <tr class="table">
+                    <td>Sorter efter:</td>
+                    @foreach (var kompetence in alleKompetencer)
+                    {
+                        <td>
+                            <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @onchange="eventArgs => { CheckboxKompetencer(kompetence, eventArgs.Value); }">
+                            @kompetence.Kompetence_Navn
+                        </td>
+                    }
+                </tr>
+            </thead>
+        </table>
     <div class="table-responsive rounded">
         <table class="table table-striped">
             <thead>
@@ -131,12 +145,15 @@ else if (LogedInBruger.ErLoggetPå())
 
 @code {
     private List<Bruger> frivilligListe;
+    private List<Bruger> frivilligListeSorteret;
+
     private List<Bruger> koordinatorListe;
     private List<Bruger> formandListe;
     private List<Bruger> brugerListeUnsorted;
     private List<Bruger> brugerListe;
     private List<Kompetence> alleKompetencer = new List<Kompetence>();
     private List<string> teams = new List<string>();
+    private List<string> valgteKompetencer = new List<string>();
 
 
     protected override async Task OnInitializedAsync()
@@ -145,6 +162,8 @@ else if (LogedInBruger.ErLoggetPå())
         brugerListe = await HentKompetencer(brugerListeUnsorted);
 
         frivilligListe = brugerListe.FindAll(q => q.Rolle_Id == 2).OrderBy(q => q.Team).ToList();
+        frivilligListeSorteret = frivilligListe;
+
         koordinatorListe = brugerListe.FindAll(q => q.Rolle_Id == 1).OrderBy(q => q.Fornavn).ToList();
         formandListe = brugerListe.FindAll(q => q.Rolle_Id == 3);
         teams = await Http.GetFromJsonAsync<List<string>>("Team/all");
@@ -168,12 +187,51 @@ else if (LogedInBruger.ErLoggetPå())
         }
     }
 
+    // Sorterer frivillige efter valgte kompetencer
+    protected void CheckboxKompetencer(Kompetence kompetence, object checkedValue)
+    {
+        if ((bool)checkedValue)
+        {
+            List<Bruger> nyFrivilligListe = new();
+            valgteKompetencer.Add(kompetence.Kompetence_Navn);
+
+            foreach(var bruger in frivilligListe)
+            {
+                foreach (var valgteKompetence in valgteKompetencer)
+                {
+                    if (bruger.Kompetencer.Exists(q => q.Kompetence_Navn == valgteKompetence))
+                    {
+                        nyFrivilligListe.Add(bruger);
+                    }
+                }
+            }
+
+            frivilligListe = nyFrivilligListe;
+        }
+        else
+        {
+            valgteKompetencer.Remove(kompetence.Kompetence_Navn);
+
+            foreach (var bruger in frivilligListeSorteret)
+            {
+                foreach (var valgteKompetence in valgteKompetencer)
+                    if (bruger.Kompetencer.Exists(q => q.Kompetence_Navn == valgteKompetence))
+                    {
+                        frivilligListe.Add(bruger);
+                    }
+            }
+
+
+        }
+    }
+
+
     // Indsætter kompetencer på alle brugere
     protected async Task<List<Bruger>> HentKompetencer(List<Bruger> brugerListe)
     {
         foreach (var bruger in brugerListe)
         {
-            bruger.Kompetences = await Http.GetFromJsonAsync<List<Kompetence>>($"Kompetence/brugerIDkompetence?bruger_id={bruger.Bruger_Id}");
+            bruger.Kompetencer = await Http.GetFromJsonAsync<List<Kompetence>>($"Kompetence/brugerIDkompetence?bruger_id={bruger.Bruger_Id}");
         }
 
         return brugerListe;
