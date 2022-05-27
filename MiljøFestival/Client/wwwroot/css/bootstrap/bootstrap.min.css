@@ -10115,11 +10115,11 @@ a.text-dark:focus, a.text-dark:hover {
     @page {
         size: a3
     }
-
+    
     body {
         min-width: 992px !important
     }
-
+    
     .container {
         min-width: 992px !important
     }

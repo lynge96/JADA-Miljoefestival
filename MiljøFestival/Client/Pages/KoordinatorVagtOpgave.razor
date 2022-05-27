@@ -27,7 +27,7 @@ else if (LogedInBruger.ErLoggetPå())
             </div>
             <div class="form-group">
                 <label for="exampleFormControlSelect1">Antal Vagter</label>
-                <select class="form-control" @bind="antalVagter">
+                <select class="form-select" @bind="antalVagter">
                     <option selected>1</option>
                     <option>2</option>
                     <option>3</option>
@@ -37,7 +37,7 @@ else if (LogedInBruger.ErLoggetPå())
             </div>
             <div class="form-group">
                 <label for="exampleFormControlSelect1">Opgave Type </label>
-                <select class="form-control" @bind="nyVagt.Opgave">
+                <select class="form-select" @bind="nyVagt.Opgave">
                     <option selected hidden>Vælg en opgave...</option>
                     @foreach (var item in opgaveListe)
                     {
@@ -46,7 +46,7 @@ else if (LogedInBruger.ErLoggetPå())
                 </select>
             </div>
             <div class="d-grid gap-2 col-6 mx-auto">
-                <button class="btn btn-primary" type="button" @onclick="() => OpretVagt(nyVagt)">Opret vagt<i class="bi bi-check-circle-fill"></i></button>
+                <button class="btn btn-primary" type="button" @onclick="() => OpretVagt(nyVagt)">Opret vagt</button>
             </div>
         </div>
         <div class="opretopgaveContainer col-md-6">
@@ -61,7 +61,7 @@ else if (LogedInBruger.ErLoggetPå())
             </div>
             <div class="form-group">
                 <label for="exampleFormControlSelect1">Start status:</label>
-                <select class="form-control" @bind="nyOpgave.Status">
+                <select class="form-select" @bind="nyOpgave.Status">
                     <option selected>Vælg en status...</option>
                     @foreach (var status in status)
                     {
@@ -71,7 +71,7 @@ else if (LogedInBruger.ErLoggetPå())
             </div>
             <div class="form-group">
                 <label for="exampleFormControlSelect1">Start status:</label>
-                <select class="form-control" @bind="nyOpgave.Team">
+                <select class="form-select" @bind="nyOpgave.Team">
                     <option selected>Vælg et team...</option>
                     @foreach (var team in teams)
                     {
@@ -80,7 +80,7 @@ else if (LogedInBruger.ErLoggetPå())
                 </select>
             </div>
             <div class="d-grid gap-2 col-6 mx-auto">
-                <button class="btn btn-primary" type="button" @onclick="() => OpretOpgave(nyOpgave)">Opret opgave<i class="bi bi-check-circle-fill"></i></button>
+                <button class="btn btn-primary" type="button" @onclick="() => OpretOpgave(nyOpgave)">Opret opgave</button>
             </div>
         </div>
     </div>
