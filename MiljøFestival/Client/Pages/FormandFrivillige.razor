@@ -65,7 +65,7 @@ else if (LogedInBruger.ErLoggetPå())
                 </tr>
             </thead>
             <tbody>
-                @foreach (var bruger in frivilligListeSorteret)
+                @foreach (var bruger in frivilligListe)
                 {
                     <tr>
                         <td>@bruger.Bruger_Id</td>
@@ -145,8 +145,6 @@ else if (LogedInBruger.ErLoggetPå())
 
 @code {
     private List<Bruger> frivilligListe;
-    private List<Bruger> frivilligListeSorteret;
-
     private List<Bruger> koordinatorListe;
     private List<Bruger> formandListe;
     private List<Bruger> brugerListeUnsorted;
@@ -162,7 +160,7 @@ else if (LogedInBruger.ErLoggetPå())
         brugerListe = await HentKompetencer(brugerListeUnsorted);
 
         frivilligListe = brugerListe.FindAll(q => q.Rolle_Id == 2).OrderBy(q => q.Team).ToList();
-        frivilligListeSorteret = frivilligListe;
+
 
         koordinatorListe = brugerListe.FindAll(q => q.Rolle_Id == 1).OrderBy(q => q.Fornavn).ToList();
         formandListe = brugerListe.FindAll(q => q.Rolle_Id == 3);
@@ -192,37 +190,23 @@ else if (LogedInBruger.ErLoggetPå())
     {
         if ((bool)checkedValue)
         {
-            if (valgteKompetencer.Count() == 0)
-            {
-                frivilligListeSorteret.Clear();
+            List<Bruger> nyListe = new List<Bruger>();
 
-                foreach (var bruger in frivilligListe)
+            valgteKompetencer.Add(kompetence.Kompetence_Navn);
+
+            frivilligListe = brugerListe.FindAll(q => q.Rolle_Id == 2).OrderBy(q => q.Team).ToList();
+
+            foreach (var valgteKompetence in valgteKompetencer.ToList())
+            {
+                foreach (var bruger in frivilligListe.ToList())
                 {
-                    foreach (var valgteKompetence in valgteKompetencer)
+                    if (bruger.Kompetencer.Exists(q => q.Kompetence_Navn == valgteKompetence))
                     {
-                        if (bruger.Kompetencer.Exists(q => q.Kompetence_Navn == valgteKompetence))
-                        {
-                            frivilligListeSorteret.Add(bruger);
-                        }
+                        nyListe.Add(bruger);
                     }
                 }
-            }
-            else
-            {
-                List<Bruger> nyListe = new List<Bruger>();
-
-                foreach (var bruger in frivilligListeSorteret)
-                {
-                    foreach (var valgteKompetence in valgteKompetencer)
-                    {
-                        if (bruger.Kompetencer.Exists(q => q.Kompetence_Navn == valgteKompetence))
-                        {
-                            nyListe.Add(bruger);
-                        }
-                    }
-                }
-
-                frivilligListeSorteret = nyListe;
+                frivilligListe = nyListe;
+                nyListe = new List<Bruger>();
             }
         }
         else
@@ -231,16 +215,20 @@ else if (LogedInBruger.ErLoggetPå())
 
             valgteKompetencer.Remove(kompetence.Kompetence_Navn);
 
-            foreach (var bruger in frivilligListe)
+            frivilligListe = brugerListe.FindAll(q => q.Rolle_Id == 2).OrderBy(q => q.Team).ToList();
+
+            foreach (var valgteKompetence in valgteKompetencer.ToList())
             {
-                foreach (var valgteKompetence in valgteKompetencer)
+                foreach (var bruger in frivilligListe.ToList())
+                {
                     if (bruger.Kompetencer.Exists(q => q.Kompetence_Navn == valgteKompetence))
                     {
                         nyFrivilligListe.Add(bruger);
                     }
+                }
+                frivilligListe = nyFrivilligListe;
+                nyFrivilligListe = new List<Bruger>();;
             }
-
-
         }
     }
 
@@ -261,10 +249,10 @@ else if (LogedInBruger.ErLoggetPå())
     {
         await Http.PostAsJsonAsync<Bruger>("Bruger/opdaterFrivillig", bruger);
 
-        frivilligListeSorteret = brugerListe.FindAll(q => q.Rolle_Id == 2).OrderBy(q => q.Team).ToList();
+        frivilligListe = brugerListe.FindAll(q => q.Rolle_Id == 2).OrderBy(q => q.Team).ToList();
         koordinatorListe = brugerListe.FindAll(q => q.Rolle_Id == 1).OrderBy(q => q.Fornavn).ToList();
 
     }
 
 
-}
+    }
