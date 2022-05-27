@@ -55,6 +55,10 @@ else
         {
             var testBruger = verificerBruger.First();
 
+            var kompetencer = await HentKompetencer(testBruger);
+
+            testBruger.Kompetencer = kompetencer.ToList();
+
             LogedInBruger.Bruger_Id = testBruger.Bruger_Id;
             LogedInBruger.Fornavn = testBruger.Fornavn;
             LogedInBruger.Efternavn = testBruger.Efternavn;
@@ -65,6 +69,7 @@ else
             LogedInBruger.Rolle = testBruger.Rolle;
             LogedInBruger.Team_Id = testBruger.Team_Id;
             LogedInBruger.Team = testBruger.Team;
+            LogedInBruger.Kompetencer = testBruger.Kompetencer;
 
             feedback = "Godkendt!";
 
@@ -78,6 +83,25 @@ else
             feedback = "Forkert login, prøv igen.";
         }
     }
+
+
+    protected async Task<IEnumerable<Kompetence>> HentKompetencer(Bruger bruger)
+    {
+        List<Kompetence> alleKompetencer = await Http.GetFromJsonAsync<List<Kompetence>>("Kompetence/all");
+
+        List<Kompetence> valgteKompetencer = new List<Kompetence>();
+
+        foreach (var kompetence in alleKompetencer)
+        {
+            var kompetencer = await Http.GetFromJsonAsync<IEnumerable<Kompetence>>($"Kompetence/brugerkompetence?bruger_id={bruger.Bruger_Id}&kompetence_id={kompetence.Kompetence_Id}");
+
+            valgteKompetencer.Add(kompetencer.First());
+        }
+
+        return valgteKompetencer;
+    }
+
+
 
     protected async Task<IEnumerable<Bruger>> TjekLogin(Bruger user)
     {

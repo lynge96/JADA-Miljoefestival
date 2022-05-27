@@ -37,20 +37,20 @@ else if (LogedInBruger.ErLoggetPå())
     </div>
 
     <h1>Frivillige</h1>
-        <table>
-            <thead>
-                <tr class="table">
-                    <td>Sorter efter:</td>
-                    @foreach (var kompetence in alleKompetencer)
-                    {
-                        <td>
-                            <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @onchange="eventArgs => { CheckboxKompetencer(kompetence, eventArgs.Value); }">
-                            @kompetence.Kompetence_Navn
-                        </td>
-                    }
-                </tr>
-            </thead>
-        </table>
+    <table>
+        <thead>
+            <tr class="table">
+                <td>Sorter efter:</td>
+                @foreach (var kompetence in alleKompetencer)
+                {
+                    <td>
+                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @onchange="eventArgs => { CheckboxKompetencer(kompetence, eventArgs.Value); }">
+                        @kompetence.Kompetence_Navn
+                    </td>
+                }
+            </tr>
+        </thead>
+    </table>
     <div class="table-responsive rounded">
         <table class="table table-striped">
             <thead>
@@ -192,25 +192,43 @@ else if (LogedInBruger.ErLoggetPå())
     {
         if ((bool)checkedValue)
         {
-            List<Bruger> nyFrivilligListe = new();
-            valgteKompetencer.Add(kompetence.Kompetence_Navn);
-
-            foreach(var bruger in frivilligListe)
+            if (valgteKompetencer.Count() == 0)
             {
-                foreach (var valgteKompetence in valgteKompetencer)
+                frivilligListeSorteret.Clear();
+
+                foreach (var bruger in frivilligListe)
                 {
-                    if (bruger.Kompetencer.Exists(q => q.Kompetence_Navn == valgteKompetence))
+                    foreach (var valgteKompetence in valgteKompetencer)
                     {
-                        nyFrivilligListe.Add(bruger);
+                        if (bruger.Kompetencer.Exists(q => q.Kompetence_Navn == valgteKompetence))
+                        {
+                            frivilligListeSorteret.Add(bruger);
+                        }
                     }
                 }
             }
+            else
+            {
+                List<Bruger> nyListe = new List<Bruger>();
 
-            frivilligListeSorteret = nyFrivilligListe;
+                foreach (var bruger in frivilligListeSorteret)
+                {
+                    foreach (var valgteKompetence in valgteKompetencer)
+                    {
+                        if (bruger.Kompetencer.Exists(q => q.Kompetence_Navn == valgteKompetence))
+                        {
+                            nyListe.Add(bruger);
+                        }
+                    }
+                }
+
+                frivilligListeSorteret = nyListe;
+            }
         }
         else
         {
             List<Bruger> nyFrivilligListe = new();
+
             valgteKompetencer.Remove(kompetence.Kompetence_Navn);
 
             foreach (var bruger in frivilligListe)
@@ -243,7 +261,9 @@ else if (LogedInBruger.ErLoggetPå())
     {
         await Http.PostAsJsonAsync<Bruger>("Bruger/opdaterFrivillig", bruger);
 
-        await OnInitializedAsync();
+        frivilligListeSorteret = brugerListe.FindAll(q => q.Rolle_Id == 2).OrderBy(q => q.Team).ToList();
+        koordinatorListe = brugerListe.FindAll(q => q.Rolle_Id == 1).OrderBy(q => q.Fornavn).ToList();
+
     }
 
 
