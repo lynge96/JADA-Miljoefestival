@@ -65,7 +65,7 @@ else if (LogedInBruger.ErLoggetPå())
                 </tr>
             </thead>
             <tbody>
-                @foreach (var bruger in frivilligListe)
+                @foreach (var bruger in frivilligListeSorteret)
                 {
                     <tr>
                         <td>@bruger.Bruger_Id</td>
@@ -206,18 +206,19 @@ else if (LogedInBruger.ErLoggetPå())
                 }
             }
 
-            frivilligListe = nyFrivilligListe;
+            frivilligListeSorteret = nyFrivilligListe;
         }
         else
         {
+            List<Bruger> nyFrivilligListe = new();
             valgteKompetencer.Remove(kompetence.Kompetence_Navn);
 
-            foreach (var bruger in frivilligListeSorteret)
+            foreach (var bruger in frivilligListe)
             {
                 foreach (var valgteKompetence in valgteKompetencer)
                     if (bruger.Kompetencer.Exists(q => q.Kompetence_Navn == valgteKompetence))
                     {
-                        frivilligListe.Add(bruger);
+                        nyFrivilligListe.Add(bruger);
                     }
             }
 
