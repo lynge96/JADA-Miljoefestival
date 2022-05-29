@@ -1,7 +1,7 @@
 ﻿@page "/koordinatorfrivillige"
 @using MiljøFestival.Shared.Models
 @inject HttpClient Http
-@inject MiljøFestival.Shared.Models.Bruger LogedInBruger
+@inject MiljøFestival.Shared.Models.Bruger loggedInBruger
 
 <h1>Overblik over alle brugere</h1>
 
@@ -9,11 +9,11 @@
 {
     <p><em>Loading...</em></p>
 }
-else if (!LogedInBruger.ErKoordinator())
+else if (!loggedInBruger.ErKoordinator())
 {
     <p><em>Du skal være koordinator for at se denne side</em></p>
 }
-else if (LogedInBruger.ErLoggetPå())
+else if (loggedInBruger.ErLoggetPå())
 {
     <h1>Formand</h1>
     <div class="table-responsive rounded">

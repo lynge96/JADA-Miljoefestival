@@ -1,20 +1,20 @@
 ﻿@page "/koordinatorStartside"
 @using MiljøFestival.Shared.Models
 @inject HttpClient Http
-@inject MiljøFestival.Shared.Models.Bruger LogedInBruger
+@inject MiljøFestival.Shared.Models.Bruger loggedInBruger
 
 
 @if (vagtListe == null)
 {
     <p><em>Loading...</em></p>
 }
-else if (!LogedInBruger.ErKoordinator() && !LogedInBruger.ErFormand())
+else if (!loggedInBruger.ErKoordinator() && !loggedInBruger.ErFormand())
 {
     <p><em>Du skal være koordinator for at se denne side</em></p>
 }
-else if (LogedInBruger.ErLoggetPå())
+else if (loggedInBruger.ErLoggetPå())
 {
-    <h1>Hej @LogedInBruger.Fornavn!</h1>
+    <h1>Hej @loggedInBruger.Fornavn!</h1>
     <h2>Her er en liste over alle opgaver og deres tilhørende vagter</h2>
 
     <p>Sorter efter: </p>

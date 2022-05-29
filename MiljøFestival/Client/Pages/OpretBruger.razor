@@ -3,88 +3,80 @@
 @inject HttpClient Http
 
 
-<main class="opretBrugerContainer m-auto col-md-4">
-    <h1 class="text-center">Opret en bruger</h1>
+<main class="opretBrugerContainer mx-auto col-md-4">
+    <h1>Opret en bruger</h1>
 
-    <form class="row g-2 needs-validation" novalidate>
-        <div class="form-floating col-md-6 mb-3 position-relative">
-            <input type="text" class="form-control" id="validationFornavn" @bind-value="nyBruger.Fornavn" placeholder="Fornavn" required>
-            <label for="validationFornavn">Fornavn</label>
-            <div class="valid-tooltip">Sejt navn!</div>
-            <div class="invalid-tooltip">Skriv dit fornavn</div>
+    <EditForm Model="@BrugerModel" class="row g-2" OnValidSubmit="() => OpretUser(BrugerModel, alleKompetencer)">
+        <DataAnnotationsValidator />
+
+        <div class="form-floating col-md-6 mb-3">
+            <InputText id="fornavn" @bind-Value="BrugerModel.Fornavn" class="form-control" placeholder="Fornavn"/>
+            <label for="fornavn">Fornavn</label>
+            <ValidationMessage For="@(() => BrugerModel.Fornavn)" />
         </div>
 
-        <div class="form-floating col-md-6 mb-3 position-relative">
-            <input type="text" class="form-control" id="validationEfternavn" @bind-value="nyBruger.Efternavn" placeholder="Efternavn" required>
-            <label for="validationEfternavn">Efternavn</label>
-            <div class="valid-tooltip">... og efternavn!</div>
-            <div class="invalid-tooltip">Skriv dit efternavn</div>
+        <div class="form-floating col-md-6 mb-3">
+            <InputText id="efternavn" @bind-Value="BrugerModel.Efternavn" class="form-control" placeholder="Efternavn" />
+            <label for="efternavn">Efternavn</label>
+            <ValidationMessage For="@(() => BrugerModel.Efternavn)" />
         </div>
 
-        <div class="form-floating col-md-6 mb-3 position-relative">
-            <input type="password" class="form-control" id="validationPassword" @bind-value="nyBruger.Kode" placeholder="Password" required>
-            <label for="validationPassword">Password</label>
-            <div class="valid-tooltip">Looks good!</div>
-            <div class="invalid-tooltip">Skriv dit password</div>
+        <div class="form-floating col-md-6 mb-3">
+            <InputText type="password" id="password" @bind-Value="BrugerModel.Kode" class="form-control" placeholder="Password"/>
+            <label for="password">Password</label>
+            <ValidationMessage For="@(() => BrugerModel.Kode)" />
         </div>
 
-        <div class="form-floating col-md-6 mb-3 position-relative">
-            <input type="email" class="form-control" id="validationEmail" @bind-value="nyBruger.Email" placeholder="Email" required>
-            <label for="validationEmail">E-mail</label>
-            <div class="valid-tooltip">Den er modtaget!</div>
-            <div class="invalid-tooltip">Skriv din e-mailadresse</div>
+        <div class="form-floating col-md-6 mb-3">
+            <InputText id="email" @bind-Value="BrugerModel.Email" class="form-control" placeholder="Email"/>
+            <label for="email">Email adresse</label>
+            <ValidationMessage For="@(() => BrugerModel.Email)" />
         </div>
 
-        <div class="form-floating col-md-6 mb-3 position-relative">
-            <input type="tel" class="form-control" id="validationTelefon" @bind-value="nyBruger.Telefon" placeholder="Telefon" required>
-            <label for="validationTelefon">Telefon</label>
-            <div class="valid-tooltip">Tak for dit nummer</div>
-            <div class="invalid-tooltip">Skriv dit telefonnummer</div>
+        <div class="form-floating col-md-6 mb-3">
+            <InputText id="telefon" @bind-Value="BrugerModel.Telefon" class="form-control" placeholder="Telefon"/>
+            <label for="telefon">Telefon</label>
+            <ValidationMessage For="@(() => BrugerModel.Telefon)" />
         </div>
 
-        <div class="form-floating col-md-6 mb-3 position-relative">
-            <input type="text" class="form-control" id="validationAdresse" @bind-value="nyBruger.Adresse" placeholder="Adresse" required>
-            <label for="validationAdresse">Adresse</label>
-            <div class="valid-tooltip">Ved hvor du bor nu.</div>
-            <div class="invalid-tooltip">Skriv din adresse</div>
+        <div class="form-floating col-md-6 mb-3">
+            <InputText id="adresse" @bind-Value="BrugerModel.Adresse" class="form-control" placeholder="Adresse"/>
+            <label for="adresse">Adresse</label>
+            <ValidationMessage For="@(() => BrugerModel.Adresse)" />
         </div>
 
-        <div class="form-floating col-md-6 mb-3 position-relative">
-            <select class="form-control" id="validationTeam" @bind="nyBruger.Team" placeholder="Team" required>
-                <option selected>Vælg et team</option>
-                @foreach (var team in teams)
+        <div class="col-md-6 mb-3">
+            <InputSelect id="team" @bind-Value="BrugerModel.Team" class="form-select" placeholder="Team" >
+            <label for="team">Team</label>
+            <option selected>Vælg et team</option>
+            @foreach (var team in teams)
                 {
                     <option>@team</option>
                 }
-            </select>
-            <label for="validationTeam">Team</label>
-            <div class="valid-tooltip">Bliver hyggeligt!</div>
-            <div class="invalid-tooltip">Vælg et team</div>
+            </InputSelect>
+            <ValidationMessage For="@(() => BrugerModel.Team)" />
         </div>
 
-        <div class="kompetenceContainer col-md-6">
+        <div class="col-md-6 mb-3">
             <p>Kompetencer</p>
             @foreach (var kompetence in alleKompetencer)
             {
-                <div class="form-floating mb-3">
-                    <div class="form-check">
-                        <input type="checkbox" @onchange="eventArgs => { CheckboxClicked(kompetence, eventArgs.Value); }" />
-                        @kompetence.Kompetence_Navn
-                    </div>
+                <div class="form-check mb-3">
+                    <input type="checkbox" class="form-check-input" id="kompetencer" @onchange="eventArgs => { CheckboxClicked(kompetence, eventArgs.Value); }" />
+                    <label class="form-check-label" for="kompetencer">@kompetence.Kompetence_Navn</label>
                 </div>
             }
         </div>
 
         <div class="mx-auto">
-            <button class="btn btn-primary" type="button" @onclick="() => OpretUser(nyBruger, alleKompetencer)">Opret Bruger</button>
+            <button class="btn btn-primary" type="submit">Opret Bruger</button>
         </div>
 
+    </EditForm>
 
-    </form>
 </main>
 
 @code {
-    private Bruger nyBruger = new Bruger();
     private List<string> teams = new List<string>();
     private List<Kompetence> alleKompetencer = new List<Kompetence>();
 
@@ -105,7 +97,7 @@
         await Http.PostAsJsonAsync<List<Kompetence>>("Kompetence/opdater", alleKompetencer);
 
         // Resetter opret-formularen
-        nyBruger = new Bruger();
+        BrugerModel = new Bruger();
 
     }
 
@@ -129,5 +121,6 @@
             kompetence.IsChecked = false;
         }
     }
+
 
 }

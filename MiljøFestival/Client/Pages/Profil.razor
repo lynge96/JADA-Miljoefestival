@@ -1,46 +1,53 @@
 @page "/profil"
 @using MiljøFestival.Shared.Models
 @inject HttpClient Http
-@inject MiljøFestival.Shared.Models.Bruger LogedInBruger
+@inject MiljøFestival.Shared.Models.Bruger loggedInBruger
 
 
-@if (LogedInBruger.ErLoggetPå())
+@if (loggedInBruger.ErLoggetPå())
 {
     <div class="row col-md-6 mx-auto bg-body rounded shadow-sm">
         <div class="profilContainer col-md-6">
             <h2 class="my-3">Profiloplysninger</h2>
             <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="floatingFornavn" @bind="LogedInBruger.Fornavn" placeholder="text">
+                <input type="text" class="form-control" id="floatingFornavn" @bind="loggedInBruger.Fornavn" placeholder="text">
                 <label for="floatingFornavn">Fornavn</label>
             </div>
 
             <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="floatingEfternavn" @bind="LogedInBruger.Efternavn" placeholder="text">
+                <input type="text" class="form-control" id="floatingEfternavn" @bind="loggedInBruger.Efternavn" placeholder="text">
                 <label for="floatingEfternavn">Efternavn</label>
             </div>
 
             <div class="form-floating mb-3">
-                <input type="tel" class="form-control" id="floatingTelefon" @bind="LogedInBruger.Telefon" placeholder="text">
+                <input type="tel" class="form-control" id="floatingTelefon" @bind="loggedInBruger.Telefon" placeholder="text">
                 <label for="floatingTelefon">Telefon</label>
             </div>
 
             <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="floatingInput" @bind="LogedInBruger.Adresse" placeholder="text">
+                <input type="text" class="form-control" id="floatingInput" @bind="loggedInBruger.Adresse" placeholder="text">
                 <label for="floatingInput">Adresse</label>
             </div>
 
             <div class="form-floating mb-3">
-                <input type="email" class="form-control" id="floatingInput" @bind="LogedInBruger.Email" placeholder="text">
+                <input type="email" class="form-control" id="floatingInput" @bind="loggedInBruger.Email" placeholder="text">
                 <label for="floatingInput">Email adresse</label>
             </div>
             <div class="my-3">
                 <button class="btn btn-primary" type="button" @onclick="() => OpdaterBruger()">Gem ændringer</button>
             </div>
+            @if (brugerÆndring == true)
+            {
+                <div class="alert alert-success col-md-9 my-3">
+                    <span class="bi bi-shield-lock" aria-hidden="true"></span>
+                    <strong> Succes!</strong> Dine oplysninger er ændret!
+                </div>
+            }
         </div>
 
         <div class="kompetenceContainer col-md-6">
             <h2 class="my-3">Kompetencer</h2>
-            @foreach (var kompetence in LogedInBruger.Kompetencer)
+            @foreach (var kompetence in loggedInBruger.Kompetencer)
             {
                 <div class="form-check mb-3">
                     @if (kompetence.IsChecked == true)
@@ -57,28 +64,22 @@
                     }
                 </div>
             }
-        </div>
-
-        <div class="row">
-            <div class="passwordContainer col-md-6 my-4">
-                <h2 class="my-3">Ændre Password</h2>
-                <div class="form-floating mb-3">
-                    <input type="password" class="form-control" id="floatingPassword" @bind="LogedInBruger.Kode">
-                    <label for="floatingPassword">Password</label>
-                </div>
-                <div>
-                    <button class="btn btn-outline-primary" type="button" @onclick="() => OpdaterPassword()">Opdater password</button>
-                </div>
-                @if (passwordÆndring == true)
-                {
-                    <div class="alert alert-success col-md-9 my-3">
-                        <span class="bi bi-shield-lock" aria-hidden="true"></span>
-                        <strong> Succes!</strong> Dit password er ændret!
-                    </div>
-                }
+            <h2 class="my-3">Ændre Password</h2>
+            <div class="form-floating mb-3">
+                <input type="password" class="form-control" id="floatingPassword" @bind="loggedInBruger.Kode">
+                <label for="floatingPassword">Password</label>
             </div>
+            <div>
+                <button class="btn btn-outline-primary" type="button" @onclick="() => OpdaterPassword()">Opdater password</button>
+            </div>
+            @if (passwordÆndring == true)
+            {
+                <div class="alert alert-success col-md-9 my-3">
+                    <span class="bi bi-shield-lock" aria-hidden="true"></span>
+                    <strong> Succes!</strong> Dit password er ændret!
+                </div>
+            }
         </div>
-
     </div>
 
 }
@@ -93,6 +94,8 @@ else
 
 @code {
     private bool passwordÆndring = false;
+    private bool brugerÆndring = false;
+
 
     // Gemmer ændringer i kompetencevalg
     void CheckboxClicked(Kompetence kompetence, object checkedValue)
@@ -118,14 +121,16 @@ else
 
     protected async Task OpdaterBruger()
     {
-        await OpdaterKompetencer(LogedInBruger.Kompetencer);
+        await OpdaterKompetencer(loggedInBruger.Kompetencer);
 
-        await Http.PostAsJsonAsync<Bruger>("Bruger/opdater", LogedInBruger);
+        await Http.PostAsJsonAsync<Bruger>("Bruger/opdater", loggedInBruger);
+
+        brugerÆndring = true;
     }
 
     private async Task OpdaterPassword()
     {
-        await Http.PostAsJsonAsync<Bruger>("Bruger/opdaterPassword", LogedInBruger);
+        await Http.PostAsJsonAsync<Bruger>("Bruger/opdaterPassword", loggedInBruger);
 
         passwordÆndring = true;
 

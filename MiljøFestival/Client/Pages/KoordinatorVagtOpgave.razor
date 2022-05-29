@@ -1,17 +1,17 @@
 ﻿@page "/koordinatorVagtOpgave"
 @using MiljøFestival.Shared.Models
 @inject HttpClient Http
-@inject MiljøFestival.Shared.Models.Bruger LogedInBruger
+@inject MiljøFestival.Shared.Models.Bruger loggedInBruger
 
 @if (opgaveListe == null)
 {
     <p><em>Loading...</em></p>
 }
-else if (!LogedInBruger.ErKoordinator() && !LogedInBruger.ErFormand())
+else if (!loggedInBruger.ErKoordinator() && !loggedInBruger.ErFormand())
 {
     <p><em>Du skal være koordinator for at se denne side</em></p>
 }
-else if (LogedInBruger.ErLoggetPå())
+else if (loggedInBruger.ErLoggetPå())
 {
 
     <div class="row">
