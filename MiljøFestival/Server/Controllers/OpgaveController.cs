@@ -87,7 +87,7 @@ namespace MiljøFestival.Server.Controllers
         }
 
         // Slet opgave
-        [HttpDelete("slet")]
+        [HttpPut("slet")]
         public async Task SletOpgave(Opgave opgave)
         {
             var sql = $"CALL slet_opgave({opgave.Opgave_Id});";

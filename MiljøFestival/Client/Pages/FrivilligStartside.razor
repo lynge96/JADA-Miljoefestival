@@ -34,8 +34,13 @@ else if (LogedInBruger.ErLoggetPå())
                         <td>@vagt.Slut.ToShortTimeString()</td>
                         <td>@vagt.Opgave</td>
                         <td>@vagt.Beskrivelse</td>
-                        
+                        @if (vagt.Status == "Planlægning")
+                        {
                             <td><input type="button" class="btn btn-danger" value="Frigiv" @onclick="() => FrigivVagt(vagt)"></td>
+                        } else
+                        {
+                            <td><input type="button" class="btn btn-danger" value="Frigiv" disabled></td>
+                        }
                     </tr>
                 }
             </tbody>
@@ -62,15 +67,8 @@ else
     // Sletter vagt, sætter bruger_id til null og henter vagtlisten igen
     protected async Task FrigivVagt(Vagt vagt)
     {
-        await Http.PostAsJsonAsync<Vagt>("Vagt/frigivVagt", vagt);
+        await Http.PutAsJsonAsync<Vagt>("Vagt/frigivVagt", vagt);
 
         await OnInitializedAsync();
-    }
-
-
-    // Henter vagtstatus
-    protected async Task<IEnumerable<string>> HentStatus(int vagt_id)
-    {
-        return await Http.GetFromJsonAsync<IEnumerable<string>>($"vagt/vagtStatus?vagt_id={vagt_id}");
     }
 }

@@ -68,7 +68,7 @@ else
     {
         vagt.Bruger_Id = LogedInBruger.Bruger_Id;
 
-        await Http.PostAsJsonAsync<Vagt>("Vagt/tagVagt", vagt);
+        await Http.PutAsJsonAsync<Vagt>("Vagt/tagVagt", vagt);
 
         await OnInitializedAsync();
 

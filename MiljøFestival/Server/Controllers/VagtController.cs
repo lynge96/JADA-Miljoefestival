@@ -27,7 +27,7 @@ namespace MiljøFestival.Server.Controllers
         public async Task<IEnumerable<Vagt>> GetAll()
         {
             
-            var sql = "SELECT vagt_id, start, slut, (bruger.fornavn || ' ' || bruger.efternavn) AS taget_af, bruger_id, opgave.navn AS opgave, opgave_id, opgave.beskrivelse FROM vagt LEFT JOIN bruger USING (bruger_id) LEFT JOIN opgave USING (opgave_id);";
+            var sql = "SELECT vagt_id, start, slut, (bruger.fornavn || ' ' || bruger.efternavn) AS taget_af, bruger_id, opgave.navn AS opgave, opgave_id, opgave.beskrivelse, status.status FROM vagt LEFT JOIN bruger USING(bruger_id)  LEFT JOIN opgave USING(opgave_id) LEFT JOIN status USING(status_id);";
 
             try
             {
@@ -49,7 +49,7 @@ namespace MiljøFestival.Server.Controllers
         [HttpGet("brugerVagter")]
         public async Task<IEnumerable<Vagt>> BrugerIdVagt(string brugerid) // Ændre til int bruger_id
         {
-            var sql = $"SELECT vagt_id, start, slut, (bruger.fornavn || ' ' || bruger.efternavn) AS taget_af, bruger_id, opgave.navn AS opgave, opgave_id, opgave.beskrivelse FROM vagt LEFT JOIN bruger USING(bruger_id ) LEFT JOIN opgave USING(opgave_id ) WHERE bruger_id = {brugerid};";
+            var sql = $"SELECT vagt_id, start, slut, (bruger.fornavn || ' ' || bruger.efternavn) AS taget_af, bruger_id, opgave.navn AS opgave, opgave_id, opgave.beskrivelse, status.status FROM vagt LEFT JOIN bruger USING(bruger_id ) LEFT JOIN opgave USING(opgave_id) LEFT JOIN status USING(status_id) WHERE bruger_id = {brugerid};";
 
             try
             {
@@ -71,7 +71,7 @@ namespace MiljøFestival.Server.Controllers
         [HttpGet("ledigeVagter")]
         public async Task<IEnumerable<Vagt>> LedigeVagter(int team_id)
         {
-            var sql = $"SELECT vagt_id, start, slut, (bruger.fornavn || ' ' || bruger.efternavn) AS taget_af, bruger_id, opgave.navn AS opgave, opgave_id, opgave.beskrivelse FROM vagt LEFT JOIN bruger USING(bruger_id ) LEFT JOIN opgave USING(opgave_id )WHERE bruger_id IS NULL AND opgave.team_id = {team_id};"; 
+            var sql = $"SELECT vagt_id, start, slut, (bruger.fornavn || ' ' || bruger.efternavn) AS taget_af, bruger_id, opgave.navn AS opgave, opgave_id, opgave.beskrivelse, status.status FROM vagt LEFT JOIN bruger USING(bruger_id ) LEFT JOIN opgave USING(opgave_id ) LEFT JOIN status USING(status_id) WHERE bruger_id IS NULL AND opgave.team_id = {team_id};"; 
 
             try
             {
@@ -134,7 +134,7 @@ namespace MiljøFestival.Server.Controllers
 
 
         // Sletter vagten
-        [HttpDelete("sletVagt")]
+        [HttpPut("sletVagt")]
         public async Task SletVagt(Vagt vagt)
         {
             var sql = $"DELETE FROM vagt WHERE vagt_id = {vagt.Vagt_Id};";
@@ -199,26 +199,5 @@ namespace MiljøFestival.Server.Controllers
 
         }
 
-
-        // Finder status på en given vagt
-        [HttpGet("vagtStatus")]
-        public async Task<IEnumerable<string>> HentVagtStatus(int vagt_id)
-        {
-            var sql = $"SELECT hent_vagt_status({vagt_id});";
-
-            try
-            {
-                using (var connection = new NpgsqlConnection(connString))
-                {
-                    var status = await connection.QueryAsync<string>(sql);
-
-                    return status;
-                }
-            }
-            catch (System.Exception)
-            {
-                return new List<string>();
-            }
-        }
     }
 }
