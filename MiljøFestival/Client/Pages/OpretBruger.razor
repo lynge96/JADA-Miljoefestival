@@ -50,19 +50,6 @@
         </div>
 
         <div class="form-floating col-md-6 mb-3 position-relative">
-            <select class="form-control" id="validationRolle" @bind="nyBruger.Rolle" placeholder="Rolle" required>
-                <option selected>Vælg en rolle</option>
-                @foreach (var rolle in roller)
-                {
-                    <option>@rolle</option>
-                }
-            </select>
-            <label for="validationRolle">Rolle</label>
-            <div class="valid-tooltip">Godt valg!.</div>
-            <div class="invalid-tooltip">Vælg en team</div>
-        </div>
-
-        <div class="form-floating col-md-6 mb-3 position-relative">
             <select class="form-control" id="validationTeam" @bind="nyBruger.Team" placeholder="Team" required>
                 <option selected>Vælg et team</option>
                 @foreach (var team in teams)
@@ -99,11 +86,12 @@
 @code {
     private Bruger nyBruger = new Bruger();
     private List<string> teams = new List<string>();
-    private List<string> roller = new List<string>();
     private List<Kompetence> alleKompetencer = new List<Kompetence>();
 
     protected async Task OpretUser(Bruger bruger, List<Kompetence> kompetenceListe)
     {
+        bruger.Rolle = "Frivillig";
+
         await Http.PostAsJsonAsync<Bruger>("Bruger/opret", bruger);
 
         // Henter bruger_id'et for den nyoprettede bruger og kobler det op på kompetencelisten
@@ -124,9 +112,7 @@
     protected override async Task OnInitializedAsync()
     {
         teams = await Http.GetFromJsonAsync<List<string>>("team/all");
-        roller = await Http.GetFromJsonAsync<List<string>>("rolle/all");
         alleKompetencer = await Http.GetFromJsonAsync<List<Kompetence>>("Kompetence/all");
-
 
     }
 

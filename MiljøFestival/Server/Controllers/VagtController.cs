@@ -179,7 +179,11 @@ namespace MiljøFestival.Server.Controllers
         [HttpPost("opret")]
         public async Task OpretVagt(Vagt vagt)
         {
-            var sql = $"INSERT INTO vagt (start, slut, opgave_id) VALUES ('{vagt.Start}', '{vagt.Slut}', {vagt.Opgave_Id})";
+            string vagtStart = vagt.Start.ToString("MM-dd-yyyy HH:mm:ss");
+            string vagtSlut = vagt.Slut.ToString("MM-dd-yyyy HH:mm:ss");
+
+
+            var sql = $"INSERT INTO vagt (start, slut, opgave_id) VALUES ('{vagtStart}', '{vagtSlut}', {vagt.Opgave_Id})";
 
             try
             {
@@ -193,6 +197,28 @@ namespace MiljøFestival.Server.Controllers
                 throw;
             }
 
+        }
+
+
+        // Finder status på en given vagt
+        [HttpGet("vagtStatus")]
+        public async Task<IEnumerable<string>> HentVagtStatus(int vagt_id)
+        {
+            var sql = $"SELECT hent_vagt_status({vagt_id});";
+
+            try
+            {
+                using (var connection = new NpgsqlConnection(connString))
+                {
+                    var status = await connection.QueryAsync<string>(sql);
+
+                    return status;
+                }
+            }
+            catch (System.Exception)
+            {
+                return new List<string>();
+            }
         }
     }
 }

@@ -22,7 +22,7 @@ else if (LogedInBruger.ErLoggetPå())
                     <th>Slut</th>
                     <th>Opgave</th>
                     <th>Beskrivelse</th>
-                    <th>Slet vagt</th>
+                    <th>Frigiv vagt</th>
                 </tr>
             </thead>
             <tbody>
@@ -34,7 +34,8 @@ else if (LogedInBruger.ErLoggetPå())
                         <td>@vagt.Slut.ToShortTimeString()</td>
                         <td>@vagt.Opgave</td>
                         <td>@vagt.Beskrivelse</td>
-                        <td><input type="button" class="btn btn-danger" value="Slet" @onclick="() => FrigivVagt(vagt)"></td>
+                        
+                            <td><input type="button" class="btn btn-danger" value="Frigiv" @onclick="() => FrigivVagt(vagt)"></td>
                     </tr>
                 }
             </tbody>
@@ -64,5 +65,12 @@ else
         await Http.PostAsJsonAsync<Vagt>("Vagt/frigivVagt", vagt);
 
         await OnInitializedAsync();
+    }
+
+
+    // Henter vagtstatus
+    protected async Task<IEnumerable<string>> HentStatus(int vagt_id)
+    {
+        return await Http.GetFromJsonAsync<IEnumerable<string>>($"vagt/vagtStatus?vagt_id={vagt_id}");
     }
 }

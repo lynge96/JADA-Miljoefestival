@@ -7,7 +7,7 @@
 {
     <p><em>Loading...</em></p>
 }
-else if (!LogedInBruger.ErKoordinator()  && !LogedInBruger.ErFormand())
+else if (!LogedInBruger.ErKoordinator() && !LogedInBruger.ErFormand())
 {
     <p><em>Du skal være koordinator for at se denne side</em></p>
 }
@@ -45,6 +45,22 @@ else if (LogedInBruger.ErLoggetPå())
                     }
                 </select>
             </div>
+            @if (feedbackVagt == "Fejl!")
+            {
+
+                <div class="alert alert-warning">
+                    <span class="bi bi-key" aria-hidden="true"></span>
+                    <strong>Hov!</strong> - Udfyld alle felterne, inden du trykker opret
+                </div>
+
+            }
+            else if (feedbackVagt == "Succes!")
+            {
+                <div class="alert alert-success">
+                    <span class="bi bi-key" aria-hidden="true"></span>
+                    <strong>Hov!</strong> - Succes! Vagt(er) er nu oprettet
+                </div>
+            }
             <div class="d-grid gap-2 col-6 mx-auto">
                 <button class="btn btn-primary" type="button" @onclick="() => OpretVagt(nyVagt)">Opret vagt</button>
             </div>
@@ -79,6 +95,22 @@ else if (LogedInBruger.ErLoggetPå())
                     }
                 </select>
             </div>
+            @if (feedbackOpgave == "Fejl!")
+            {
+
+                <div class="alert alert-warning">
+                    <span class="bi bi-key" aria-hidden="true"></span>
+                    <strong>Hov!</strong> - Udfyld alle felterne, inden du trykker opret
+                </div>
+
+            }
+            else if (feedbackOpgave == "Succes!")
+            {
+                <div class="alert alert-success">
+                    <span class="bi bi-key" aria-hidden="true"></span>
+                    <strong>Hov!</strong> - Succes! Opgave er nu oprettet
+                </div>
+            }
             <div class="d-grid gap-2 col-6 mx-auto">
                 <button class="btn btn-primary" type="button" @onclick="() => OpretOpgave(nyOpgave)">Opret opgave</button>
             </div>
@@ -94,20 +126,24 @@ else
 
 @code {
     private Vagt nyVagt = new Vagt();
-
     private Opgave nyOpgave = new Opgave();
     private List<Opgave> opgaveListe;
     private int antalVagter = 1;
     private List<string> status;
     private List<string> teams;
+    private string feedbackVagt = string.Empty;
+    private string feedbackOpgave = string.Empty;
+
 
 
 
 
     protected async Task OpretVagt(Vagt vagt)
     {
-        if (vagt.Opgave == "Vælg en opgave...")
+        if (vagt.Opgave == null || vagt.Start == DateTime.Today || vagt.Slut == DateTime.Today)
         {
+            feedbackVagt = "Fejl!";
+
             return;
         }
         else
@@ -128,20 +164,31 @@ else
             nyVagt.Opgave = "Vælg en opgave...";
             nyVagt.Start = DateTime.Today;
             nyVagt.Slut = DateTime.Today;
+
+            feedbackVagt = "Succes!";
         }
     }
 
     protected async Task OpretOpgave(Opgave opgave)
     {
-        await Http.PostAsJsonAsync<Opgave>("Opgave/opret", opgave);
+        if (opgave.Navn == null || opgave.Beskrivelse == null || opgave.Status == null || opgave.Team == null)
+        {
+            feedbackOpgave = "Fejl!";
+        }
+        else
+        {
+            await Http.PostAsJsonAsync<Opgave>("Opgave/opret", opgave);
 
-        nyOpgave.Navn = string.Empty;
-        nyOpgave.Beskrivelse = string.Empty;
-        nyOpgave.Status = "Vælg en status...";
-        nyOpgave.Team = "Vælg et team...";
+            nyOpgave.Navn = string.Empty;
+            nyOpgave.Beskrivelse = string.Empty;
+            nyOpgave.Status = "Vælg en status...";
+            nyOpgave.Team = "Vælg et team...";
 
 
-        await OnInitializedAsync();
+            await OnInitializedAsync();
+
+            feedbackOpgave = "Succes!";
+        }
     }
 
     protected override async Task OnInitializedAsync()

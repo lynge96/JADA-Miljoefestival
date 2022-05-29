@@ -158,10 +158,7 @@ else if (LogedInBruger.ErLoggetPå())
     {
         brugerListeUnsorted = await Http.GetFromJsonAsync<List<Bruger>>("Bruger/all");
         brugerListe = await HentKompetencer(brugerListeUnsorted);
-
         frivilligListe = brugerListe.FindAll(q => q.Rolle_Id == 2).OrderBy(q => q.Team).ToList();
-
-
         koordinatorListe = brugerListe.FindAll(q => q.Rolle_Id == 1).OrderBy(q => q.Fornavn).ToList();
         formandListe = brugerListe.FindAll(q => q.Rolle_Id == 3);
         teams = await Http.GetFromJsonAsync<List<string>>("Team/all");
@@ -185,7 +182,7 @@ else if (LogedInBruger.ErLoggetPå())
         }
     }
 
-    // Sorterer frivillige efter valgte kompetencer
+    // Sorterer frivillige efter valgte kompetencer (til jacob: kig på opdaterbruger hvad den gør med sort)
     protected void CheckboxKompetencer(Kompetence kompetence, object checkedValue)
     {
         if ((bool)checkedValue)
@@ -211,7 +208,7 @@ else if (LogedInBruger.ErLoggetPå())
         }
         else
         {
-            List<Bruger> nyFrivilligListe = new();
+            List<Bruger> nyListe = new();
 
             valgteKompetencer.Remove(kompetence.Kompetence_Navn);
 
@@ -223,11 +220,11 @@ else if (LogedInBruger.ErLoggetPå())
                 {
                     if (bruger.Kompetencer.Exists(q => q.Kompetence_Navn == valgteKompetence))
                     {
-                        nyFrivilligListe.Add(bruger);
+                        nyListe.Add(bruger);
                     }
                 }
-                frivilligListe = nyFrivilligListe;
-                nyFrivilligListe = new List<Bruger>();;
+                frivilligListe = nyListe;
+                nyListe = new List<Bruger>();;
             }
         }
     }
