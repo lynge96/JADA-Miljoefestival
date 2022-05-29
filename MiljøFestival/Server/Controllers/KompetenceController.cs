@@ -90,7 +90,7 @@ namespace MiljøFestival.Server.Controllers
         }
 
         // Opdaterer kompetencer for en bruger
-        [HttpPost("opdater")]
+        [HttpPut("opdater")]
         public async Task OpretBruger(List<Kompetence> kompetenceListe)
         {
             foreach (var kompetence in kompetenceListe)

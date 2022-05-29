@@ -90,7 +90,7 @@ namespace MiljøFestival.Server.Controllers
 
 
         // Tager en vagt 
-        [HttpPost("tagVagt")]
+        [HttpPut("tagVagt")]
         public async Task TagVagt(Vagt vagt)
         {
             var sql = $"UPDATE vagt SET bruger_id = {vagt.Bruger_Id} WHERE vagt_id = {vagt.Vagt_Id};";
@@ -112,7 +112,7 @@ namespace MiljøFestival.Server.Controllers
 
 
         // Fjerner vagt fra brugeren og gør den ledig til andre
-        [HttpPost("frigivVagt")]
+        [HttpPut("frigivVagt")]
         public async Task FrigivVagt(Vagt vagt)
         {
             var sql = $"UPDATE vagt SET bruger_id = null WHERE vagt_id = {vagt.Vagt_Id};";
@@ -134,7 +134,7 @@ namespace MiljøFestival.Server.Controllers
 
 
         // Sletter vagten
-        [HttpPost("sletVagt")]
+        [HttpDelete("sletVagt")]
         public async Task SletVagt(Vagt vagt)
         {
             var sql = $"DELETE FROM vagt WHERE vagt_id = {vagt.Vagt_Id};";
@@ -154,7 +154,7 @@ namespace MiljøFestival.Server.Controllers
         }
 
         // Opdaterer vagt
-        [HttpPost("opdaterVagt")]
+        [HttpPut("opdaterVagt")]
         public async Task OpdaterBruger(Vagt vagt)
         {
             var sql = $"UPDATE vagt SET start = '{vagt.Start}', slut = '{vagt.Slut}' where vagt_id = '{vagt.Vagt_Id}'";

@@ -113,7 +113,7 @@ namespace MiljøFestival.Server.Controllers
 
 
         // Opdaterer oplysninger for brugers profil
-        [HttpPost("opdater")]
+        [HttpPut("opdater")]
         public async Task OpdaterBruger(Bruger bruger)
         {
             var sql = $"CALL opdater_bruger({bruger.Bruger_Id}, '{bruger.Fornavn}', '{bruger.Efternavn}', '{bruger.Telefon}', '{bruger.Email}', '{bruger.Adresse}', '{bruger.Rolle}', '{bruger.Team}')";
@@ -133,7 +133,7 @@ namespace MiljøFestival.Server.Controllers
 
 
         // Opdaterer oplysninger for frivillige fra koordinator/formandens-frivilligeside
-        [HttpPost("opdaterFrivillig")]
+        [HttpPut("opdaterFrivillig")]
         public async Task OpdaterFrivillig(Bruger bruger)
         {
             var sql = $"CALL opdater_frivillig({bruger.Bruger_Id}, '{bruger.Rolle}', '{bruger.Team}')";
@@ -152,7 +152,7 @@ namespace MiljøFestival.Server.Controllers
         }
 
         // Opdaterer brugerens password.
-        [HttpPost("opdaterPassword")]
+        [HttpPut("opdaterPassword")]
         public async Task OpdaterPassword(Bruger bruger)
         {
             var sql = $"CALL opdater_password('{bruger.Bruger_Id}', '{bruger.Kode}')";
