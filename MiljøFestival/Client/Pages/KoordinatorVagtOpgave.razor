@@ -38,7 +38,7 @@ else if (loggedInBruger.ErLoggetPå())
             <div class="form-group">
                 <label for="exampleFormControlSelect1">Opgave Type </label>
                 <select class="form-select" @bind="nyVagt.Opgave">
-                    <option selected hidden>Vælg en opgave...</option>
+                    <option selected>Vælg en opgave...</option>
                     @foreach (var item in opgaveListe)
                     {
                         <option>@item.Navn</option>
@@ -78,7 +78,7 @@ else if (loggedInBruger.ErLoggetPå())
             <div class="form-group">
                 <label for="exampleFormControlSelect1">Start status:</label>
                 <select class="form-select" @bind="nyOpgave.Status">
-                    <option selected>Vælg en status...</option>
+                    <option selected hdden >Vælg en status...</option>
                     @foreach (var status in status)
                     {
                         <option>@status</option>
