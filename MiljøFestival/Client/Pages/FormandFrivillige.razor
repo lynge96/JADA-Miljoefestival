@@ -244,7 +244,7 @@ else if (loggedInBruger.ErLoggetPå())
 
     protected async Task OpdaterBruger(Bruger bruger)
     {
-        await Http.PostAsJsonAsync<Bruger>("Bruger/opdaterFrivillig", bruger);
+        await Http.PutAsJsonAsync<Bruger>("Bruger/opdaterFrivillig", bruger);
 
         frivilligListe = brugerListe.FindAll(q => q.Rolle_Id == 2).OrderBy(q => q.Team).ToList();
         koordinatorListe = brugerListe.FindAll(q => q.Rolle_Id == 1).OrderBy(q => q.Fornavn).ToList();

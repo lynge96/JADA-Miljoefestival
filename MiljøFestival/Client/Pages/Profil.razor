@@ -115,7 +115,7 @@ else
     protected async Task OpdaterKompetencer(List<Kompetence> kompetenceListe)
     {
         // Sender listen af nuværende valgte kompetencer til controlleren
-        await Http.PostAsJsonAsync<List<Kompetence>>("Kompetence/opdater", kompetenceListe);
+        await Http.PutAsJsonAsync<List<Kompetence>>("Kompetence/opdater", kompetenceListe);
     }
 
 
@@ -124,12 +124,14 @@ else
         await OpdaterKompetencer(loggedInBruger.Kompetencer);
 
         await Http.PostAsJsonAsync<Bruger>("Bruger/opdater", loggedInBruger);
-
+      
         brugerÆndring = true;
+
     }
 
     private async Task OpdaterPassword()
     {
+
         await Http.PostAsJsonAsync<Bruger>("Bruger/opdaterPassword", loggedInBruger);
 
         passwordÆndring = true;

@@ -47,7 +47,7 @@ namespace MiljøFestival.Server.Controllers
 
 
         // Opdater en opgave
-        [HttpPost("opdaterOpgave")]
+        [HttpPut("opdaterOpgave")]
         public async Task OpdaterOpgave(Opgave opgave)
         {
             var sql = $"CALL opdater_opgave_status({opgave.Opgave_Id}, '{opgave.Status}')";
@@ -87,7 +87,7 @@ namespace MiljøFestival.Server.Controllers
         }
 
         // Slet opgave
-        [HttpPost("slet")]
+        [HttpPut("slet")]
         public async Task SletOpgave(Opgave opgave)
         {
             var sql = $"CALL slet_opgave({opgave.Opgave_Id});";

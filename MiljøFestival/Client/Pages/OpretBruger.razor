@@ -94,7 +94,7 @@
             kompetence.Bruger_Id = bruger_id;
         }
 
-        await Http.PostAsJsonAsync<List<Kompetence>>("Kompetence/opdater", alleKompetencer);
+        await Http.PutAsJsonAsync<List<Kompetence>>("Kompetence/opdater", alleKompetencer);
 
         // Resetter opret-formularen
         BrugerModel = new Bruger();

@@ -203,7 +203,7 @@ else if (loggedInBruger.ErLoggetPå())
 
     protected async Task OpdaterBruger(Bruger bruger)
     {
-        await Http.PostAsJsonAsync<Bruger>("Bruger/opdaterFrivillig", bruger);
+        await Http.PutAsJsonAsync<Bruger>("Bruger/opdaterFrivillig", bruger);
 
         await OnInitializedAsync();
     }

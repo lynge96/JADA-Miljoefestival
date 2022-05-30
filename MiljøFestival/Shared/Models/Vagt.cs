@@ -24,5 +24,10 @@ namespace MiljøFestival.Shared.Models
 
         public string Beskrivelse { get; set; }
 
+        public string Status { get; set; }
+
     }
+
+
+    
 }
