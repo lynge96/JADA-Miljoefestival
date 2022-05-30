@@ -48,7 +48,6 @@ else if (loggedInBruger.ErLoggetPå())
                             else
                             {
                                 <td><input type="button" class="btn btn-danger" value="Frigiv" disabled></td>
-
                             }
                         </tr>
                     }
@@ -97,7 +96,6 @@ else
     private List<Bruger> frivilligListeUnsorted;
     private List<Bruger> frivilligListe;
 
-
     protected override async Task OnInitializedAsync()
     {
         vagtListeUnsorted = await Http.GetFromJsonAsync<List<Vagt>>($"Vagt/brugerVagter?brugerid={loggedInBruger.Bruger_Id}");
@@ -112,7 +110,7 @@ else
     }
 
     // Sletter vagt, sætter bruger_id til null og henter vagtlisten igen
-    protected async Task FrigivVagt(Vagt vagt)
+    private async Task FrigivVagt(Vagt vagt)
     {
         await Http.PutAsJsonAsync<Vagt>("Vagt/frigivVagt", vagt);
 
@@ -120,9 +118,8 @@ else
     }
 
     // Henter vagtstatus
-    protected async Task<IEnumerable<string>> HentStatus(int vagt_id)
+    private async Task<IEnumerable<string>> HentStatus(int vagt_id)
     {
         return await Http.GetFromJsonAsync<IEnumerable<string>>($"vagt/vagtStatus?vagt_id={vagt_id}");
     }
-
 }

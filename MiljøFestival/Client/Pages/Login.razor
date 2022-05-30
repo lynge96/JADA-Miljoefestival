@@ -12,7 +12,6 @@
         <div class="my-3 p-3">
             <form>
                 <h1 class="text-center mb-4 display-4">Log ind</h1>
-
                 <div class="form-floating mb-2">
                     <input type="email" class="form-control" id="floatingInput" placeholder="Email" @bind-value="bruger.Email" required>
                     <label for="floatingInput">Email adresse</label>
@@ -23,7 +22,6 @@
                 </div>
                 <button class="w-100 btn btn-primary mt-3" type="button" @onclick="() => HandleSubmit()">Log ind</button>
                 <p class="my-3 h6"><a class="nav-link text-decoration-underline" href="OpretBruger">Opret bruger</a></p>
-
                 @if (feedback != string.Empty)
                 {
                     <div class="alert alert-warning">
@@ -50,7 +48,6 @@ else
 
     private async Task HandleSubmit()
     {
-
         IEnumerable<Bruger> verificerBruger = await TjekLogin(bruger);
 
         if (verificerBruger.Count() > 0)
@@ -79,26 +76,24 @@ else
 
             @if (loggedInBruger.ErFormand())
             {
-                NavManager.NavigateTo("/formandfrivillige");    
-            } 
+                NavManager.NavigateTo("/formandfrivillige");
+            }
             else if (loggedInBruger.ErKoordinator())
             {
-                NavManager.NavigateTo("/koordinatorstartside");    
+                NavManager.NavigateTo("/koordinatorstartside");
             }
             else
             {
-                NavManager.NavigateTo("/frivilligstartside");    
+                NavManager.NavigateTo("/frivilligstartside");
             }
-
-    }
+        }
         else
         {
             feedback = "Forkert login, prøv igen.";
         }
     }
 
-
-    protected async Task<IEnumerable<Kompetence>> HentKompetencer(Bruger bruger)
+    private async Task<IEnumerable<Kompetence>> HentKompetencer(Bruger bruger)
     {
         List<Kompetence> alleKompetencer = await Http.GetFromJsonAsync<List<Kompetence>>("Kompetence/all");
 
@@ -110,16 +105,11 @@ else
 
             valgteKompetencer.Add(kompetencer.First());
         }
-
         return valgteKompetencer;
     }
 
-
-
-    protected async Task<IEnumerable<Bruger>> TjekLogin(Bruger user)
+    private async Task<IEnumerable<Bruger>> TjekLogin(Bruger user)
     {
-
         return await Http.GetFromJsonAsync<IEnumerable<Bruger>>($"Bruger/tjeklogin?email={bruger.Email}&kode={bruger.Kode}");
     }
-
 }

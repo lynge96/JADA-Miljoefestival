@@ -1,6 +1,6 @@
 ﻿@inherits LayoutComponentBase
 @inject NavigationManager NavManager
-@inject MiljøFestival.Shared.Models.Bruger LogedInBruger
+@inject MiljøFestival.Shared.Models.Bruger loggedInBruger
 
 <style>
     body {
@@ -20,19 +20,19 @@
                     <li><a href="#" class="nav-link px-2 link-dark"><span class="bi bi-house"></span> Home</a></li>
                     <li><a href="#" class="nav-link px-2 link-dark"><span class="bi bi-info-circle"></span> About</a></li>
 
-                    @if (LogedInBruger.ErLoggetPå() && LogedInBruger.ErKoordinator())
+                    @if (loggedInBruger.ErLoggetPå() && loggedInBruger.ErKoordinator())
                     {
                         <li><a href="koordinatorStartside" class="nav-link px-2 link-dark"><span class="bi bi-layout-text-window"></span> Dashboard</a></li>
                         <li><a href="koordinatorVagtOpgave" class="nav-link px-2 link-dark"><span class="bi bi-plus-circle"></span> Opret</a></li>
                         <li><a href="koordinatorfrivillige" class="nav-link px-2 link-dark"><span class="bi bi-people"></span> Frivillige</a></li>
                     }
-                    else if (LogedInBruger.ErLoggetPå() && !LogedInBruger.ErKoordinator() && !LogedInBruger.ErFormand())
+                    else if (loggedInBruger.ErLoggetPå() && !loggedInBruger.ErKoordinator() && !loggedInBruger.ErFormand())
                     {
                         <li><a href="FrivilligStartside" class="nav-link px-2 link-dark"><span class="bi bi-signpost-2"></span> Dashboard</a></li>
                         <li><a href="FrivilligTagVagt" class="nav-link px-2 link-dark"><span class="bi bi-layout-text-window"></span> Vagter</a></li>
                         <li><a href="Frivillige" class="nav-link px-2 link-dark"><span class="bi bi-people"></span> Frivillige</a></li>
                     }
-                    else if (LogedInBruger.ErLoggetPå() && LogedInBruger.ErFormand())
+                    else if (loggedInBruger.ErLoggetPå() && loggedInBruger.ErFormand())
                     {
                         <li><a href="koordinatorStartside" class="nav-link px-2 link-dark"><span class="bi bi-layout-text-window"></span> Dashboard</a></li>
                         <li><a href="koordinatorVagtOpgave" class="nav-link px-2 link-dark"><span class="bi bi-plus-circle"></span> Opret</a></li>
@@ -42,7 +42,7 @@
                 </ul>
 
                 <div class="col-md-3 text-end">
-                    @if (LogedInBruger.ErLoggetPå())
+                    @if (loggedInBruger.ErLoggetPå())
                     {
                         <a class="btn btn-outline-primary me-2" href="#" role="button" @onclick="LogAf"><span class="bi bi-box-arrow-left" aria-hidden="true"></span> Log af</a>
                         <a class="btn btn-primary me-2" href="profil" role="button"><span class="bi bi-person-badge" aria-hidden="true"></span> Profil</a>
@@ -66,19 +66,20 @@
 </div>
 
 @code {
-    protected void LogAf()
+    private void LogAf()
     {
-    @*LogedInBruger = new Bruger(); Virker ikke??*@
-        LogedInBruger.Bruger_Id = 0;
-        LogedInBruger.Fornavn = string.Empty;
-        LogedInBruger.Efternavn = string.Empty;
-        LogedInBruger.Telefon = string.Empty;
-        LogedInBruger.Email = string.Empty;
-        LogedInBruger.Adresse = string.Empty;
-        LogedInBruger.Team = string.Empty;
-        LogedInBruger.Team_Id = 0;
-        LogedInBruger.Rolle_Id = 0;
-        LogedInBruger.Rolle = string.Empty;
+        loggedInBruger.Bruger_Id = 0;
+        loggedInBruger.Fornavn = string.Empty;
+        loggedInBruger.Efternavn = string.Empty;
+        loggedInBruger.Telefon = string.Empty;
+        loggedInBruger.Email = string.Empty;
+        loggedInBruger.Adresse = string.Empty;
+        loggedInBruger.Team = string.Empty;
+        loggedInBruger.Team_Id = 0;
+        loggedInBruger.Rolle_Id = 0;
+        loggedInBruger.Rolle = string.Empty;
+        loggedInBruger.Kode = string.Empty;
+        loggedInBruger.Kompetencer.Clear();
 
         NavManager.NavigateTo("/");
     }

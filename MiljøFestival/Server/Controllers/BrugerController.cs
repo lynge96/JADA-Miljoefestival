@@ -62,7 +62,6 @@ namespace MiljøFestival.Server.Controllers
             {
                 throw;
             }
-
         }
 
 
@@ -108,10 +107,10 @@ namespace MiljøFestival.Server.Controllers
             }
         }
 
-
+        
         // Opdaterer oplysninger for frivillige fra koordinator/formandens-frivilligeside
         [HttpPut("opdaterFrivillig")]
-        public async Task OpdaterFrivillig(Bruger bruger)
+        public async Task OpdaterFrivilligBruger(Bruger bruger)
         {
             var sql = $"CALL opdater_frivillig({bruger.Bruger_Id}, '{bruger.Rolle}', '{bruger.Team}')";
 
@@ -188,7 +187,6 @@ namespace MiljøFestival.Server.Controllers
             {
                 return new List<int>();
             }
-
         }
     }
 }

@@ -106,8 +106,6 @@ namespace MiljøFestival.Server.Controllers
             {
                 throw;
             }
-
-
         }
 
 
@@ -128,8 +126,6 @@ namespace MiljøFestival.Server.Controllers
             {
                 throw;
             }
-
-
         }
 
 
@@ -150,7 +146,6 @@ namespace MiljøFestival.Server.Controllers
             {
                 throw;
             }
-
         }
 
         // Opdaterer vagt
@@ -170,8 +165,6 @@ namespace MiljøFestival.Server.Controllers
             {
                 throw;
             }
-
-
         }
 
 
@@ -181,7 +174,6 @@ namespace MiljøFestival.Server.Controllers
         {
             string vagtStart = vagt.Start.ToString("MM-dd-yyyy HH:mm:ss");
             string vagtSlut = vagt.Slut.ToString("MM-dd-yyyy HH:mm:ss");
-
 
             var sql = $"INSERT INTO vagt (start, slut, opgave_id) VALUES ('{vagtStart}', '{vagtSlut}', {vagt.Opgave_Id})";
 
@@ -196,7 +188,6 @@ namespace MiljøFestival.Server.Controllers
             {
                 throw;
             }
-
         }
 
     }

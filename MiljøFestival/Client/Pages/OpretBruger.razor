@@ -82,6 +82,7 @@
         {
                 <h2 class="my-3">Kompetencer</h2>
 
+
                 @foreach (var kompetence in alleKompetencer)
                 {
                     <div class="form-check mb-3">
@@ -97,8 +98,14 @@
     private List<string> teams = new List<string>();
     private List<Kompetence> alleKompetencer = new List<Kompetence>();
 
+    protected override async Task OnInitializedAsync()
+    {
+        teams = await Http.GetFromJsonAsync<List<string>>("team/all");
 
-    protected async Task OpretUser(Bruger bruger, List<Kompetence> kompetenceListe)
+        alleKompetencer = await Http.GetFromJsonAsync<List<Kompetence>>("Kompetence/all");
+    }
+
+    private async Task OpretUser(Bruger bruger, List<Kompetence> kompetenceListe)
     {
         bruger.Rolle = "Frivillig";
 
@@ -114,26 +121,16 @@
 
         await Http.PutAsJsonAsync<List<Kompetence>>("Kompetence/opdater", alleKompetencer);
 
-
         // Resetter opret-formularen
         BrugerModel = new Bruger();
 
         await Task.Delay(1000);
+
         NavManager.NavigateTo("/login");
-
     }
-
-
-    protected override async Task OnInitializedAsync()
-    {
-        teams = await Http.GetFromJsonAsync<List<string>>("team/all");
-        alleKompetencer = await Http.GetFromJsonAsync<List<Kompetence>>("Kompetence/all");
-
-    }
-
 
     // Gemmer ændringer i kompetencevalg
-    void CheckboxClicked(Kompetence kompetence, object checkedValue)
+    private void CheckboxClicked(Kompetence kompetence, object checkedValue)
     {
         if ((bool)checkedValue)
         {
@@ -144,6 +141,4 @@
             kompetence.IsChecked = false;
         }
     }
-
-
 }

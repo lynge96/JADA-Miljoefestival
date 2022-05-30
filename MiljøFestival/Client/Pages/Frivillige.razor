@@ -83,14 +83,16 @@ else if (loggedInBruger.ErLoggetPå())
     private List<Bruger> brugerListeUnsorted;
     private List<string> teams = new List<string>();
 
-
     protected override async Task OnInitializedAsync()
     {
         brugerListeUnsorted = await Http.GetFromJsonAsync<List<Bruger>>("Bruger/all");
+
         frivilligListe = brugerListeUnsorted.FindAll(q => q.Rolle_Id == 2).OrderBy(q => q.Team).ToList();
+
         koordinatorListe = brugerListeUnsorted.FindAll(q => q.Rolle_Id == 1);
+
         formandListe = brugerListeUnsorted.FindAll(q => q.Rolle_Id == 3);
+
         teams = await Http.GetFromJsonAsync<List<string>>("Team/all");
     }
-
 }

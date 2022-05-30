@@ -17,7 +17,6 @@ namespace MiljøFestival.Server.Controllers
     public class TeamController : ControllerBase
     {
         private string connString;
-
         public TeamController(IConfiguration configuration)
         {
             connString = configuration.GetConnectionString("miljøDB");
@@ -43,7 +42,5 @@ namespace MiljøFestival.Server.Controllers
                 return new List<string>();
             }
         }
-
-
     }
 }

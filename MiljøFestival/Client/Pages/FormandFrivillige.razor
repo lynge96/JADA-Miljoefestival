@@ -34,8 +34,8 @@ else if (loggedInBruger.ErLoggetPå())
                 }
             </tbody>
         </table>
-    </div>
 
+    </div>
     <h1>Frivillige</h1>
     <table>
         <thead>
@@ -93,7 +93,6 @@ else if (loggedInBruger.ErLoggetPå())
 
                                 }
                             </div>
-
                         </td>
                     </tr>
                 }
@@ -111,7 +110,6 @@ else if (loggedInBruger.ErLoggetPå())
                     <th>Email</th>
                     <th>Adresse</th>
                     <th>Koordinator?</th>
-
                 </tr>
             </thead>
             <tbody>
@@ -132,7 +130,6 @@ else if (loggedInBruger.ErLoggetPå())
                                 else
                                 {
                                     <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @onchange="async eventArgs => { await CheckboxClicked(bruger, eventArgs.Value); }">
-
                                 }
                             </div>
                         </td>
@@ -153,37 +150,46 @@ else if (loggedInBruger.ErLoggetPå())
     private List<string> teams = new List<string>();
     private List<string> valgteKompetencer = new List<string>();
 
-
     protected override async Task OnInitializedAsync()
     {
         brugerListeUnsorted = await Http.GetFromJsonAsync<List<Bruger>>("Bruger/all");
+
         brugerListe = await HentKompetencer(brugerListeUnsorted);
+
         frivilligListe = brugerListe.FindAll(q => q.Rolle_Id == 2).OrderBy(q => q.Team).ToList();
+
         koordinatorListe = brugerListe.FindAll(q => q.Rolle_Id == 1).OrderBy(q => q.Fornavn).ToList();
+
         formandListe = brugerListe.FindAll(q => q.Rolle_Id == 3);
+
         teams = await Http.GetFromJsonAsync<List<string>>("Team/all");
+
         alleKompetencer = await Http.GetFromJsonAsync<List<Kompetence>>("Kompetence/all");
     }
 
     // Gemmer ændringer som koordinator
-    protected async Task CheckboxClicked(Bruger bruger, object checkedValue)
+    private async Task CheckboxClicked(Bruger bruger, object checkedValue)
     {
         if ((bool)checkedValue)
         {
             bruger.Rolle_Id = 1;
+
             bruger.Rolle = "Koordinator";
+
             await OpdaterBruger(bruger);
         }
         else
         {
             bruger.Rolle_Id = 2;
+
             bruger.Rolle = "Frivillig";
+
             await OpdaterBruger(bruger);
         }
     }
 
     // Sorterer frivillige efter valgte kompetencer (til jacob: kig på opdaterbruger hvad den gør med sort)
-    protected void CheckboxKompetencer(Kompetence kompetence, object checkedValue)
+    private void CheckboxKompetencer(Kompetence kompetence, object checkedValue)
     {
         if ((bool)checkedValue)
         {
@@ -202,7 +208,9 @@ else if (loggedInBruger.ErLoggetPå())
                         nyListe.Add(bruger);
                     }
                 }
+
                 frivilligListe = nyListe;
+
                 nyListe = new List<Bruger>();
             }
         }
@@ -223,15 +231,17 @@ else if (loggedInBruger.ErLoggetPå())
                         nyListe.Add(bruger);
                     }
                 }
+
                 frivilligListe = nyListe;
-                nyListe = new List<Bruger>();;
+
+                nyListe = new List<Bruger>();
             }
         }
     }
 
 
     // Indsætter kompetencer på alle brugere
-    protected async Task<List<Bruger>> HentKompetencer(List<Bruger> brugerListe)
+    private async Task<List<Bruger>> HentKompetencer(List<Bruger> brugerListe)
     {
         foreach (var bruger in brugerListe)
         {
@@ -241,15 +251,14 @@ else if (loggedInBruger.ErLoggetPå())
         return brugerListe;
     }
 
-
-    protected async Task OpdaterBruger(Bruger bruger)
+    private async Task OpdaterBruger(Bruger bruger)
     {
+        bruger.Kode = "placeholder";
+
         await Http.PutAsJsonAsync<Bruger>("Bruger/opdaterFrivillig", bruger);
 
         frivilligListe = brugerListe.FindAll(q => q.Rolle_Id == 2).OrderBy(q => q.Team).ToList();
+
         koordinatorListe = brugerListe.FindAll(q => q.Rolle_Id == 1).OrderBy(q => q.Fornavn).ToList();
-
     }
-
-
-    }
+ }
