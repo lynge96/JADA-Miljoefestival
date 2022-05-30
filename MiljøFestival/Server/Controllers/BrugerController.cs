@@ -89,29 +89,6 @@ namespace MiljøFestival.Server.Controllers
         }
 
 
-        // Find bruger med Bruger Id
-        [HttpGet("findBrugerId")]
-        public async Task<IEnumerable<Bruger>> HentBrugerBrugerId(int bruger_id)
-        {
-            var sql = $"SELECT * FROM hent_bruger_brugerID({bruger_id})";
-
-            try
-            {
-                using (var connection = new NpgsqlConnection(connString))
-                {
-                    var bruger = await connection.QueryAsync<Bruger>(sql);
-
-                    return bruger;
-                }
-            }
-            catch (System.Exception)
-            {
-                return new List<Bruger>();
-            }
-
-        }
-
-
         // Opdaterer oplysninger for brugers profil
         [HttpPut("opdater")]
         public async Task OpdaterBruger(Bruger bruger)
@@ -170,6 +147,27 @@ namespace MiljøFestival.Server.Controllers
             }
         }
 
+
+        // Sletter brugerens profil
+        [HttpPut("sletProfil")]
+        public async Task SletProfil(Bruger bruger)
+        {
+            var sql = $"CALL slet_profil({bruger.Bruger_Id})";
+
+            try
+            {
+                using (var connection = new NpgsqlConnection(connString))
+                {
+                    await connection.ExecuteAsync(sql);
+                }
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }
+        }
+
+        
 
         // Find bruger_id med email
         [HttpGet("findBrugerIdMail")]

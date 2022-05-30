@@ -81,6 +81,8 @@
             }
         </div>
     </div>
+    <td><button type="button" class="btn btn-danger" @onclick="() => SletProfil()">Slet profil</button></td>
+
 
 }
 else
@@ -123,8 +125,8 @@ else
     {
         await OpdaterKompetencer(loggedInBruger.Kompetencer);
 
-        await Http.PostAsJsonAsync<Bruger>("Bruger/opdater", loggedInBruger);
-      
+        await Http.PutAsJsonAsync<Bruger>("Bruger/opdater", loggedInBruger);
+
         brugerÆndring = true;
 
     }
@@ -132,9 +134,14 @@ else
     private async Task OpdaterPassword()
     {
 
-        await Http.PostAsJsonAsync<Bruger>("Bruger/opdaterPassword", loggedInBruger);
+        await Http.PutAsJsonAsync<Bruger>("Bruger/opdaterPassword", loggedInBruger);
 
         passwordÆndring = true;
 
+    }
+
+    private async Task SletProfil()
+    {
+        await Http.PutAsJsonAsync<Bruger>("Bruger/sletProfil", loggedInBruger);
     }
 }

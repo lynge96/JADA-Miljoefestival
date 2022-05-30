@@ -29,7 +29,7 @@ else if (loggedInBruger.ErLoggetPå())
                         <th scope="col">Slut</th>
                         <th scope="col">Opgave</th>
                         <th scope="col">Beskrivelse</th>
-                        <th>scope="col>Status</th>
+                        <th scope="col">Status</th>
                         <th scope="col">Frigiv vagt</th>
                     </tr>
                 </thead>
@@ -59,20 +59,21 @@ else if (loggedInBruger.ErLoggetPå())
         </div>
     </div>
     <div class="col-md-6 mx-auto">
+        <h3>@loggedInBruger.Team-holdet</h3>
+    </div>
+    <div class="col-md-6 mx-auto">
         <div class="table-responsive rounded mt-4">
             <table class="table table-striped">
                 <thead class="table-dark">
                     <tr>
-                        <th scope="col">@loggedInBruger.Team-holdet</th>
-                        <th scope="col">Navn</th>
+                        <th scope="col">Frivillige</th>
                         <th scope="col">Rolle</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var bruger in brugerListe)
+                    @foreach (var bruger in frivilligListe)
                     {
                         <tr>
-                            <td></td>
                             <td>@bruger.Fornavn @bruger.Efternavn</td>
                             <td>@bruger.Rolle</td>
                         </tr>
@@ -95,7 +96,8 @@ else
     private List<Vagt> vagtListe;
     private List<Vagt> vagtListeUnsorted;
     private List<Bruger> brugerListeUnsorted;
-    private List<Bruger> brugerListe;
+    private List<Bruger> frivilligListeUnsorted;
+    private List<Bruger> frivilligListe;
 
 
     protected override async Task OnInitializedAsync()
@@ -106,7 +108,9 @@ else
 
         brugerListeUnsorted = await Http.GetFromJsonAsync<List<Bruger>>("Bruger/all");
 
-        brugerListe = brugerListeUnsorted.OrderBy(q => q.Team_Id).ToList();
+        frivilligListeUnsorted = brugerListeUnsorted.FindAll(q => q.Rolle_Id == 2).ToList();
+
+        frivilligListe = frivilligListeUnsorted.FindAll(x => x.Team == loggedInBruger.Team).ToList();
     }
 
     // Sletter vagt, sætter bruger_id til null og henter vagtlisten igen

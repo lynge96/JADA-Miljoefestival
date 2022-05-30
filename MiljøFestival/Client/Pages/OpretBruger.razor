@@ -1,5 +1,6 @@
 ﻿@page "/opretbruger"
 @using MiljøFestival.Shared.Models
+@inject NavigationManager NavManager
 @inject HttpClient Http
 
 
@@ -10,7 +11,7 @@
         <DataAnnotationsValidator />
 
         <div class="form-floating col-md-6 mb-3">
-            <InputText id="fornavn" @bind-Value="BrugerModel.Fornavn" class="form-control" placeholder="Fornavn"/>
+            <InputText id="fornavn" @bind-Value="BrugerModel.Fornavn" class="form-control" placeholder="Fornavn" />
             <label for="fornavn">Fornavn</label>
             <ValidationMessage For="@(() => BrugerModel.Fornavn)" />
         </div>
@@ -22,34 +23,34 @@
         </div>
 
         <div class="form-floating col-md-6 mb-3">
-            <InputText type="password" id="password" @bind-Value="BrugerModel.Kode" class="form-control" placeholder="Password"/>
+            <InputText type="password" id="password" @bind-Value="BrugerModel.Kode" class="form-control" placeholder="Password" />
             <label for="password">Password</label>
             <ValidationMessage For="@(() => BrugerModel.Kode)" />
         </div>
 
         <div class="form-floating col-md-6 mb-3">
-            <InputText id="email" @bind-Value="BrugerModel.Email" class="form-control" placeholder="Email"/>
+            <InputText id="email" @bind-Value="BrugerModel.Email" class="form-control" placeholder="Email" />
             <label for="email">Email adresse</label>
             <ValidationMessage For="@(() => BrugerModel.Email)" />
         </div>
 
         <div class="form-floating col-md-6 mb-3">
-            <InputText id="telefon" @bind-Value="BrugerModel.Telefon" class="form-control" placeholder="Telefon"/>
+            <InputText id="telefon" @bind-Value="BrugerModel.Telefon" class="form-control" placeholder="Telefon" />
             <label for="telefon">Telefon</label>
             <ValidationMessage For="@(() => BrugerModel.Telefon)" />
         </div>
 
         <div class="form-floating col-md-6 mb-3">
-            <InputText id="adresse" @bind-Value="BrugerModel.Adresse" class="form-control" placeholder="Adresse"/>
+            <InputText id="adresse" @bind-Value="BrugerModel.Adresse" class="form-control" placeholder="Adresse" />
             <label for="adresse">Adresse</label>
             <ValidationMessage For="@(() => BrugerModel.Adresse)" />
         </div>
 
         <div class="col-md-6 mb-3">
-            <InputSelect id="team" @bind-Value="BrugerModel.Team" class="form-select" placeholder="Team" >
-            <label for="team">Team</label>
-            <option selected>Vælg et team</option>
-            @foreach (var team in teams)
+            <InputSelect id="team" @bind-Value="BrugerModel.Team" class="form-select" placeholder="Team">
+                <label for="team">Team</label>
+                <option selected>Vælg et team</option>
+                @foreach (var team in teams)
                 {
                     <option>@team</option>
                 }
@@ -72,6 +73,7 @@
             <button class="btn btn-primary" type="submit">Opret Bruger</button>
         </div>
 
+
     </EditForm>
 
 </main>
@@ -79,6 +81,7 @@
 @code {
     private List<string> teams = new List<string>();
     private List<Kompetence> alleKompetencer = new List<Kompetence>();
+
 
     protected async Task OpretUser(Bruger bruger, List<Kompetence> kompetenceListe)
     {
@@ -96,10 +99,15 @@
 
         await Http.PutAsJsonAsync<List<Kompetence>>("Kompetence/opdater", alleKompetencer);
 
+
         // Resetter opret-formularen
         BrugerModel = new Bruger();
 
+        await Task.Delay(1000);
+        NavManager.NavigateTo("/login");
+
     }
+
 
     protected override async Task OnInitializedAsync()
     {
