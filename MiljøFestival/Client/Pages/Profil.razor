@@ -2,7 +2,7 @@
 @using MiljøFestival.Shared.Models
 @inject HttpClient Http
 @inject MiljøFestival.Shared.Models.Bruger loggedInBruger
-
+@inject NavigationManager NavManager
 
 @if (loggedInBruger.ErLoggetPå())
 {
@@ -82,8 +82,6 @@
         </div>
     </div>
     <td><button type="button" class="btn btn-danger" @onclick="() => SletProfil()">Slet profil</button></td>
-
-
 }
 else
 {
@@ -91,7 +89,6 @@ else
         <span class="oi oi-account-login" aria-hidden="true"></span>
         <strong> Hov!</strong> <a href="/login">Log in</a> for at se og redigere din profil!
     </div>
-
 }
 
 @code {
@@ -100,7 +97,7 @@ else
 
 
     // Gemmer ændringer i kompetencevalg
-    void CheckboxClicked(Kompetence kompetence, object checkedValue)
+    private void CheckboxClicked(Kompetence kompetence, object checkedValue)
     {
         if ((bool)checkedValue)
         {
@@ -114,34 +111,53 @@ else
 
 
     // Opdaterer valget af kompetencer
-    protected async Task OpdaterKompetencer(List<Kompetence> kompetenceListe)
+    private async Task OpdaterKompetencer(List<Kompetence> kompetenceListe)
     {
         // Sender listen af nuværende valgte kompetencer til controlleren
         await Http.PutAsJsonAsync<List<Kompetence>>("Kompetence/opdater", kompetenceListe);
     }
 
 
-    protected async Task OpdaterBruger()
+    private async Task OpdaterBruger()
     {
         await OpdaterKompetencer(loggedInBruger.Kompetencer);
 
         await Http.PutAsJsonAsync<Bruger>("Bruger/opdater", loggedInBruger);
 
         brugerÆndring = true;
-
     }
 
     private async Task OpdaterPassword()
     {
-
         await Http.PutAsJsonAsync<Bruger>("Bruger/opdaterPassword", loggedInBruger);
 
         passwordÆndring = true;
-
     }
 
     private async Task SletProfil()
     {
+        loggedInBruger.Kode = "placeholder";
+
         await Http.PutAsJsonAsync<Bruger>("Bruger/sletProfil", loggedInBruger);
+
+        LogAf();
+    }
+
+    private void LogAf()
+    {
+        loggedInBruger.Bruger_Id = 0;
+        loggedInBruger.Fornavn = string.Empty;
+        loggedInBruger.Efternavn = string.Empty;
+        loggedInBruger.Telefon = string.Empty;
+        loggedInBruger.Email = string.Empty;
+        loggedInBruger.Adresse = string.Empty;
+        loggedInBruger.Team = string.Empty;
+        loggedInBruger.Team_Id = 0;
+        loggedInBruger.Rolle_Id = 0;
+        loggedInBruger.Rolle = string.Empty;
+        loggedInBruger.Kode = string.Empty;
+        loggedInBruger.Kompetencer.Clear();
+
+        NavManager.NavigateTo("/");
     }
 }

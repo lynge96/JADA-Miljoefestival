@@ -13,7 +13,6 @@ else if (!loggedInBruger.ErKoordinator() && !loggedInBruger.ErFormand())
 }
 else if (loggedInBruger.ErLoggetPå())
 {
-
     <div class="row">
         <div class="opretvagtContainer col-md-6">
             <h1>Opret vagt</h1>
@@ -47,7 +46,6 @@ else if (loggedInBruger.ErLoggetPå())
             </div>
             @if (feedbackVagt == "Fejl!")
             {
-
                 <div class="alert alert-warning">
                     <span class="bi bi-key" aria-hidden="true"></span>
                     <strong>Hov!</strong> - Udfyld alle felterne inden du trykker opret
@@ -78,7 +76,7 @@ else if (loggedInBruger.ErLoggetPå())
             <div class="form-group">
                 <label for="exampleFormControlSelect1">Start status:</label>
                 <select class="form-select" @bind="nyOpgave.Status">
-                    <option selected hdden >Vælg en status...</option>
+                    <option selected hdden>Vælg en status...</option>
                     @foreach (var status in status)
                     {
                         <option>@status</option>
@@ -97,7 +95,6 @@ else if (loggedInBruger.ErLoggetPå())
             </div>
             @if (feedbackOpgave == "Fejl!")
             {
-
                 <div class="alert alert-warning">
                     <span class="bi bi-key" aria-hidden="true"></span>
                     <strong>Hov!</strong> - Udfyld alle felterne inden du trykker opret
@@ -134,11 +131,20 @@ else
     private string feedbackVagt = string.Empty;
     private string feedbackOpgave = string.Empty;
 
+    protected override async Task OnInitializedAsync()
+    {
+        opgaveListe = await Http.GetFromJsonAsync<List<Opgave>>("Opgave/all");
 
+        status = await Http.GetFromJsonAsync<List<string>>("Status/all");
 
+        teams = await Http.GetFromJsonAsync<List<string>>("Team/all");
 
+        nyVagt.Start = DateTime.Today;
 
-    protected async Task OpretVagt(Vagt vagt)
+        nyVagt.Slut = DateTime.Today;
+    }
+
+    private async Task OpretVagt(Vagt vagt)
     {
         if (vagt.Opgave == null || vagt.Start == DateTime.Today || vagt.Slut == DateTime.Today)
         {
@@ -160,16 +166,20 @@ else
             }
 
             nyVagt = new Vagt();
+
             antalVagter = 1;
+
             nyVagt.Opgave = "Vælg en opgave...";
+
             nyVagt.Start = DateTime.Today;
+
             nyVagt.Slut = DateTime.Today;
 
             feedbackVagt = "Succes!";
         }
     }
 
-    protected async Task OpretOpgave(Opgave opgave)
+    private async Task OpretOpgave(Opgave opgave)
     {
         if (opgave.Navn == null || opgave.Beskrivelse == null || opgave.Status == null || opgave.Team == null)
         {
@@ -180,28 +190,16 @@ else
             await Http.PostAsJsonAsync<Opgave>("Opgave/opret", opgave);
 
             nyOpgave.Navn = string.Empty;
-            nyOpgave.Beskrivelse = string.Empty;
-            nyOpgave.Status = "Vælg en status...";
-            nyOpgave.Team = "Vælg et team...";
 
+            nyOpgave.Beskrivelse = string.Empty;
+
+            nyOpgave.Status = "Vælg en status...";
+
+            nyOpgave.Team = "Vælg et team...";
 
             await OnInitializedAsync();
 
             feedbackOpgave = "Succes!";
         }
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
-        opgaveListe = await Http.GetFromJsonAsync<List<Opgave>>("Opgave/all");
-
-        status = await Http.GetFromJsonAsync<List<string>>("Status/all");
-
-        teams = await Http.GetFromJsonAsync<List<string>>("Team/all");
-
-        nyVagt.Start = DateTime.Today;
-        nyVagt.Slut = DateTime.Today;
-
-
     }
 }

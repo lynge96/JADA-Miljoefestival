@@ -80,9 +80,4 @@ namespace MiljøFestival.Shared.Models
             }
         }
     }
-
-
-
-    // Metode til ErLoggetPå -> returnerer true / false
-    // Metode til at ændre koordinatorstatus
 }

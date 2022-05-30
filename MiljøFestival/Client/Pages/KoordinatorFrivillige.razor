@@ -80,7 +80,6 @@ else if (loggedInBruger.ErLoggetPå())
                                 }
                             </select>
                         </td>
-
                     </tr>
                 }
             </tbody>
@@ -119,30 +118,30 @@ else if (loggedInBruger.ErLoggetPå())
     private List<Bruger> koordinatorListe;
     private List<Bruger> brugerListeUnsorted;
     private List<Bruger> brugerListe;
-
     private List<Bruger> formandListe;
     private List<string> teams = new List<string>();
     private List<string> valgteKompetencer = new List<string>();
     private List<Kompetence> alleKompetencer = new List<Kompetence>();
 
-
-
-
     protected override async Task OnInitializedAsync()
     {
         brugerListeUnsorted = await Http.GetFromJsonAsync<List<Bruger>>("Bruger/all");
+
         brugerListe = await HentKompetencer(brugerListeUnsorted);
 
         frivilligListe = brugerListeUnsorted.FindAll(q => q.Rolle_Id == 2).OrderBy(q => q.Team).ToList();
-        koordinatorListe = brugerListeUnsorted.FindAll(q => q.Rolle_Id == 1);
-        formandListe = brugerListeUnsorted.FindAll(q => q.Rolle_Id == 3);
-        teams = await Http.GetFromJsonAsync<List<string>>("Team/all");
-        alleKompetencer = await Http.GetFromJsonAsync<List<Kompetence>>("Kompetence/all");
 
+        koordinatorListe = brugerListeUnsorted.FindAll(q => q.Rolle_Id == 1);
+
+        formandListe = brugerListeUnsorted.FindAll(q => q.Rolle_Id == 3);
+
+        teams = await Http.GetFromJsonAsync<List<string>>("Team/all");
+
+        alleKompetencer = await Http.GetFromJsonAsync<List<Kompetence>>("Kompetence/all");
     }
 
     // Sorterer frivillige efter valgte kompetencer (til jacob: kig på opdaterbruger hvad den gør med sort)
-    protected void CheckboxKompetencer(Kompetence kompetence, object checkedValue)
+    private void CheckboxKompetencer(Kompetence kompetence, object checkedValue)
     {
         if ((bool)checkedValue)
         {
@@ -161,7 +160,9 @@ else if (loggedInBruger.ErLoggetPå())
                         nyListe.Add(bruger);
                     }
                 }
+
                 frivilligListe = nyListe;
+
                 nyListe = new List<Bruger>();
             }
         }
@@ -182,15 +183,16 @@ else if (loggedInBruger.ErLoggetPå())
                         nyListe.Add(bruger);
                     }
                 }
+
                 frivilligListe = nyListe;
-                nyListe = new List<Bruger>(); ;
+
+                nyListe = new List<Bruger>(); 
             }
         }
     }
 
-
     // Indsætter kompetencer på alle brugere
-    protected async Task<List<Bruger>> HentKompetencer(List<Bruger> brugerListe)
+    private async Task<List<Bruger>> HentKompetencer(List<Bruger> brugerListe)
     {
         foreach (var bruger in brugerListe)
         {
@@ -200,8 +202,7 @@ else if (loggedInBruger.ErLoggetPå())
         return brugerListe;
     }
 
-
-    protected async Task OpdaterBruger(Bruger bruger)
+    private async Task OpdaterBruger(Bruger bruger)
     {
         await Http.PutAsJsonAsync<Bruger>("Bruger/opdaterFrivillig", bruger);
 

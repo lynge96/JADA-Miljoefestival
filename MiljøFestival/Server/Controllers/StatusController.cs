@@ -43,7 +43,5 @@ namespace MiljøFestival.Server.Controllers
                 return new List<string>();
             }
         }
-
-
     }
 }

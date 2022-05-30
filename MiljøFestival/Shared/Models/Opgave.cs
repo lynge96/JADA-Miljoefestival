@@ -23,6 +23,5 @@ namespace MiljøFestival.Shared.Models
         public string Team { get; set; }
 
         public int LedigeVagter { get; set; }
-
     }
 }

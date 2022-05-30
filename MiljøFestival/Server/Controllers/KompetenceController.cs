@@ -48,7 +48,6 @@ namespace MiljøFestival.Server.Controllers
        [HttpGet("brugerkompetence")]
         public async Task<IEnumerable<Kompetence>> HentKompetencer(int bruger_id, int kompetence_id)
         {
-
             var sql = $"SELECT * FROM hent_kompetencer({bruger_id}, {kompetence_id})";
 
             try
@@ -71,7 +70,6 @@ namespace MiljøFestival.Server.Controllers
         [HttpGet("brugerIDkompetence")]
         public async Task<IEnumerable<Kompetence>> HentKompetencer(int bruger_id)
         {
-
             var sql = $"SELECT * FROM hent_bruger_kompetence({bruger_id})";
 
             try

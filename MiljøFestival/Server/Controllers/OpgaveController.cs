@@ -63,7 +63,6 @@ namespace MiljøFestival.Server.Controllers
             {
                 throw;  
             }
-
         }
 
         // Opret en opgave
@@ -83,7 +82,6 @@ namespace MiljøFestival.Server.Controllers
             {
                 throw;
             }
-
         }
 
         // Slet opgave
@@ -103,7 +101,6 @@ namespace MiljøFestival.Server.Controllers
             {
                 throw;
             }
-
         }
     }
 }

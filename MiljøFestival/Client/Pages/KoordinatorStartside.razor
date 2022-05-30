@@ -18,7 +18,7 @@ else if (loggedInBruger.ErLoggetPå())
     <h2>Her er en liste over alle opgaver og deres tilhørende vagter</h2>
 
     <p>Sorter efter: </p>
-    <select class="form-select" @bind="sorteringsValg">
+    <select class="form-select" @bind="SorteringsInput">
         <option selected>Status</option>
         <option>Flest ledige vagter</option>
         <option>Ansvarlige team</option>
@@ -41,7 +41,6 @@ else if (loggedInBruger.ErLoggetPå())
                                                 @foreach (var status in status)
                                                 {
                                                     <option value=@status selected=@(opgave.Status == status)>@status</option>
-
                                                 }
                                             </select>
                                         </th>
@@ -117,9 +116,7 @@ else
     private List<string> status;
     private string sorteringsInput;
     private List<Kompetence> alleKompetencer = new List<Kompetence>();
-
     private bool editMode = false;
-    private bool visVagter = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -132,12 +129,10 @@ else
         opgaveListe = opgaveListeUnsorted.OrderBy(q => q.Status).ToList();
 
         status = await Http.GetFromJsonAsync<List<string>>("Status/all");
-
-
     }
 
     // Sorterer i opgaverne. Opretter først en constructor og så en funktion der sorterer
-    public string sorteringsValg
+    public string SorteringsInput
     {
         get
         {
@@ -146,17 +141,18 @@ else
         set
         {
             sorteringsInput = value;
+
             SorterOpgaver();
         }
     }
 
-    protected void SorterOpgaver()
+    private void SorterOpgaver()
     {
-        if (sorteringsInput == "Status")
+        if (SorteringsInput == "Status")
         {
             opgaveListe = opgaveListe.OrderBy(q => q.Status).ToList();
         }
-        else if (sorteringsInput == "Flest ledige vagter")
+        else if (SorteringsInput == "Flest ledige vagter")
         {
             foreach (var opgave in opgaveListe)
             {
@@ -165,9 +161,10 @@ else
                 opgave.LedigeVagter = opgaveVagter.FindAll(q => q.Bruger_Id == null).Count();
 
             }
+
             opgaveListe = opgaveListe.OrderByDescending(q => q.LedigeVagter).ToList();
         }
-        else if (sorteringsInput == "Ansvarlige team")
+        else if (SorteringsInput == "Ansvarlige team")
         {
             opgaveListe = opgaveListe.OrderBy(q => q.Team).ToList();
 
@@ -175,7 +172,7 @@ else
     }
 
     // Finder vagter der tilhører en specifik opgave
-    protected List<Vagt> FindVagtOpgave(Opgave opgave, List<Vagt> vagtliste)
+    private List<Vagt> FindVagtOpgave(Opgave opgave, List<Vagt> vagtliste)
     {
         List<Vagt> vagtListe = new List<Vagt>();
 
@@ -184,11 +181,11 @@ else
         return vagtListe;
     }
 
-
     // Finder antal vagter pr. opgave
-    protected string FindAntalVagter(int opgave_id, List<Vagt> vagtListe)
+    private string FindAntalVagter(int opgave_id, List<Vagt> vagtListe)
     {
         int antalVagter = vagtListe.Count(q => q.Opgave_Id == opgave_id);
+
         int antalLedigeVagter = vagtListe.FindAll(q => q.Bruger_Id == null).Count();
 
         if (antalVagter == 0)
@@ -211,40 +208,36 @@ else
         {
             return $"{antalVagter} / {antalVagter} vagter dækket";
         }
-
-
     }
+
     // Sletter opgave fra databasen
-    protected async Task SletOpgave(Opgave opgave)
+    private async Task SletOpgave(Opgave opgave)
     {
         await Http.PutAsJsonAsync<Opgave>("Opgave/slet", opgave);
 
         await OnInitializedAsync();
     }
 
-
     // Sletter vagt fra databasen
-    protected async Task SletVagt(Vagt vagt)
+    private async Task SletVagt(Vagt vagt)
     {
         await Http.PutAsJsonAsync<Vagt>("Vagt/sletVagt", vagt);
 
         await OnInitializedAsync();
     }
 
-
     // Opdaterer vagt fra databasen
-    protected async Task OpdaterVagt(Vagt vagt)
+    private async Task OpdaterVagt(Vagt vagt)
     {
         await Http.PutAsJsonAsync<Vagt>("Vagt/opdaterVagt", vagt);
 
         await OnInitializedAsync();
 
         editMode = false;
-
     }
 
     // Opdaterer status på opgave
-    protected async Task OpdaterStatus(Opgave opgave)
+    private async Task OpdaterStatus(Opgave opgave)
     {
         await Http.PutAsJsonAsync<Opgave>("Opgave/opdaterOpgave", opgave);
 

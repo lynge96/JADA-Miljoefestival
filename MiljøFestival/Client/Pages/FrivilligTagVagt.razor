@@ -56,25 +56,21 @@ else
     private List<Vagt> VagtListe;
     private List<Vagt> VagtListeUnsorted;
 
-
     // Henter alle ledige vagter (taget_af == null)
     protected override async Task OnInitializedAsync()
     {
         VagtListeUnsorted = await Http.GetFromJsonAsync<List<Vagt>>($"Vagt/ledigeVagter?team_id={loggedInBruger.Team_Id}");
 
         VagtListe = VagtListeUnsorted.OrderBy(q => q.Vagt_Id).ToList();
-
     }
 
-
     // Tager vagt og opdaterer ledige vagter
-    protected async Task TagVagt(Vagt vagt)
+    private async Task TagVagt(Vagt vagt)
     {
         vagt.Bruger_Id = loggedInBruger.Bruger_Id;
 
         await Http.PutAsJsonAsync<Vagt>("Vagt/tagVagt", vagt);
 
         await OnInitializedAsync();
-
     }
 }
