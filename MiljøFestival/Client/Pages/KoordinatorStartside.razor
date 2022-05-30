@@ -20,7 +20,7 @@ else if (loggedInBruger.ErKoordinator())
         <p class="lead">Hej @loggedInBruger.Fornavn, her kan du se en oversigt over alle opgaver og deres tilhørende vagter</p>
 
         <p class="lead mt-4">Sorter efter: </p>
-        <select class="form-select mb-4 col-md-3" @bind="sorteringsValg">
+        <select class="form-select mb-4 col-md-3" @bind="SorteringsInput">
             <option selected>Status</option>
             <option>Flest ledige vagter</option>
             <option>Ansvarlige team</option>
