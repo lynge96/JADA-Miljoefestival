@@ -8,6 +8,7 @@
 @if (!loggedInBruger.ErLoggetPå())
 {
     <main class="form-signin col-md-3 m-auto">
+        @*Login form*@
         <div class="my-3 p-3">
             <form>
                 <h1 class="text-center mb-4 display-4">Log ind</h1>
@@ -36,7 +37,10 @@
 }
 else
 {
-    <p>Du er allerede logget ind...</p>
+    <div class="alert alert-info col-md-3 mx-auto">
+        <span class="bi bi-door-open-fill" aria-hidden="true"></span>
+        <strong> Hov!</strong> Du er allerede logget på.
+    </div>
 }
 
 @code {

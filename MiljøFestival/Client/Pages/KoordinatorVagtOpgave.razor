@@ -5,26 +5,29 @@
 
 @if (opgaveListe == null)
 {
-    <p><em>Loading...</em></p>
+    <div class="d-flex justify-content-center">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
 }
-else if (!loggedInBruger.ErKoordinator() && !loggedInBruger.ErFormand())
+else if (loggedInBruger.ErKoordinator())
 {
-    <p><em>Du skal være koordinator for at se denne side</em></p>
-}
-else if (loggedInBruger.ErLoggetPå())
-{
-
-    <div class="row">
+    <main class="row col-md-6 mx-auto">
+        @*Opret Vagt*@
         <div class="opretvagtContainer col-md-6">
-            <h1>Opret vagt</h1>
+            <h2 class="my-3">Opret vagt</h2>
+
             <div class="form-floating mb-3">
-                <input type="datetime" class="form-control" id="floatingStartdato" @bind="nyVagt.Start">
+                <input type="datetime" class="form-control" id="floatingStartdato" @bind="nyVagt.Start" placeholder="StartDato">
                 <label for="floatingStartdato">Start</label>
             </div>
+
             <div class="form-floating mb-3">
-                <input type="datetime" class="form-control" id="floatingSlutdato" @bind="nyVagt.Slut">
+                <input type="datetime" class="form-control" id="floatingSlutdato" @bind="nyVagt.Slut" placeholder="SlutDato">
                 <label for="floatingSlutdato">Slut</label>
             </div>
+
             <div class="form-group">
                 <label for="exampleFormControlSelect1">Antal Vagter</label>
                 <select class="form-select" @bind="antalVagter">
@@ -35,6 +38,7 @@ else if (loggedInBruger.ErLoggetPå())
                     <option>5</option>
                 </select>
             </div>
+
             <div class="form-group">
                 <label for="exampleFormControlSelect1">Opgave Type </label>
                 <select class="form-select" @bind="nyVagt.Opgave">
@@ -45,6 +49,7 @@ else if (loggedInBruger.ErLoggetPå())
                     }
                 </select>
             </div>
+
             @if (feedbackVagt == "Fejl!")
             {
 
@@ -61,20 +66,27 @@ else if (loggedInBruger.ErLoggetPå())
                     <strong>Succes!</strong> - Vagt(er) er nu oprettet
                 </div>
             }
-            <div class="d-grid gap-2 col-6 mx-auto">
+
+            <div class="d-grid gap-2 col-md-6 mx-auto">
                 <button class="btn btn-primary" type="button" @onclick="() => OpretVagt(nyVagt)">Opret vagt</button>
             </div>
+
         </div>
+        @*Opret Opgave*@
         <div class="opretopgaveContainer col-md-6">
-            <h1>Opret opgave</h1>
+
+            <h2 class="my-3">Opret opgave</h2>
+
             <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="floatingType" @bind="nyOpgave.Navn">
+                <input type="text" class="form-control" id="floatingType" @bind="nyOpgave.Navn" placeholder="OpgaveNavn">
                 <label for="floatingType">Opgave navn</label>
             </div>
+
             <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="floatingBeskrivelse" @bind="nyOpgave.Beskrivelse">
+                <input type="text" class="form-control" id="floatingBeskrivelse" @bind="nyOpgave.Beskrivelse" placeholder="Beskrivelse">
                 <label for="floatingBeskrivelse">Opgave beskrivelse</label>
             </div>
+
             <div class="form-group">
                 <label for="exampleFormControlSelect1">Start status:</label>
                 <select class="form-select" @bind="nyOpgave.Status">
@@ -85,6 +97,7 @@ else if (loggedInBruger.ErLoggetPå())
                     }
                 </select>
             </div>
+
             <div class="form-group">
                 <label for="exampleFormControlSelect1">Start status:</label>
                 <select class="form-select" @bind="nyOpgave.Team">
@@ -95,6 +108,7 @@ else if (loggedInBruger.ErLoggetPå())
                     }
                 </select>
             </div>
+
             @if (feedbackOpgave == "Fejl!")
             {
 
@@ -111,15 +125,20 @@ else if (loggedInBruger.ErLoggetPå())
                     <strong>Succes!</strong> - Opgave er nu oprettet
                 </div>
             }
-            <div class="d-grid gap-2 col-6 mx-auto">
+
+            <div class="d-grid gap-2 col-md-6 mx-auto">
                 <button class="btn btn-primary" type="button" @onclick="() => OpretOpgave(nyOpgave)">Opret opgave</button>
             </div>
+
         </div>
-    </div>
+    </main>
 }
 else
 {
-    <p><em>Du skal være logget på for at kunne se denne side!</em></p>
+    <div class="alert alert-info col-md-3 mx-auto">
+        <span class="bi bi-door-open-fill" aria-hidden="true"></span>
+        <strong> Hov!</strong> Du skal være logget på en koordinator bruger for at se denne side.
+    </div>
 }
 
 
