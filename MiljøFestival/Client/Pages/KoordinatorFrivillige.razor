@@ -3,114 +3,133 @@
 @inject HttpClient Http
 @inject MiljøFestival.Shared.Models.Bruger loggedInBruger
 
-<h1>Overblik over alle brugere</h1>
-
 @if (brugerListeUnsorted == null)
 {
-    <p><em>Loading...</em></p>
+    <div class="d-flex justify-content-center">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
 }
 else if (!loggedInBruger.ErKoordinator())
 {
-    <p><em>Du skal være koordinator for at se denne side</em></p>
+    <div class="alert alert-info col-md-3 mx-auto">
+        <span class="bi bi-door-open-fill" aria-hidden="true"></span>
+        <strong> Hov!</strong> Du skal være logget på en koordinator bruger for at se denne side.
+    </div>
 }
 else if (loggedInBruger.ErLoggetPå())
 {
-    <h1>Formand</h1>
-    <div class="table-responsive rounded">
-        <table class="table table-striped">
-            <thead>
-                <tr class="table">
-                    <th>Navn</th>
-                    <th>Email</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var bruger in formandListe)
-                {
-                    <tr>
-                        <td>@bruger.Fornavn @bruger.Efternavn</td>
-                        <td>@bruger.Email</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
+    <main class="col-md-6 mx-auto">
+        <h1 class="display-4">Alle Frivillige</h1>
 
-    <h1>Frivillige</h1>
-    <table>
-        <thead>
-            <tr class="table">
-                <td>Sorter efter:</td>
-                @foreach (var kompetence in alleKompetencer)
-                {
-                    <td>
-                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @onchange="eventArgs => { CheckboxKompetencer(kompetence, eventArgs.Value); }">
-                        @kompetence.Kompetence_Navn
-                    </td>
-                }
-            </tr>
-        </thead>
-    </table>
-    <div class="table-responsive rounded">
-        <table class="table table-striped">
-            <thead>
-                <tr class="table">
-                    <th>Bruger ID</th>
-                    <th>Navn</th>
-                    <th>Telefon</th>
-                    <th>Email</th>
-                    <th>Adresse</th>
-                    <th>Team</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var bruger in frivilligListe)
-                {
+        <h2 class="mt-3">Formand</h2>
+
+        <div class="table-responsive rounded">
+            <table class="table table-striped">
+                <thead class="table-dark">
                     <tr>
-                        <td>@bruger.Bruger_Id</td>
-                        <td>@bruger.Fornavn @bruger.Efternavn</td>
-                        <td>@bruger.Telefon</td>
-                        <td>@bruger.Email</td>
-                        <td>@bruger.Adresse</td>
-                        <td>
-                            <select class="form-control" @bind-value="bruger.Team" @onchange="() => OpdaterBruger(bruger)" @bind-value:event="oninput">
-                                @foreach (var team in teams)
-                                {
-                                    <option value="@team" selected=@(bruger.Team == team)>@team</option>
-                                }
-                            </select>
-                        </td>
+                        <th class="col-md-1">ID</th>
+                        <th class="col-md-4">Navn</th>
+                        <th class="col-md-3">Telefon</th>
+                        <th class="col-md-4">Email</th>
                     </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-    <h1>Koordinatorer</h1>
-    <div class="table-responsive rounded">
-        <table class="table table-striped">
-            <thead>
-                <tr class="table">
-                    <th>Bruger ID</th>
-                    <th>Navn</th>
-                    <th>Telefon</th>
-                    <th>Email</th>
-                    <th>Adresse</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var bruger in koordinatorListe)
-                {
+                </thead>
+                <tbody>
+                    @foreach (var bruger in formandListe)
+                    {
+                        <tr>
+                            <th>@bruger.Bruger_Id</th>
+                            <td>@bruger.Fornavn @bruger.Efternavn</td>
+                            <td>@bruger.Telefon</td>
+                            <td>@bruger.Email</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+
+        <div class="flex-md-wrap mt-3">
+            <p class="lead">Sorter efter kompetencer:</p>
+            @foreach (var kompetence in alleKompetencer)
+            {
+                <div class="form-check form-check-inline mb-2">
+                    <input type="checkbox" class="form-check-input" id="defaultCheck" @onchange="eventArgs => { CheckboxKompetencer(kompetence, eventArgs.Value); }">
+                    <label class="form-check-label" for="defaultCheck">@kompetence.Kompetence_Navn</label>
+                </div>
+            }
+        </div>
+
+        <h2 class="mt-1">Frivillige</h2>
+
+        <div class="table-responsive rounded">
+            <table class="table table-striped">
+                <thead class="table-dark">
                     <tr>
-                        <td>@bruger.Bruger_Id</td>
-                        <td>@bruger.Fornavn @bruger.Efternavn</td>
-                        <td>@bruger.Telefon</td>
-                        <td>@bruger.Email</td>
-                        <td>@bruger.Adresse</td>
+                        <th class="col-md-1">ID</th>
+                        <th class="col-md-2">Navn</th>
+                        <th class="col-md-2">Telefon</th>
+                        <th class="col-md-2">Email</th>
+                        <th class="col-md-3">Adresse</th>
+                        <th class="col-md-2">Team</th>
                     </tr>
-                }
-            </tbody>
-        </table>
-    </div>
+                </thead>
+                <tbody>
+                    @foreach (var bruger in frivilligListe)
+                    {
+                        <tr>
+                            <th>@bruger.Bruger_Id</th>
+                            <td>@bruger.Fornavn @bruger.Efternavn</td>
+                            <td>@bruger.Telefon</td>
+                            <td>@bruger.Email</td>
+                            <td>@bruger.Adresse</td>
+                            <td>
+                                <select class="form-select" @bind-value="bruger.Team" @onchange="() => OpdaterBruger(bruger)" @bind-value:event="oninput">
+                                    @foreach (var team in teams)
+                                    {
+                                        <option value="@team" selected=@(bruger.Team == team)>@team</option>
+                                    }
+                                </select>
+                            </td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <h2 class="mt-3">Koordinatorer</h2>
+
+        <div class="table-responsive rounded">
+            <table class="table table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th class="col-md-1">ID</th>
+                        <th class="col-md-2">Navn</th>
+                        <th class="col-md-2">Telefon</th>
+                        <th class="col-md-2">Email</th>
+                        <th class="col-md-3">Adresse</th>
+                        <th class="col-md-2">Team</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var bruger in koordinatorListe)
+                    {
+                        <tr>
+                            <th>@bruger.Bruger_Id</th>
+                            <td>@bruger.Fornavn @bruger.Efternavn</td>
+                            <td>@bruger.Telefon</td>
+                            <td>@bruger.Email</td>
+                            <td>@bruger.Adresse</td>
+                            <td>@bruger.Team</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+    </main>
 }
 
 @code {

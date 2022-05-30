@@ -6,104 +6,116 @@
 
 @if (vagtListe == null)
 {
-    <p><em>Loading...</em></p>
+    <div class="d-flex justify-content-center">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
 }
-else if (!loggedInBruger.ErKoordinator() && !loggedInBruger.ErFormand())
+else if (loggedInBruger.ErKoordinator())
 {
-    <p><em>Du skal være koordinator for at se denne side</em></p>
-}
-else if (loggedInBruger.ErLoggetPå())
-{
-    <h1>Hej @loggedInBruger.Fornavn!</h1>
-    <h2>Her er en liste over alle opgaver og deres tilhørende vagter</h2>
+    <main class="col-md-6 mx-auto">
 
-    <p>Sorter efter: </p>
-    <select class="form-select" @bind="SorteringsInput">
-        <option selected>Status</option>
-        <option>Flest ledige vagter</option>
-        <option>Ansvarlige team</option>
-    </select>
+        <h1 class="display-4">Koordinator Dashboard</h1>
+        <p class="lead">Hej @loggedInBruger.Fornavn, her kan du se en oversigt over alle opgaver og deres tilhørende vagter</p>
 
-    @foreach (var opgave in opgaveListe)
-    {
-        <div class="table-responsive rounded mb-3">
-            <div class="accordion" id="accordionPanelsStayOpenExample">
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="panelsStayOpen-heading-@opgave.Opgave_Id">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-@opgave.Opgave_Id" aria-expanded="false" aria-controls="panelsStayOpen-@opgave.Opgave_Id">
-                            <table class="table">
-                                <thead>
-                                    <tr class="table">
-                                        <th class="col-3">Opgave: @opgave.Navn</th>
-                                        <th class="col-1">@FindAntalVagter(opgave.Opgave_Id, FindVagtOpgave(opgave, vagtListe))</th>
-                                        <th class="col-2">
-                                            <select class="form-control" @bind-value="opgave.Status" @onchange="() => OpdaterStatus(opgave)" @bind-value:event="oninput">
-                                                @foreach (var status in status)
-                                                {
-                                                    <option value=@status selected=@(opgave.Status == status)>@status</option>
-                                                }
-                                            </select>
-                                        </th>
-                                        <th>
-                                            <input type="button" class="btn btn-danger" value="Slet opgave" @onclick="() => SletOpgave(opgave)">
-                                        </th>
-                                        <th class="col-3">Ansvarlig team: @opgave.Team</th>
-                                    </tr>
-                                </thead>
-                            </table>
-                        </button>
-                    </h2>
-                    <div id="panelsStayOpen-@opgave.Opgave_Id" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-heading-@opgave.Opgave_Id">
-                        <div class="accordion-body">
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr class="table">
-                                        <th>Slet</th>
-                                        <th>Opdater</th>
-                                        <th>Vagt ID</th>
-                                        <th>Start</th>
-                                        <th>Slut</th>
-                                        <th>Taget af</th>
-                                        <th>Opgave navn</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var vagt in FindVagtOpgave(opgave, vagtListe))
-                                    {
-                                        <tr>
-                                            <td><input type="button" class="btn btn-danger" value="Slet" @onclick="() => SletVagt(vagt)"></td>
-                                            @if (editMode == false)
-                                            {
-                                                <td><input type="button" class="btn btn-primary" value="Opdater" @onclick="() => editMode = true"></td>
-                                                <td>@vagt.Vagt_Id</td>
-                                                <td>@vagt.Start</td>
-                                                <td>@vagt.Slut</td>
-                                                <td>@vagt.Taget_Af</td>
-                                                <td>@vagt.Opgave</td>
-                                            }
-                                            else if (editMode == true)
-                                            {
-                                                <td><input type="button" class="btn btn-primary" value="Gem" @onclick="() => OpdaterVagt(vagt)"></td>
-                                                <td>@vagt.Vagt_Id</td>
-                                                <td> <input type="text" class="form-control" @bind="vagt.Start"></td>
-                                                <td> <input type="text" class="form-control" @bind="vagt.Slut"></td>
-                                                <td>@vagt.Taget_Af</td>
-                                                <td>@vagt.Opgave</td>
-                                            }
+        <p class="lead mt-4">Sorter efter: </p>
+        <select class="form-select mb-4 col-md-3" @bind="sorteringsValg">
+            <option selected>Status</option>
+            <option>Flest ledige vagter</option>
+            <option>Ansvarlige team</option>
+        </select>
+
+        @foreach (var opgave in opgaveListe)
+        {
+            <div class="table-responsive rounded mb-3">
+                <div class="accordion" id="accordionPanelsStayOpenExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="panelsStayOpen-heading-@opgave.Opgave_Id">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-@opgave.Opgave_Id" aria-expanded="false" aria-controls="panelsStayOpen-@opgave.Opgave_Id">
+
+                                <table class="table">
+                                    <thead>
+                                        <tr class="table">
+                                            <th class="col-3">Opgave: @opgave.Navn</th>
+                                            <th class="col-1">@FindAntalVagter(opgave.Opgave_Id, FindVagtOpgave(opgave, vagtListe))</th>
+                                            <th class="col-3">
+                                                <select class="form-select" @bind-value="opgave.Status" @onchange="() => OpdaterStatus(opgave)" @bind-value:event="oninput">
+                                                    @foreach (var status in status)
+                                                    {
+                                                        <option value=@status selected=@(opgave.Status == status)>@status</option>
+
+                                                    }
+                                                </select>
+                                            </th>
+                                            <th>
+                                                <input type="button" class="btn btn-danger" value="Slet opgave" @onclick="() => SletOpgave(opgave)">
+                                            </th>
+                                            <th class="col-3">Ansvarlig team: @opgave.Team</th>
                                         </tr>
-                                    }
-                                </tbody>
-                            </table>
+                                    </thead>
+                                </table>
+
+                            </button>
+                        </h2>
+
+                        <div id="panelsStayOpen-@opgave.Opgave_Id" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-heading-@opgave.Opgave_Id">
+                            <div class="accordion-body">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr class="table">
+                                            <th>Slet</th>
+                                            <th>Opdater</th>
+                                            <th>Vagt ID</th>
+                                            <th>Start</th>
+                                            <th>Slut</th>
+                                            <th>Taget af</th>
+                                            <th>Opgave navn</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var vagt in FindVagtOpgave(opgave, vagtListe))
+                                        {
+                                            <tr>
+                                                <td><input type="button" class="btn btn-danger" value="Slet" @onclick="() => SletVagt(vagt)"></td>
+                                                @if (editMode == false)
+                                                {
+                                                    <td><input type="button" class="btn btn-primary" value="Opdater" @onclick="() => editMode = true"></td>
+                                                    <td>@vagt.Vagt_Id</td>
+                                                    <td>@vagt.Start</td>
+                                                    <td>@vagt.Slut</td>
+                                                    <td>@vagt.Taget_Af</td>
+                                                    <td>@vagt.Opgave</td>
+                                                }
+                                                else if (editMode == true)
+                                                {
+                                                    <td><input type="button" class="btn btn-primary" value="Gem" @onclick="() => OpdaterVagt(vagt)"></td>
+                                                    <td>@vagt.Vagt_Id</td>
+                                                    <td> <input type="text" class="form-control" @bind="vagt.Start"></td>
+                                                    <td> <input type="text" class="form-control" @bind="vagt.Slut"></td>
+                                                    <td>@vagt.Taget_Af</td>
+                                                    <td>@vagt.Opgave</td>
+                                                }
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
+
                     </div>
                 </div>
             </div>
-        </div>
-    }
+        }
+
+    </main>
 }
 else
 {
-    <p><em>Du skal være logget på for at kunne se denne side!</em></p>
+    <div class="alert alert-info col-md-3 mx-auto">
+        <span class="bi bi-door-open-fill" aria-hidden="true"></span>
+        <strong> Hov!</strong> Du skal være logget på en koordinator bruger for at se denne side.
+    </div>
 }
 
 

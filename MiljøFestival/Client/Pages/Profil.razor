@@ -6,45 +6,49 @@
 
 @if (loggedInBruger.ErLoggetPå())
 {
-    <div class="row col-md-6 mx-auto">
+    <main class="row col-md-6 mx-auto">
+        @*Profiloplysninger*@
         <div class="profilContainer col-md-6">
             <h2 class="my-3">Profiloplysninger</h2>
-            <div class="form-floating mb-3">
+            <div class="form-floating mb-4">
                 <input type="text" class="form-control" id="floatingFornavn" @bind="loggedInBruger.Fornavn" placeholder="text">
                 <label for="floatingFornavn">Fornavn</label>
             </div>
 
-            <div class="form-floating mb-3">
+            <div class="form-floating mb-4">
                 <input type="text" class="form-control" id="floatingEfternavn" @bind="loggedInBruger.Efternavn" placeholder="text">
                 <label for="floatingEfternavn">Efternavn</label>
             </div>
 
-            <div class="form-floating mb-3">
+            <div class="form-floating mb-4">
                 <input type="tel" class="form-control" id="floatingTelefon" @bind="loggedInBruger.Telefon" placeholder="text">
                 <label for="floatingTelefon">Telefon</label>
             </div>
 
-            <div class="form-floating mb-3">
+            <div class="form-floating mb-4">
                 <input type="text" class="form-control" id="floatingInput" @bind="loggedInBruger.Adresse" placeholder="text">
                 <label for="floatingInput">Adresse</label>
             </div>
 
-            <div class="form-floating mb-3">
+            <div class="form-floating mb-4">
                 <input type="email" class="form-control" id="floatingInput" @bind="loggedInBruger.Email" placeholder="text">
                 <label for="floatingInput">Email adresse</label>
             </div>
-            <div class="my-3">
+
+            <div class="mt-3">
                 <button class="btn btn-primary" type="button" @onclick="() => OpdaterBruger()">Gem ændringer</button>
             </div>
+
             @if (brugerÆndring == true)
             {
-                <div class="alert alert-success col-md-9 my-3">
+                <div class="alert alert-success col-md-9 mt-4">
                     <span class="bi bi-shield-lock" aria-hidden="true"></span>
                     <strong> Succes!</strong> Dine oplysninger er ændret!
                 </div>
             }
         </div>
 
+        @*Kompetencer og Password*@
         <div class="kompetenceContainer col-md-6">
             <h2 class="my-3">Kompetencer</h2>
             @foreach (var kompetence in loggedInBruger.Kompetencer)
@@ -52,24 +56,24 @@
                 <div class="form-check mb-3">
                     @if (kompetence.IsChecked == true)
                     {
-                        <input type="checkbox" class="form-check-input" id="defaultCheck" @onchange="eventArgs => { CheckboxClicked(kompetence, eventArgs.Value); }" checked />
-                        <label class="form-check-label" for="defaultcheck">@kompetence.Kompetence_Navn</label>
+                        <input type="checkbox" class="form-check-input" id="defaultCheck1" @onchange="eventArgs => { CheckboxClicked(kompetence, eventArgs.Value); }" checked />
+                        <label class="form-check-label" for="defaultCheck1">@kompetence.Kompetence_Navn</label>
                         <br />
                     }
                     else
                     {
-                        <input type="checkbox" class="form-check-input" @onchange="eventArgs => { CheckboxClicked(kompetence, eventArgs.Value); }" />
-                        <label class="form-check-label" for="defaultcheck">@kompetence.Kompetence_Navn</label>
+                        <input type="checkbox" class="form-check-input" id="defaultCheck2" @onchange="eventArgs => { CheckboxClicked(kompetence, eventArgs.Value); }" />
+                        <label class="form-check-label" for="defaultCheck2">@kompetence.Kompetence_Navn</label>
                         <br />
                     }
                 </div>
             }
-            <h2 class="my-3">Ændre Password</h2>
-            <div class="form-floating mb-3">
+            <h2 class="mt-3">Ændre Password</h2>
+            <div class="form-floating mt-2">
                 <input type="password" class="form-control" id="floatingPassword" @bind="loggedInBruger.Kode">
                 <label for="floatingPassword">Password</label>
             </div>
-            <div>
+            <div class="mt-4">
                 <button class="btn btn-outline-primary" type="button" @onclick="() => OpdaterPassword()">Opdater password</button>
             </div>
             @if (passwordÆndring == true)
@@ -79,14 +83,19 @@
                     <strong> Succes!</strong> Dit password er ændret!
                 </div>
             }
+
+            <div class="my-5">
+                <button type="button" class="btn btn-danger" @onclick="() => SletProfil()">Slet profil</button>
+            </div>
+
         </div>
-    </div>
-    <td><button type="button" class="btn btn-danger" @onclick="() => SletProfil()">Slet profil</button></td>
+    </main>
+
 }
 else
 {
     <div class="alert alert-info col-md-3 mx-auto">
-        <span class="oi oi-account-login" aria-hidden="true"></span>
+        <span class="bi bi-door-open-fill" aria-hidden="true"></span>
         <strong> Hov!</strong> <a href="/login">Log in</a> for at se og redigere din profil!
     </div>
 }

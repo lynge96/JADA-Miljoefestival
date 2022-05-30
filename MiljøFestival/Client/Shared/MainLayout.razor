@@ -22,8 +22,8 @@
 
                     @if (loggedInBruger.ErLoggetPå() && loggedInBruger.ErKoordinator())
                     {
-                        <li><a href="koordinatorVagtOpgave" class="nav-link px-2 link-dark"><span class="bi bi-plus-circle"></span> Opret</a></li>
                         <li><a href="koordinatorStartside" class="nav-link px-2 link-dark"><span class="bi bi-layout-text-window"></span> Dashboard</a></li>
+                        <li><a href="koordinatorVagtOpgave" class="nav-link px-2 link-dark"><span class="bi bi-plus-circle"></span> Opret</a></li>
                         <li><a href="koordinatorfrivillige" class="nav-link px-2 link-dark"><span class="bi bi-people"></span> Frivillige</a></li>
                     }
                     else if (loggedInBruger.ErLoggetPå() && !loggedInBruger.ErKoordinator() && !loggedInBruger.ErFormand())
@@ -34,8 +34,8 @@
                     }
                     else if (loggedInBruger.ErLoggetPå() && loggedInBruger.ErFormand())
                     {
-                        <li><a href="koordinatorVagtOpgave" class="nav-link px-2 link-dark"><span class="bi bi-plus-circle"></span> Opret</a></li>
                         <li><a href="koordinatorStartside" class="nav-link px-2 link-dark"><span class="bi bi-layout-text-window"></span> Dashboard</a></li>
+                        <li><a href="koordinatorVagtOpgave" class="nav-link px-2 link-dark"><span class="bi bi-plus-circle"></span> Opret</a></li>
                         <li><a href="formandfrivillige" class="nav-link px-2 link-dark"><span class="bi bi-plus-circle"></span> Frivillige</a></li>
                     }
 
