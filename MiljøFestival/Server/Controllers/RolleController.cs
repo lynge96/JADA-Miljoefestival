@@ -23,7 +23,7 @@ namespace MiljøFestival.Server.Controllers
             connString = configuration.GetConnectionString("miljøDB");
         }
 
-        // Hent alle teams
+        // Hent alle roller
         [HttpGet("all")]
         public async Task<IEnumerable<string>> HentAlle()
         {

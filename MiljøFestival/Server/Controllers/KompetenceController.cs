@@ -27,7 +27,7 @@ namespace MiljøFestival.Server.Controllers
         [HttpGet("all")]
         public async Task<IEnumerable<Kompetence>> HentAlle()
         {
-            var sql = "SELECT kompetence_id, kompetence AS kompetence_navn FROM kompetence;";
+            var sql = "SELECT * FROM alle_kompetencer";
 
             try
             {

@@ -27,7 +27,7 @@ namespace MiljøFestival.Server.Controllers
         [HttpGet("all")]
         public async Task<IEnumerable<Bruger>> HentAlle()
         {
-            var sql = "SELECT bruger_id, fornavn, efternavn, telefon, email, adresse, rolle_id, team_id, rolle.rolle AS rolle, team.team AS team FROM bruger LEFT JOIN rolle USING (rolle_id) LEFT JOIN team USING (team_id);";
+            var sql = "SELECT * FROM alle_brugere;";
 
             try
             {
@@ -93,7 +93,7 @@ namespace MiljøFestival.Server.Controllers
         [HttpGet("findBrugerId")]
         public async Task<IEnumerable<Bruger>> HentBrugerBrugerId(int bruger_id)
         {
-            var sql = $"SELECT bruger_id, fornavn, efternavn, telefon, email, adresse, rolle_id, team_id, rolle.rolle AS rolle, team.team AS team FROM bruger LEFT JOIN rolle USING (rolle_id) LEFT JOIN team USING (team_id) WHERE bruger_id = '{bruger_id}';";
+            var sql = $"SELECT * FROM hent_bruger_brugerID({bruger_id})";
 
             try
             {

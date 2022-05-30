@@ -28,7 +28,7 @@ namespace MiljøFestival.Server.Controllers
         [HttpGet("all")]
         public async Task<IEnumerable<Opgave>> GetAll()
         {
-            var sql = "SELECT opgave_id, navn, beskrivelse, status_id, status.status AS status, team_id, team.team AS team FROM opgave LEFT JOIN status USING (status_id) LEFT JOIN team USING (team_id);";
+            var sql = "SELECT * FROM alle_opgaver;";
 
             try
             {

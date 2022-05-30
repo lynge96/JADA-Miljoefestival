@@ -29,6 +29,7 @@ else if (loggedInBruger.ErLoggetPå())
                         <th scope="col">Slut</th>
                         <th scope="col">Opgave</th>
                         <th scope="col">Beskrivelse</th>
+                        <th>scope="col>Status</th>
                         <th scope="col">Frigiv vagt</th>
                     </tr>
                 </thead>
@@ -40,8 +41,40 @@ else if (loggedInBruger.ErLoggetPå())
                             <td>@vagt.Start.ToShortTimeString()</td>
                             <td>@vagt.Slut.ToShortTimeString()</td>
                             <td>@vagt.Opgave</td>
-                            <td>@vagt.Beskrivelse</td>                       
-                            <td><input type="button" class="btn btn-danger" value="Frigiv" @onclick="() => FrigivVagt(vagt)"></td>
+                            <td>@vagt.Beskrivelse</td>
+                            <td>@vagt.Status</td>
+                            @if (vagt.Status == "Planlægning")
+                            {
+                                <td><input type="button" class="btn btn-danger" value="Frigiv" @onclick="() => FrigivVagt(vagt)"></td>
+                            }
+                            else
+                            {
+                                <td><input type="button" class="btn btn-danger" value="Frigiv" disabled></td>
+
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-md-6 mx-auto">
+        <div class="table-responsive rounded mt-4">
+            <table class="table table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">@loggedInBruger.Team-holdet</th>
+                        <th scope="col">Navn</th>
+                        <th scope="col">Rolle</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var bruger in brugerListe)
+                    {
+                        <tr>
+                            <td></td>
+                            <td>@bruger.Fornavn @bruger.Efternavn</td>
+                            <td>@bruger.Rolle</td>
                         </tr>
                     }
                 </tbody>
@@ -61,6 +94,9 @@ else
 @code {
     private List<Vagt> vagtListe;
     private List<Vagt> vagtListeUnsorted;
+    private List<Bruger> brugerListeUnsorted;
+    private List<Bruger> brugerListe;
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -68,6 +104,9 @@ else
 
         vagtListe = vagtListeUnsorted.OrderBy(q => q.Vagt_Id).ToList();
 
+        brugerListeUnsorted = await Http.GetFromJsonAsync<List<Bruger>>("Bruger/all");
+
+        brugerListe = brugerListeUnsorted.OrderBy(q => q.Team_Id).ToList();
     }
 
     // Sletter vagt, sætter bruger_id til null og henter vagtlisten igen
@@ -77,7 +116,7 @@ else
 
         await OnInitializedAsync();
     }
-    
+
     // Henter vagtstatus
     protected async Task<IEnumerable<string>> HentStatus(int vagt_id)
     {
