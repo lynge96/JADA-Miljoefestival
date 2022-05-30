@@ -1,46 +1,50 @@
 ﻿@page "/frivilligTagVagt"
 @using MiljøFestival.Shared.Models
 @inject HttpClient Http
-@inject MiljøFestival.Shared.Models.Bruger LogedInBruger
+@inject MiljøFestival.Shared.Models.Bruger loggedInBruger
 
 @if (VagtListe == null)
 {
     <p><em>Loading...</em></p>
 }
-else if (LogedInBruger.ErKoordinator())
+else if (loggedInBruger.ErKoordinator())
 {
     <p><em>Du skal være frivillig for at se denne side</em></p>
 }
-else if (LogedInBruger.ErLoggetPå())
+else if (loggedInBruger.ErLoggetPå())
 {
-    <h1>Hej @LogedInBruger.Fornavn</h1>
-    <p>Her er en liste over dine ledige vagter for dit team: @LogedInBruger.Team</p>
-    <div class="table-responsive rounded">
-        <table class="table table-striped">
-            <thead>
-                <tr class="table">
-                    <th>Dato</th>
-                    <th>Start</th>
-                    <th>Slut</th>
-                    <th>Opgave</th>
-                    <th>Beskrivelse</th>
-                    <th>Tag vagt</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var vagt in VagtListe)
-                {
+    <div class="col-md-6 mx-auto">
+
+        <h1 class="display-4">Ledige vagter</h1>
+        <p class="lead">Her er en liste over dine ledige vagter for dit team: @loggedInBruger.Team</p>
+
+        <div class="table-responsive rounded mt-4">
+            <table class="table table-striped">
+                <thead class="table-dark">
                     <tr>
-                        <td>@vagt.Start.ToShortDateString()</td>
-                        <td>@vagt.Start.ToShortTimeString()</td>
-                        <td>@vagt.Slut.ToShortTimeString()</td>
-                        <td>@vagt.Opgave</td>
-                        <td>@vagt.Beskrivelse</td>
-                        <td><input type="button" class="btn btn-primary" value="Tag vagt" @onclick="() => TagVagt(vagt)"></td>
+                        <th scope="col">Dato</th>
+                        <th scope="col">Start</th>
+                        <th scope="col">Slut</th>
+                        <th scope="col">Opgave</th>
+                        <th scope="col">Beskrivelse</th>
+                        <th scope="col">Tag vagt</th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var vagt in VagtListe)
+                    {
+                        <tr>
+                            <td scope="row">@vagt.Start.ToShortDateString()</td>
+                            <td>@vagt.Start.ToShortTimeString()</td>
+                            <td>@vagt.Slut.ToShortTimeString()</td>
+                            <td>@vagt.Opgave</td>
+                            <td>@vagt.Beskrivelse</td>
+                            <td><input type="button" class="btn btn-primary" value="Tag vagt" @onclick="() => TagVagt(vagt)"></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
 }
 else
@@ -56,7 +60,7 @@ else
     // Henter alle ledige vagter (taget_af == null)
     protected override async Task OnInitializedAsync()
     {
-        VagtListeUnsorted = await Http.GetFromJsonAsync<List<Vagt>>($"Vagt/ledigeVagter?team_id={LogedInBruger.Team_Id}");
+        VagtListeUnsorted = await Http.GetFromJsonAsync<List<Vagt>>($"Vagt/ledigeVagter?team_id={loggedInBruger.Team_Id}");
 
         VagtListe = VagtListeUnsorted.OrderBy(q => q.Vagt_Id).ToList();
 
@@ -66,7 +70,7 @@ else
     // Tager vagt og opdaterer ledige vagter
     protected async Task TagVagt(Vagt vagt)
     {
-        vagt.Bruger_Id = LogedInBruger.Bruger_Id;
+        vagt.Bruger_Id = loggedInBruger.Bruger_Id;
 
         await Http.PutAsJsonAsync<Vagt>("Vagt/tagVagt", vagt);
 

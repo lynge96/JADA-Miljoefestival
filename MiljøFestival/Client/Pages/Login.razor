@@ -3,14 +3,14 @@
 @inject HttpClient Http
 @inject NavigationManager UriHelper
 @inject NavigationManager NavManager
-@inject MiljøFestival.Shared.Models.Bruger LogedInBruger
+@inject MiljøFestival.Shared.Models.Bruger loggedInBruger
 
-@if (!LogedInBruger.ErLoggetPå())
+@if (!loggedInBruger.ErLoggetPå())
 {
     <main class="form-signin col-md-3 m-auto">
-        <div class="my-3 p-3 bg-body rounded shadow-sm">
+        <div class="my-3 p-3">
             <form>
-                <h1 class="text-center mb-4">Log ind</h1>
+                <h1 class="text-center mb-4 display-4">Log ind</h1>
 
                 <div class="form-floating mb-2">
                     <input type="email" class="form-control" id="floatingInput" placeholder="Email" @bind-value="bruger.Email" required>
@@ -25,12 +25,10 @@
 
                 @if (feedback != string.Empty)
                 {
-
-                <div class="alert alert-warning">
-                    <span class="bi bi-key" aria-hidden="true"></span>
-                    <strong>Hov!</strong> - @feedback
-                </div>
-
+                    <div class="alert alert-warning">
+                        <span class="bi bi-lock-fill" aria-hidden="true"></span>
+                        <strong>Hov!</strong> - @feedback
+                    </div>
                 }
             </form>
         </div>
@@ -53,31 +51,42 @@ else
 
         if (verificerBruger.Count() > 0)
         {
-            var testBruger = verificerBruger.First();
+            var brugerOplysninger = verificerBruger.First();
 
-            var kompetencer = await HentKompetencer(testBruger);
+            var kompetencer = await HentKompetencer(brugerOplysninger);
 
-            testBruger.Kompetencer = kompetencer.ToList();
+            brugerOplysninger.Kompetencer = kompetencer.ToList();
 
-            LogedInBruger.Bruger_Id = testBruger.Bruger_Id;
-            LogedInBruger.Fornavn = testBruger.Fornavn;
-            LogedInBruger.Efternavn = testBruger.Efternavn;
-            LogedInBruger.Telefon = testBruger.Telefon;
-            LogedInBruger.Email = testBruger.Email;
-            LogedInBruger.Adresse = testBruger.Adresse;
-            LogedInBruger.Rolle_Id = testBruger.Rolle_Id;
-            LogedInBruger.Rolle = testBruger.Rolle;
-            LogedInBruger.Team_Id = testBruger.Team_Id;
-            LogedInBruger.Team = testBruger.Team;
-            LogedInBruger.Kompetencer = testBruger.Kompetencer;
+            loggedInBruger.Bruger_Id = brugerOplysninger.Bruger_Id;
+            loggedInBruger.Fornavn = brugerOplysninger.Fornavn;
+            loggedInBruger.Efternavn = brugerOplysninger.Efternavn;
+            loggedInBruger.Telefon = brugerOplysninger.Telefon;
+            loggedInBruger.Email = brugerOplysninger.Email;
+            loggedInBruger.Adresse = brugerOplysninger.Adresse;
+            loggedInBruger.Rolle_Id = brugerOplysninger.Rolle_Id;
+            loggedInBruger.Rolle = brugerOplysninger.Rolle;
+            loggedInBruger.Team_Id = brugerOplysninger.Team_Id;
+            loggedInBruger.Team = brugerOplysninger.Team;
+            loggedInBruger.Kompetencer = brugerOplysninger.Kompetencer;
 
             feedback = "Godkendt!";
 
             bruger = new Bruger();
 
-            NavManager.NavigateTo("/");
+            @if (loggedInBruger.ErFormand())
+            {
+                NavManager.NavigateTo("/formandfrivillige");    
+            } 
+            else if (loggedInBruger.ErKoordinator())
+            {
+                NavManager.NavigateTo("/koordinatorstartside");    
+            }
+            else
+            {
+                NavManager.NavigateTo("/frivilligstartside");    
+            }
 
-        }
+    }
         else
         {
             feedback = "Forkert login, prøv igen.";

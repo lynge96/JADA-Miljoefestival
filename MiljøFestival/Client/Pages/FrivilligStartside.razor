@@ -1,66 +1,72 @@
 ﻿@page "/frivilligStartside"
 @using MiljøFestival.Shared.Models
 @inject HttpClient Http
-@inject MiljøFestival.Shared.Models.Bruger LogedInBruger
+@inject MiljøFestival.Shared.Models.Bruger loggedInBruger
 
-@if (VagtListe == null)
+@if (vagtListe == null)
 {
     <p><em>Loading...</em></p>
 }
-else if (LogedInBruger.ErKoordinator())
+else if (loggedInBruger.ErKoordinator())
 {
     <p><em>Du skal være frivillig for at se denne side</em></p>
 }
-else if (LogedInBruger.ErLoggetPå())
+else if (loggedInBruger.ErLoggetPå())
 {
-    <div class="table-responsive rounded">
-        <table class="table table-striped">
-            <thead>
-                <tr class="table">
-                    <th>Dato</th>
-                    <th>Start</th>
-                    <th>Slut</th>
-                    <th>Opgave</th>
-                    <th>Beskrivelse</th>
-                    <th>Frigiv vagt</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var vagt in VagtListe)
-                {
+    <div class="col-md-6 mx-auto">
+
+        <h1 class="display-4">Dashboard</h1>
+        <p class="lead">
+            Hej @loggedInBruger.Fornavn, her kan du se en oversigt over alle dine nuværende vagter.
+        </p>
+
+        <div class="table-responsive rounded mt-4">
+            <table class="table table-striped">
+                <thead class="table-dark">
                     <tr>
-                        <td>@vagt.Start.ToShortDateString()</td>
-                        <td>@vagt.Start.ToShortTimeString()</td>
-                        <td>@vagt.Slut.ToShortTimeString()</td>
-                        <td>@vagt.Opgave</td>
-                        <td>@vagt.Beskrivelse</td>
-                        @if (vagt.Status == "Planlægning")
-                        {
-                            <td><input type="button" class="btn btn-danger" value="Frigiv" @onclick="() => FrigivVagt(vagt)"></td>
-                        } else
-                        {
-                            <td><input type="button" class="btn btn-danger" value="Frigiv" disabled></td>
-                        }
+                        <th scope="col">Dato</th>
+                        <th scope="col">Start</th>
+                        <th scope="col">Slut</th>
+                        <th scope="col">Opgave</th>
+                        <th scope="col">Beskrivelse</th>
+                        <th scope="col">Frigiv vagt</th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var vagt in vagtListe)
+                    {
+                        <tr>
+                            <th scope="row">@vagt.Start.ToShortDateString()</th>
+                            <td>@vagt.Start.ToShortTimeString()</td>
+                            <td>@vagt.Slut.ToShortTimeString()</td>
+                            <td>@vagt.Opgave</td>
+                            <td>@vagt.Beskrivelse</td>                       
+                            <td><input type="button" class="btn btn-danger" value="Frigiv" @onclick="() => FrigivVagt(vagt)"></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
 }
 else
 {
-    <p><em>Log in for at se dine vagter</em></p>
+    <div class="alert alert-info col-md-3 mx-auto">
+        <span class="oi oi-account-login" aria-hidden="true"></span>
+        <strong> Hov!</strong> <a href="/login">Log in</a> for at se dine vagter!
+    </div>
+
 }
 
 @code {
-    private List<Vagt> VagtListe;
-    private List<Vagt> VagtListeUnsorted;
+    private List<Vagt> vagtListe;
+    private List<Vagt> vagtListeUnsorted;
 
     protected override async Task OnInitializedAsync()
     {
-        VagtListeUnsorted = await Http.GetFromJsonAsync<List<Vagt>>($"Vagt/brugerVagter?brugerid={LogedInBruger.Bruger_Id}");
+        vagtListeUnsorted = await Http.GetFromJsonAsync<List<Vagt>>($"Vagt/brugerVagter?brugerid={loggedInBruger.Bruger_Id}");
 
-        VagtListe = VagtListeUnsorted.OrderBy(q => q.Vagt_Id).ToList();
+        vagtListe = vagtListeUnsorted.OrderBy(q => q.Vagt_Id).ToList();
 
     }
 
@@ -71,4 +77,11 @@ else
 
         await OnInitializedAsync();
     }
+    
+    // Henter vagtstatus
+    protected async Task<IEnumerable<string>> HentStatus(int vagt_id)
+    {
+        return await Http.GetFromJsonAsync<IEnumerable<string>>($"vagt/vagtStatus?vagt_id={vagt_id}");
+    }
+
 }
