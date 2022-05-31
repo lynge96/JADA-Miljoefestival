@@ -14,8 +14,8 @@ else if (loggedInBruger.ErKoordinator())
 else if (loggedInBruger.ErLoggetPå())
 {
     <main class="col-md-7 mx-auto">
-        <h1 class="display-4">Dashboard</h1>
-        <p class="lead">Hej @loggedInBruger.Fornavn, her kan du se en oversigt over alle dine nuværende vagter.</p>
+        <h1 class="display-4 text-center mb-4">Dashboard</h1>
+        <p class="lead">Hej <bold>@loggedInBruger.Fornavn</bold>, her kan du se en oversigt over alle dine nuværende vagter.</p>
 
         @*Dashboard Tabel*@
         <div class="table-responsive rounded mt-4">
@@ -55,8 +55,8 @@ else if (loggedInBruger.ErLoggetPå())
             </table>
         </div>
     </main>
-
-    <div class="col-md-6 mx-auto mt-3">
+    @*Team Tabel*@
+    <div class="col-md-7 mx-auto mt-3">
         <h3>@loggedInBruger.Team-holdet</h3>
         <p class="lead">Her er en liste over alle dine medarbejdere</p>
         <div class="table-responsive rounded mt-4">

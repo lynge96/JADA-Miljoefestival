@@ -3,77 +3,91 @@
 @inject HttpClient Http
 @inject MiljøFestival.Shared.Models.Bruger loggedInBruger
 
-<h1>Overblik over alle brugere</h1>
 
 @if (brugerListeUnsorted == null)
 {
-    <p><em>Loading...</em></p>
+    <div class="d-flex justify-content-center">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
 }
 else if (loggedInBruger.ErLoggetPå())
 {
-    <h1>Formand</h1>
-    <div class="table-responsive rounded">
-        <table class="table table-striped">
-            <thead>
-                <tr class="table">
-                    <th>Navn</th>
-                    <th>Email</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var bruger in formandListe)
-                {
-                    <tr>
-                        <td>@bruger.Fornavn @bruger.Efternavn</td>
-                        <td>@bruger.Email</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
+    <main class="col-md-7 mx-auto">
 
-    <h1>Frivillige</h1>
-    <div class="table-responsive rounded">
-        <table class="table table-striped">
-            <thead>
-                <tr class="table">
-                    <th>Navn</th>
-                    <th>Team</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var bruger in frivilligListe)
-                {
+        <h1 class="display-4">Alle Frivillige</h1>
+
+        <h2 class="mt-3">Formand</h2>
+
+        <div class="table-responsive rounded">
+            <table class="table table-striped">
+                <thead class="table-dark">
                     <tr>
-                        <td>@bruger.Fornavn @bruger.Efternavn</td>
-                        <td>@bruger.Team</td>
+                        <th>Navn</th>
+                        <th>Email</th>
                     </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-    <h1>Koordinatorer</h1>
-    <div class="table-responsive rounded">
-        <table class="table table-striped">
-            <thead>
-                <tr class="table">
-                    <th>Navn</th>
-                    <th>Telefon</th>
-                    <th>Email</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var bruger in koordinatorListe)
-                {
+                </thead>
+                <tbody>
+                    @foreach (var bruger in formandListe)
+                    {
+                        <tr>
+                            <td>@bruger.Fornavn @bruger.Efternavn</td>
+                            <td>@bruger.Email</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <h2 class="mt-3">Frivillige</h2>
+
+        <div class="table-responsive rounded">
+            <table class="table table-striped">
+                <thead class="table-dark">
                     <tr>
-                        <td>@bruger.Fornavn @bruger.Efternavn</td>
-                        <td>@bruger.Telefon</td>
-                        <td>@bruger.Email</td>
+                        <th>Navn</th>
+                        <th>Telefon</th>
+                        <th>Team</th>
                     </tr>
-                }
-            </tbody>
-        </table>
-    </div>
+                </thead>
+                <tbody>
+                    @foreach (var bruger in frivilligListe)
+                    {
+                        <tr>
+                            <td class="col-md-4">@bruger.Fornavn @bruger.Efternavn</td>
+                            <td class="col-md-4">@bruger.Telefon</td>
+                            <td class="col-md-4">@bruger.Team</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <h2 class="mt-3">Koordinatorer</h2>
+
+        <div class="table-responsive rounded">
+            <table class="table table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th class="col-md-4">Navn</th>
+                        <th class="col-md-4">Telefon</th>
+                        <th class="col-md-4">Email</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var bruger in koordinatorListe)
+                    {
+                        <tr>
+                            <td>@bruger.Fornavn @bruger.Efternavn</td>
+                            <td>@bruger.Telefon</td>
+                            <td>@bruger.Email</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </main>
 }
 
 @code {
