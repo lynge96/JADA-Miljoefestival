@@ -13,9 +13,12 @@
 }
 else if (!loggedInBruger.ErFormand())
 {
-    <p><em>Du skal være koordinator for at se denne side</em></p>
+    <div class="alert alert-info col-md-3 mx-auto">
+        <span class="bi bi-door-open-fill" aria-hidden="true"></span>
+        <strong> Hov!</strong> Du skal være logget på en formand bruger for at se denne side.
+    </div>
 }
-else if (loggedInBruger.ErLoggetPå())
+else if (loggedInBruger.ErFormand())
 {
 <main class="col-md-8 mx-auto">
 
