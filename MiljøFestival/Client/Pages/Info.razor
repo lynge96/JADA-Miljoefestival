@@ -1,0 +1,52 @@
+﻿@page "/info"
+@using MiljøFestival.Shared.Models
+@inject HttpClient Http
+@inject MiljøFestival.Shared.Models.Bruger loggedInBruger
+
+
+<main class="col-md-7 mx-auto">
+    <h1 class="display-4 text-center mb-4">Om projektet</h1>
+    <p class="lead mb-2">
+        Projektet er udarbejdet af Jacob, Abinash, Denis og Anders, studerende fra Erhvervsakademi Aarhus på en Professionsbachelor i It-arkitektur.<br />
+        Vi har arbejdet med dette tværfagligt projekt på 2. semester, som skal illustrere forskellige kompetencer vi har lært i de forskellige fag.
+    </p>
+
+    <div class="row row-cols-md-2 row-cols-md-2 g-4">
+        <div class="col ">
+            <div class="card">
+                <img src="Denis.png" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Denis "Quang" Huynh</h5>
+                    <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <img src="Jacob.png" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Jacob "Thomas/Morten" Kaae</h5>
+                    <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <img src="Abi.gif" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Abinash "Floorflækker" Tamilselvan</h5>
+                    <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <img src="Anders.png" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Anders "TBA" Lynge</h5>
+                    <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
