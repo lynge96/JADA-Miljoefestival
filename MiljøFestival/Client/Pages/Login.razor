@@ -20,7 +20,7 @@
                     <input type="password" class="form-control" id="floatingPassword" placeholder="Password" @bind-value="bruger.Kode" required>
                     <label for="floatingPassword">Password</label>
                 </div>
-                <button class="w-100 btn btn-primary mt-3" type="submit" @onclick="() => HandleSubmit()">Log ind</button>
+                <button class="w-100 btn btn-primary mt-3" type="button" @onclick="() => HandleSubmit()">Log ind</button>
                 <p class="my-3 h6"><a class="nav-link text-decoration-underline" href="OpretBruger">Opret bruger</a></p>
                 @if (feedback != string.Empty)
                 {
