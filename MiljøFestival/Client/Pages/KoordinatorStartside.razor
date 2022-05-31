@@ -17,7 +17,7 @@ else if (loggedInBruger.ErKoordinator() || loggedInBruger.ErFormand())
     <main class="col-md-7 mx-auto">
 
         <h1 class="display-4 text-center mb-4">Dashboard</h1>
-        <p class="lead">Hej <strong>@loggedInBruger.Fornavn</strong>, her kan du se en oversigt over alle opgaver og deres tilhørende vagter
+        <p class="lead">Hej <strong>@loggedInBruger.Fornavn</strong>, her kan du se en oversigt over alle <u>opgaver</u> og deres tilhørende vagter
         <br />Her har du mulighed for at opdaterer opgavestatusser samt slette opgaver</p>
 
         <p class="mb-0">Sorter efter: </p>
@@ -30,34 +30,33 @@ else if (loggedInBruger.ErKoordinator() || loggedInBruger.ErFormand())
         @foreach (var opgave in opgaveListe)
         {
             <div class="table-responsive rounded mb-3">
-                <div class="accordion" id="accordionPanelsStayOpenExample">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="panelsStayOpen-heading-@opgave.Opgave_Id">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-@opgave.Opgave_Id" aria-expanded="false" aria-controls="panelsStayOpen-@opgave.Opgave_Id">
-
-                                <table class="table">
+                <div class="accordion  align-middle" id="accordionPanelsStayOpenExample">
+                    <div class="accordion-item mx-auto">
+                        <h2 class="accordion-header mx-auto" id="panelsStayOpen-heading-@opgave.Opgave_Id">
+                                <table class="table table-borderless">
                                     <thead>
-                                        <tr class="table">
-                                            <th class="col-3">Opgave: @opgave.Navn</th>
-                                            <th class="col-1">@FindAntalVagter(opgave.Opgave_Id, FindVagtOpgave(opgave, vagtListe))</th>
-                                            <th class="col-3">
+                                        <tr class="align-middle">
+                                            <th class="">
+                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-@opgave.Opgave_Id" aria-expanded="false" aria-controls="panelsStayOpen-@opgave.Opgave_Id"></button>
+                                            </th>
+                                            <th class="lead col-3">@opgave.Navn</th>
+                                            <th class="lead col-3">@FindAntalVagter(opgave.Opgave_Id, FindVagtOpgave(opgave, vagtListe))</th>
+                                            <th class="lead col-3">
                                                 <select class="form-select" @bind-value="opgave.Status" @onchange="() => OpdaterStatus(opgave)" @bind-value:event="oninput">
                                                     @foreach (var status in status)
                                                     {
                                                         <option value=@status selected=@(opgave.Status == status)>@status</option>
-
                                                     }
                                                 </select>
                                             </th>
-                                            <th>
+                                            <th class="">
                                                 <input type="button" class="btn btn-danger" value="Slet opgave" @onclick="() => SletOpgave(opgave)">
                                             </th>
-                                            <th class="col-3">Ansvarlig team: @opgave.Team</th>
+                                            <th class="lead col-3">Team: @opgave.Team</th>
                                         </tr>
                                     </thead>
                                 </table>
 
-                            </button>
                         </h2>
 
                         <div id="panelsStayOpen-@opgave.Opgave_Id" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-heading-@opgave.Opgave_Id">
