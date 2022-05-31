@@ -9,7 +9,7 @@
     <div class="col-md-6">
         <h2 class="my-3">Opret en bruger</h2>
 
-        <EditForm Model="@BrugerModel" class="row g-2" OnValidSubmit="() => OpretUser(BrugerModel, alleKompetencer)">
+        <EditForm Model="@BrugerModel" class="row g-2" OnValidSubmit="() => OpretUser(alleKompetencer)">
             <DataAnnotationsValidator />
 
             <div class="form-floating col-md-6 mb-4">
@@ -71,7 +71,7 @@
                 <div class="mx-auto">
                     <button class="btn btn-primary" type="button" disabled>
                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                            Loading...
+                        Loading...
                     </button>
                 </div>
             }
@@ -89,7 +89,7 @@
                     <span class="visually-hidden">Loading...</span>
                 </div>
             </div>
-        } 
+        }
         else
         {
             @foreach (var kompetence in alleKompetencer)
@@ -100,30 +100,35 @@
                 </div>
             }
         }
-    </div>        
+    </div>
 </main>
 
 @code {
     private List<string> teams = new List<string>();
     private List<Kompetence> alleKompetencer = new List<Kompetence>();
     private bool opretBrugerLoading = false;
+    private Bruger BrugerModel = new Bruger();
+    private EditContext EditContext;
 
     protected override async Task OnInitializedAsync()
     {
         teams = await Http.GetFromJsonAsync<List<string>>("team/all");
 
         alleKompetencer = await Http.GetFromJsonAsync<List<Kompetence>>("Kompetence/all");
+
+        EditContext = new EditContext(BrugerModel);
+
     }
 
-    private async Task OpretUser(Bruger bruger, List<Kompetence> kompetenceListe)
+    private async Task OpretUser(List<Kompetence> kompetenceListe)
     {
         opretBrugerLoading = true;
-        bruger.Rolle = "Frivillig";
+        BrugerModel.Rolle = "Frivillig";
 
-        await Http.PostAsJsonAsync<Bruger>("Bruger/opret", bruger);
+        await Http.PostAsJsonAsync<Bruger>("Bruger/opret", BrugerModel);
 
         // Henter bruger_id'et for den nyoprettede bruger og kobler det op på kompetencelisten
-        int bruger_id = (await Http.GetFromJsonAsync<List<int>>($"Bruger/findBrugerIdMail?email={bruger.Email}")).First();
+        int bruger_id = (await Http.GetFromJsonAsync<List<int>>($"Bruger/findBrugerIdMail?email={BrugerModel.Email}")).First();
 
         foreach (var kompetence in alleKompetencer)
         {

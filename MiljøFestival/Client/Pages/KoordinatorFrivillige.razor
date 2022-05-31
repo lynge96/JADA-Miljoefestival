@@ -7,7 +7,7 @@
 {
     <div class="d-flex justify-content-center">
         <div class="spinner-border text-primary" role="status">
-          <span class="visually-hidden">Loading...</span>
+            <span class="visually-hidden">Loading...</span>
         </div>
     </div>
 }
@@ -22,11 +22,16 @@ else if (loggedInBruger.ErLoggetPå())
 {
     <main class="col-md-7 mx-auto">
 
-        <h1 class="display-4">Alle Frivillige</h1>
+        <h1 class="display-4">Overblik over alle frivillige</h1>
+        <p class="lead">
+            Her har du mulighed for at se alle frivillige på festivallen. Yderligere kan du flytte frivillige fra ét hold til et andet, hvis det skulle være nødvendigt.
+            <br /> <br /><i>OBS:</i> Gøres dette, bliver alle vagterne, som brugeren eventuelt havde taget, frigivet tilbage til brugerens tidligere team. <br /><br />
+
+        </p>
 
         <h2 class="mt-3">Formand</h2>
 
-        <div class="table-responsive rounded">
+        <div class="table-responsive rounded mb-3">
             <table class="table table-striped">
                 <thead class="table-dark">
                     <tr>
@@ -50,9 +55,9 @@ else if (loggedInBruger.ErLoggetPå())
             </table>
         </div>
 
-
+        <h2 class="mt-1">Frivillige</h2>
         <div class="flex-md-wrap mt-3">
-            <p class="lead">Sorter efter kompetencer:</p>
+            <p class="mb-0">Sorter efter: </p>
             @foreach (var kompetence in alleKompetencer)
             {
                 <div class="form-check form-check-inline mb-2">
@@ -62,11 +67,10 @@ else if (loggedInBruger.ErLoggetPå())
             }
         </div>
 
-        <h2 class="mt-1">Frivillige</h2>
 
         <div class="table-responsive rounded">
             <table class="table table-striped">
-                <thead>
+                <thead class="table-dark">
                     <tr>
                         <th class="col-md-1">ID</th>
                         <th class="col-md-2">Navn</th>
@@ -206,7 +210,7 @@ else if (loggedInBruger.ErLoggetPå())
 
                 frivilligListe = nyListe;
 
-                nyListe = new List<Bruger>(); 
+                nyListe = new List<Bruger>();
             }
         }
     }

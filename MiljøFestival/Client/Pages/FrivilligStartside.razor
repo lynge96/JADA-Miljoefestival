@@ -18,8 +18,9 @@ else if (loggedInBruger.ErKoordinator())
 else if (loggedInBruger.ErLoggetPå())
 {
     <main class="col-md-7 mx-auto">
-        <h1 class="display-4 text-center mb-4">Dashboard</h1>
-        <p class="lead">Hej <bold>@loggedInBruger.Fornavn</bold>, her kan du se en oversigt over alle dine nuværende vagter.</p>
+        <h1 class="display-4 text-center mb-4">Dit dashboard</h1>
+        <p class="lead">Hej <bold>@loggedInBruger.Fornavn</bold>! Nedenfor kan du se en oversigt over alle dine nuværende vagter samt en liste over alle dine medfrivillige i dit team
+            <br /><br /><i>OBS:</i> Dine vagter kan kun frigives, når selve opgaven er i planlægnings-status.</p>
 
         @*Dashboard Tabel*@
         <div class="table-responsive rounded mt-4">
@@ -60,10 +61,10 @@ else if (loggedInBruger.ErLoggetPå())
         </div>
     </main>
     @*Team Tabel*@
-    <div class="col-md-7 mx-auto mt-3">
-        <h3>@loggedInBruger.Team-holdet</h3>
-        <p class="lead">Her er en liste over alle dine medarbejdere</p>
-        <div class="table-responsive rounded mt-4">
+    <div class="col-md-7 mx-auto mt-4">
+        <h3><i>@loggedInBruger.Team-holdet</i></h3>
+        <p class="lead">Liste over alle dine kollegaer i dit team:</p>
+        <div class="table-responsive rounded mt-2">
             <table class="table table-striped">
                 <thead class="table-dark">
                     <tr>
