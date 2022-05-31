@@ -48,6 +48,7 @@ else if (loggedInBruger.ErLoggetPå())
             <table class="table table-striped">
                 <thead class="table-dark">
                     <tr>
+                        <th>ID</th>
                         <th>Navn</th>
                         <th>Telefon</th>
                         <th>Team</th>
@@ -57,9 +58,10 @@ else if (loggedInBruger.ErLoggetPå())
                     @foreach (var bruger in frivilligListe)
                     {
                         <tr>
+                            <th class="col-md-1">@bruger.Bruger_Id</th>
                             <td class="col-md-4">@bruger.Fornavn @bruger.Efternavn</td>
                             <td class="col-md-4">@bruger.Telefon</td>
-                            <td class="col-md-4">@bruger.Team</td>
+                            <td class="col-md-3">@bruger.Team</td>
                         </tr>
                     }
                 </tbody>
@@ -72,18 +74,20 @@ else if (loggedInBruger.ErLoggetPå())
             <table class="table table-striped">
                 <thead class="table-dark">
                     <tr>
-                        <th class="col-md-4">Navn</th>
-                        <th class="col-md-4">Telefon</th>
-                        <th class="col-md-4">Email</th>
+                        <th>ID</th>
+                        <th>Navn</th>
+                        <th>Telefon</th>
+                        <th>Team</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var bruger in koordinatorListe)
                     {
                         <tr>
-                            <td>@bruger.Fornavn @bruger.Efternavn</td>
-                            <td>@bruger.Telefon</td>
-                            <td>@bruger.Email</td>
+                            <th class="col-md-1">@bruger.Bruger_Id</th>
+                            <td class="col-md-4">@bruger.Fornavn @bruger.Efternavn</td>
+                            <td class="col-md-4">@bruger.Telefon</td>
+                            <td class="col-md-3">@bruger.Team</td>
                         </tr>
                     }
                 </tbody>

@@ -81,6 +81,7 @@
     </div>
     @*Kompetencer*@
     <div class="col-md-6 mb-3">
+        <h2 class="my-3">Kompetencer</h2>
         @if (alleKompetencer == null)
         {
             <div class="d-flex justify-content-center">
@@ -91,16 +92,13 @@
         } 
         else
         {
-                <h2 class="my-3">Kompetencer</h2>
-
-
-                @foreach (var kompetence in alleKompetencer)
-                {
-                    <div class="form-check mb-3">
-                        <input type="checkbox" class="form-check-input" id="kompetencer" @onchange="eventArgs => { CheckboxClicked(kompetence, eventArgs.Value); }" />
-                        <label class="form-check-label" for="kompetencer">@kompetence.Kompetence_Navn</label>
-                    </div>
-                }
+            @foreach (var kompetence in alleKompetencer)
+            {
+                <div class="form-check mb-3">
+                    <input type="checkbox" class="form-check-input" id="kompetencer" @onchange="eventArgs => { CheckboxClicked(kompetence, eventArgs.Value); }" />
+                    <label class="form-check-label" for="kompetencer">@kompetence.Kompetence_Navn</label>
+                </div>
+            }
         }
     </div>        
 </main>

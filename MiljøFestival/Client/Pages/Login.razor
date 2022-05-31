@@ -11,17 +11,33 @@
         @*Login form*@
         <div class="my-3 p-3">
             <form>
+
                 <h1 class="text-center mb-4 display-4">Log ind</h1>
+
                 <div class="form-floating mb-2">
                     <input type="email" class="form-control" id="floatingInput" placeholder="Email" @bind-value="bruger.Email" required>
                     <label for="floatingInput">Email adresse</label>
                 </div>
+
                 <div class="form-floating">
                     <input type="password" class="form-control" id="floatingPassword" placeholder="Password" @bind-value="bruger.Kode" required>
                     <label for="floatingPassword">Password</label>
                 </div>
-                <button class="w-100 btn btn-primary mt-3" type="button" @onclick="() => HandleSubmit()">Log ind</button>
+
+                @if (logInLoading == false)
+                {
+                    <button class="w-100 btn btn-primary mt-3" type="button" @onclick="() => HandleSubmit()">Log ind</button>
+                } 
+                else if (logInLoading == true)
+                {
+                    <button class="w-100 btn btn-primary mt-3" type="button" disabled>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            Loading...
+                    </button>
+                }
+
                 <p class="my-3 h6"><a class="nav-link text-decoration-underline" href="OpretBruger">Opret bruger</a></p>
+
                 @if (feedback != string.Empty)
                 {
                     <div class="alert alert-warning">
@@ -44,10 +60,11 @@ else
 @code {
     private Bruger bruger = new Bruger();
     private string feedback = string.Empty;
-
+    private bool logInLoading = false;
 
     private async Task HandleSubmit()
     {
+        logInLoading = true;
         IEnumerable<Bruger> verificerBruger = await TjekLogin(bruger);
 
         if (verificerBruger.Count() > 0)
@@ -74,13 +91,9 @@ else
 
             bruger = new Bruger();
 
-            @if (loggedInBruger.ErFormand())
+            @if (loggedInBruger.ErFormand() || loggedInBruger.ErKoordinator())
             {
                 NavManager.NavigateTo("/formandfrivillige");
-            }
-            else if (loggedInBruger.ErKoordinator())
-            {
-                NavManager.NavigateTo("/koordinatorstartside");
             }
             else
             {
@@ -89,6 +102,7 @@ else
         }
         else
         {
+            logInLoading = false;
             feedback = "Forkert login, prøv igen.";
         }
     }
