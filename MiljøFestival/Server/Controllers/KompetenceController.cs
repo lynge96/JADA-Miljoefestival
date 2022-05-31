@@ -93,7 +93,7 @@ namespace MiljøFestival.Server.Controllers
         {
             foreach (var kompetence in kompetenceListe)
             {
-                var sql = $"CALL hent_kompetencer({kompetence.Bruger_Id}, {kompetence.Kompetence_Id}, {kompetence.IsChecked});";
+                var sql = $"CALL opdater_kompetencer({kompetence.Bruger_Id}, {kompetence.Kompetence_Id}, {kompetence.IsChecked});";
 
                 try
                 {
