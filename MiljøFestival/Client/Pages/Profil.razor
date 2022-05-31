@@ -42,13 +42,13 @@
             @if (brugerÆndring == true)
             {
                 <div class="alert alert-success col-md-9 mt-4">
-                    <span class="bi bi-shield-lock" aria-hidden="true"></span>
+                    <span class="bi bi-shield-lock-fill" aria-hidden="true"></span>
                     <strong> Succes!</strong> Dine oplysninger er ændret!
                 </div>
             }
         </div>
 
-        @*Kompetencer og Password*@
+        @*Kompetencer*@
         <div class="kompetenceContainer col-md-6">
             <h2 class="my-3">Kompetencer</h2>
             @foreach (var kompetence in loggedInBruger.Kompetencer)
@@ -79,15 +79,16 @@
             @if (passwordÆndring == true)
             {
                 <div class="alert alert-success col-md-9 my-3">
-                    <span class="bi bi-shield-lock" aria-hidden="true"></span>
+                    <span class="bi bi-shield-lock-fill" aria-hidden="true"></span>
                     <strong> Succes!</strong> Dit password er ændret!
                 </div>
             }
-
+        </div>
+        @*Password*@
+        <div class="passwordContainer col-md-6">
             <div class="my-5">
                 <button type="button" class="btn btn-danger" @onclick="() => SletProfil()">Slet profil</button>
             </div>
-
         </div>
     </main>
 

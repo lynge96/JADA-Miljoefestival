@@ -60,10 +60,21 @@
                 <ValidationMessage For="@(() => BrugerModel.Team)" />
             </div>
 
-
-            <div class="mx-auto">
-                <button class="btn btn-primary" type="submit">Opret Bruger</button>
-            </div>
+            @if (opretBrugerLoading == false)
+            {
+                <div class="mx-auto">
+                    <button class="btn btn-primary" type="submit">Opret Bruger</button>
+                </div>
+            }
+            else if (opretBrugerLoading == true)
+            {
+                <div class="mx-auto">
+                    <button class="btn btn-primary" type="button" disabled>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            Loading...
+                    </button>
+                </div>
+            }
 
 
         </EditForm>
@@ -97,6 +108,7 @@
 @code {
     private List<string> teams = new List<string>();
     private List<Kompetence> alleKompetencer = new List<Kompetence>();
+    private bool opretBrugerLoading = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -107,6 +119,7 @@
 
     private async Task OpretUser(Bruger bruger, List<Kompetence> kompetenceListe)
     {
+        opretBrugerLoading = true;
         bruger.Rolle = "Frivillig";
 
         await Http.PostAsJsonAsync<Bruger>("Bruger/opret", bruger);
@@ -124,7 +137,7 @@
         // Resetter opret-formularen
         BrugerModel = new Bruger();
 
-        await Task.Delay(1000);
+        await Task.Delay(700);
 
         NavManager.NavigateTo("/login");
     }
