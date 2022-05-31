@@ -14,6 +14,13 @@
         </div>
     </div>
 }
+else if (!loggedInBruger.ErLoggetPå())
+{
+    <div class="alert alert-info col-md-3 mx-auto">
+        <span class="bi bi-door-open-fill" aria-hidden="true"></span>
+        <strong> Hov!</strong> Du skal være logget på for at se denne side.
+    </div>
+}
 else if (loggedInBruger.ErLoggetPå())
 {
     <main class="col-md-7 mx-auto">
