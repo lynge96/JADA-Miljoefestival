@@ -26,11 +26,11 @@
 
                 @if (logInLoading == false)
                 {
-                    <button class="w-100 btn btn-primary mt-3" type="button" @onclick="() => HandleSubmit()">Log ind</button>
+                    <button class="w-100 btn btn-success mt-3" type="button" @onclick="() => HandleSubmit()">Log ind</button>
                 } 
                 else if (logInLoading == true)
                 {
-                    <button class="w-100 btn btn-primary mt-3" type="button" disabled>
+                    <button class="w-100 btn btn-success mt-3" type="button" disabled>
                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                             Loading...
                     </button>
