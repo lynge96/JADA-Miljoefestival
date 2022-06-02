@@ -37,6 +37,7 @@ else if (loggedInBruger.ErLoggetPå())
                     </tr>
                 </thead>
                 <tbody>
+                    @* Laver en række for hver vagt, den frivillige har taget *@
                     @foreach (var vagt in vagtListe)
                     {
                         <tr>
@@ -46,6 +47,8 @@ else if (loggedInBruger.ErLoggetPå())
                             <td>@vagt.Opgave</td>
                             <td>@vagt.Beskrivelse</td>
                             <td>@vagt.Status</td>
+                            @* Gør det muligt for den frivillige at frigive sin vagt,
+                                hvis statussen er i "Planlægning" *@
                             @if (vagt.Status == "Planlægning")
                             {
                                 <td><input type="button" class="btn btn-danger" value="Frigiv" @onclick="() => FrigivVagt(vagt)"></td>
@@ -69,14 +72,17 @@ else if (loggedInBruger.ErLoggetPå())
                 <thead class="table-dark">
                     <tr>
                         <th scope="col">Frivillige</th>
+                        <th scope="col">Telefon</th>
                         <th scope="col">Rolle</th>
                     </tr>
                 </thead>
                 <tbody>
+                    @* Laver en række for hver i sit team med deres navn, telefon og rolle *@
                     @foreach (var bruger in frivilligListe)
                     {
                         <tr>
                             <td>@bruger.Fornavn @bruger.Efternavn</td>
+                            <td>@bruger.Telefon</td>
                             <td>@bruger.Rolle</td>
                         </tr>
                     }
@@ -101,6 +107,7 @@ else
     private List<Bruger> frivilligListeUnsorted;
     private List<Bruger> frivilligListe;
 
+    // Henter lister over alle vagter, brugere og frivillige
     protected override async Task OnInitializedAsync()
     {
         vagtListeUnsorted = await Http.GetFromJsonAsync<List<Vagt>>($"Vagt/brugerVagter?brugerid={loggedInBruger.Bruger_Id}");
@@ -114,17 +121,11 @@ else
         frivilligListe = frivilligListeUnsorted.FindAll(x => x.Team == loggedInBruger.Team).ToList();
     }
 
-    // Sletter vagt, sætter bruger_id til null og henter vagtlisten igen
+    // Frigiver vagt (sætter bruger_id til null) og henter vagtlisten igen
     private async Task FrigivVagt(Vagt vagt)
     {
         await Http.PutAsJsonAsync<Vagt>("Vagt/frigivVagt", vagt);
 
         await OnInitializedAsync();
-    }
-
-    // Henter vagtstatus
-    private async Task<IEnumerable<string>> HentStatus(int vagt_id)
-    {
-        return await Http.GetFromJsonAsync<IEnumerable<string>>($"vagt/vagtStatus?vagt_id={vagt_id}");
     }
 }

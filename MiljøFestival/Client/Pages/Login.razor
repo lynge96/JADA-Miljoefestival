@@ -8,7 +8,8 @@
 @if (!loggedInBruger.ErLoggetPå())
 {
     <main class="form-signin col-md-3 m-auto">
-        @*Login form*@
+
+        @* Login form *@
         <div class="my-3 p-3">
             <form>
 
@@ -24,20 +25,22 @@
                     <label for="floatingPassword">Password</label>
                 </div>
 
+                @* Bruger variablen "loginLoading" til at vise det animerede loading-ikon *@
                 @if (logInLoading == false)
                 {
                     <button class="w-100 btn btn-success mt-3" type="button" @onclick="() => HandleSubmit()">Log ind</button>
-                } 
+                }
                 else if (logInLoading == true)
                 {
                     <button class="w-100 btn btn-success mt-3" type="button" disabled>
                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                            Loading...
+                        Loading...
                     </button>
                 }
 
                 <p class="my-3 h6"><a class="nav-link text-decoration-underline" href="OpretBruger">Opret bruger</a></p>
 
+                @* Viser en feedbackboks, hvis login ikke bliver godkendt *@
                 @if (feedback != string.Empty)
                 {
                     <div class="alert alert-warning">
@@ -62,11 +65,17 @@ else
     private string feedback = string.Empty;
     private bool logInLoading = false;
 
+    // Tjekket om email og kode er korrekt i databasen og returnerer brugeren
+    // i form at et object (loggedinBruger) af klassen Bruger. Herefter bruges bruger rollen
+    // til at bestemme hvilken side, brugerne viderstilles til. 
     private async Task HandleSubmit()
     {
         logInLoading = true;
+
         IEnumerable<Bruger> verificerBruger = await TjekLogin(bruger);
 
+        // Hvis TjekLogin() returnerer en tom liste, så ved vi, at email / kode var forkert, og
+        // brugeren kan prøve igen. Ellers er det korrekt og i listen lægger alt information om brugeren
         if (verificerBruger.Count() > 0)
         {
             var brugerOplysninger = verificerBruger.First();
@@ -93,7 +102,7 @@ else
 
             @if (loggedInBruger.ErFormand() || loggedInBruger.ErKoordinator())
             {
-                NavManager.NavigateTo("/koordinatorStartside");
+                NavManager.NavigateTo("/adminStartside");
             }
             else
             {
@@ -107,6 +116,7 @@ else
         }
     }
 
+    // Henter en liste af kompetencer for brugeren, der logger ind (hvis login bliver godkendt)
     private async Task<IEnumerable<Kompetence>> HentKompetencer(Bruger bruger)
     {
         List<Kompetence> alleKompetencer = await Http.GetFromJsonAsync<List<Kompetence>>("Kompetence/all");
@@ -119,9 +129,12 @@ else
 
             valgteKompetencer.Add(kompetencer.First());
         }
+
         return valgteKompetencer;
     }
 
+    // Funktionen der tager den indtastede email og kode og returnerer en bruger eller en tom liste,
+    // hvis koden / emailen er forkert indtastet
     private async Task<IEnumerable<Bruger>> TjekLogin(Bruger user)
     {
         return await Http.GetFromJsonAsync<IEnumerable<Bruger>>($"Bruger/tjeklogin?email={bruger.Email}&kode={bruger.Kode}");

@@ -1,4 +1,4 @@
-﻿@page "/frivillige"
+﻿@page "/frivilligeSide"
 @using MiljøFestival.Shared.Models
 @inject HttpClient Http
 @inject MiljøFestival.Shared.Models.Bruger loggedInBruger
@@ -36,6 +36,7 @@ else if (loggedInBruger.ErLoggetPå())
                     </tr>
                 </thead>
                 <tbody>
+                    @* En liste over alle formænd*@
                     @foreach (var bruger in formandListe)
                     {
                         <tr>
@@ -60,6 +61,7 @@ else if (loggedInBruger.ErLoggetPå())
                     </tr>
                 </thead>
                 <tbody>
+                    @* En liste over alle frivillige  *@
                     @foreach (var bruger in frivilligListe)
                     {
                         <tr>
@@ -86,6 +88,7 @@ else if (loggedInBruger.ErLoggetPå())
                     </tr>
                 </thead>
                 <tbody>
+                    @* En liste over alle brugere *@
                     @foreach (var bruger in koordinatorListe)
                     {
                         <tr>
@@ -106,8 +109,8 @@ else if (loggedInBruger.ErLoggetPå())
     private List<Bruger> koordinatorListe;
     private List<Bruger> formandListe;
     private List<Bruger> brugerListeUnsorted;
-    private List<string> teams = new List<string>();
 
+    // Henter lister over alle brugere, frivillige, koordinatorer, formænd. 
     protected override async Task OnInitializedAsync()
     {
         brugerListeUnsorted = await Http.GetFromJsonAsync<List<Bruger>>("Bruger/all");
@@ -117,7 +120,5 @@ else if (loggedInBruger.ErLoggetPå())
         koordinatorListe = brugerListeUnsorted.FindAll(q => q.Rolle_Id == 1);
 
         formandListe = brugerListeUnsorted.FindAll(q => q.Rolle_Id == 3);
-
-        teams = await Http.GetFromJsonAsync<List<string>>("Team/all");
     }
 }

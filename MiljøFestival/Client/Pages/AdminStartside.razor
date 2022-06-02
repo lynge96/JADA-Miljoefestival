@@ -1,4 +1,4 @@
-﻿@page "/koordinatorStartside"
+﻿@page "/adminStartside"
 @using MiljøFestival.Shared.Models
 @inject HttpClient Http
 @inject MiljøFestival.Shared.Models.Bruger loggedInBruger
@@ -22,9 +22,9 @@ else if (loggedInBruger.ErKoordinator() || loggedInBruger.ErFormand())
             Udvider du opgaven, får du også mulighed for at se alle de vagter, som er tilknyttet den enkelte opgave.
             <br /><br>Yderligere har du mulighed for at opdaterer status for de enkelte vagter samt slette dem.
             <br /><br />
-
         </p>
 
+        @* Gør det muligt at sortere i alle opgaver efter tre muligheder *@        
         <p class="mb-0">Sorter efter: </p>
         <select class="form-select mb-4 col-md-3" @bind="SorteringsInput">
             <option selected>Status</option>
@@ -32,6 +32,8 @@ else if (loggedInBruger.ErKoordinator() || loggedInBruger.ErFormand())
             <option>Ansvarlige team</option>
         </select>
 
+       @* Laver en div for hver opgave der findes i databasen. Her kan man ændre status, slette vagten
+           se ledige vagter, slette vagter og opdatere dem *@
         @foreach (var opgave in opgaveListe)
         {
             <div class="table-responsive rounded mb-3">
@@ -79,6 +81,8 @@ else if (loggedInBruger.ErKoordinator() || loggedInBruger.ErFormand())
                                         </tr>
                                     </thead>
                                     <tbody>
+
+                                        @* Laver en række for hver vagt, hver opgave indeholder *@
                                         @foreach (var vagt in FindVagtOpgave(opgave, vagtListe))
                                         {
                                             <tr>
@@ -135,6 +139,7 @@ else
     private List<Kompetence> alleKompetencer = new List<Kompetence>();
     private bool editMode = false;
 
+    // Henter lister over alle vagter, alle opgaver og alle mulige statusser
     protected override async Task OnInitializedAsync()
     {
         vagtListeUnsorted = await Http.GetFromJsonAsync<List<Vagt>>("Vagt/all");
@@ -163,6 +168,7 @@ else
         }
     }
 
+    // Sorterer opgavelisten (opgaveListe) ud fra tre forskellige kriterier.
     private void SorterOpgaver()
     {
         if (sorteringsInput == "Status")
@@ -171,6 +177,7 @@ else
         }
         else if (sorteringsInput == "Flest ledige vagter")
         {
+            // Finder antal ledige vagter pr. opgave og gemmer dem i hver opgaves attribut (opgave.LedigeVagter)
             foreach (var opgave in opgaveListe)
             {
                 List<Vagt> opgaveVagter = FindVagtOpgave(opgave, vagtListe);
@@ -200,7 +207,7 @@ else
         return vagtListe;
     }
 
-    // Finder antal vagter pr. opgave
+    // Finder antal ledige vagter pr. opgave
     private string FindAntalVagter(int opgave_id, List<Vagt> vagtListe)
     {
         int antalVagter = vagtListe.Count(q => q.Opgave_Id == opgave_id);

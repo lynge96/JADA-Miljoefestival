@@ -1,4 +1,4 @@
-﻿@page "/formandfrivillige"
+﻿@page "/formandFrivilligeSide"
 @using MiljøFestival.Shared.Models
 @inject HttpClient Http
 @inject MiljøFestival.Shared.Models.Bruger loggedInBruger
@@ -30,6 +30,7 @@ else if (loggedInBruger.ErFormand())
           <br /><br /><i>OBS:</i> Gøres dette, bliver alle vagterne, som brugeren eventuelt havde taget, frigivet tilbage til brugerens tidligere team.  <br /><br />
       </p>
 
+   @* Gør det muligt for formanden at sortere i de frivillige ud fra deres kompetencer*@   
     <div class="flex-md-wrap mt-3">
         <p class="mb-0">Sorter efter: </p>
         @foreach (var kompetence in alleKompetencer)
@@ -55,6 +56,7 @@ else if (loggedInBruger.ErFormand())
                 </tr>
             </thead>
             <tbody>
+                @* Laver en række pr. frivillig med alt deres information *@
                 @foreach (var bruger in frivilligListe)
                 {
                     <tr>
@@ -64,6 +66,7 @@ else if (loggedInBruger.ErFormand())
                         <td>@bruger.Email</td>
                         <td>@bruger.Adresse</td>
                         <td>
+                            @* Gør det muligt at ændre teamet for en bruger *@
                             <select class="form-select" @bind-value="bruger.Team" @onchange="() => OpdaterBruger(bruger)" @bind-value:event="oninput">
                                 @foreach (var team in teams)
                                 {
@@ -73,6 +76,7 @@ else if (loggedInBruger.ErFormand())
                         </td>
                         <td>
                             <div class="form-check form-switch">
+                                @* Gør det muligt at ændre koordinator-status for den frivillige *@
                                 @if (!bruger.ErKoordinator())
                                 {
                                     <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @onchange="async eventArgs => { await CheckboxClicked(bruger, eventArgs.Value); }">
@@ -106,6 +110,8 @@ else if (loggedInBruger.ErFormand())
                 </tr>
             </thead>
             <tbody>
+
+                @* Laver en række for hver koordinator med alt deres information *@
                 @foreach (var bruger in koordinatorListe)
                 {
                     <tr>
@@ -116,6 +122,7 @@ else if (loggedInBruger.ErFormand())
                         <td>@bruger.Adresse</td>
                         <td>
                             <div class="form-check form-switch">
+                                @* Gør det muligt at ændre koordinator-status for den frivillige *@
                                 @if (bruger.ErKoordinator())
                                 {
                                     <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @onchange="async eventArgs => { await CheckboxClicked(bruger, eventArgs.Value); }" checked>
@@ -146,6 +153,7 @@ else if (loggedInBruger.ErFormand())
     private List<string> teams = new List<string>();
     private List<string> valgteKompetencer = new List<string>();
 
+    // Henter lister for alle brugere, frivillige, koordinatorer, formænd, teams og kompetencer
     protected override async Task OnInitializedAsync()
     {
         brugerListeUnsorted = await Http.GetFromJsonAsync<List<Bruger>>("Bruger/all");
@@ -184,9 +192,11 @@ else if (loggedInBruger.ErFormand())
         }
     }
 
-    // Sorterer frivillige efter valgte kompetencer (til jacob: kig på opdaterbruger hvad den gør med sort)
+    // Sorterer frivillige efter valgte kompetencer. Ændre frivilliglisten,
+    // så kun dem med valgte kompetencer vises
     private void CheckboxKompetencer(Kompetence kompetence, object checkedValue)
     {
+        // Hvis chexboxen er checked
         if ((bool)checkedValue)
         {
             List<Bruger> nyListe = new List<Bruger>();
@@ -210,6 +220,7 @@ else if (loggedInBruger.ErFormand())
                 nyListe = new List<Bruger>();
             }
         }
+        //Hvis checkboxen ikke er checked
         else
         {
             List<Bruger> nyListe = new();
@@ -236,7 +247,7 @@ else if (loggedInBruger.ErFormand())
     }
 
 
-    // Indsætter kompetencer på alle brugere
+    // Indsætter kompetencelister på alle brugere i brugerlisten
     private async Task<List<Bruger>> HentKompetencer(List<Bruger> brugerListe)
     {
         foreach (var bruger in brugerListe)
@@ -247,6 +258,8 @@ else if (loggedInBruger.ErFormand())
         return brugerListe;
     }
 
+
+    // Opdaterer den valgte bruger med nye ændringer (eksempelvis rolle / team) og opdaterer listerne på siden
     private async Task OpdaterBruger(Bruger bruger)
     {
         bruger.Kode = "placeholder";

@@ -12,8 +12,11 @@
 <div class="page">
 
     <div class="main">
+
+       @* Denne div indeholder vores navigationbar *@ 
         <div class="container">
             <header class="d-flex flex-wrap justify-content-md-between py-3 mb-4 border-bottom">
+
                 <div class="d-flex align-items-center">
                     <img src="leaves.png" class="img-fluid" width="40" height="32">
                     <a href="#" class=" col-md-3 mb-2 mb-md-0 text-dark text-decoration-none fs-3 justify-content-center">Miljøfestival</a>
@@ -24,33 +27,35 @@
                     <li><a href="#" class="nav-link px-2 link-dark"><span class="bi bi-house"></span> Forside</a></li>
                     <li><a href="Info" class="nav-link px-2 link-dark"><span class="bi bi-info-circle"></span> Info</a></li>
 
+                    @*Afgører hvilke links man kan se, når man er logget ind, alt efter hvilken rolle man har*@
                     @if (loggedInBruger.ErLoggetPå() && loggedInBruger.ErKoordinator())
                     {
-                        <li><a href="koordinatorStartside" class="nav-link px-2 link-dark"><span class="bi bi-layout-text-window"></span> Dashboard</a></li>
-                        <li><a href="koordinatorVagtOpgave" class="nav-link px-2 link-dark"><span class="bi bi-plus-circle"></span> Opret</a></li>
-                        <li><a href="koordinatorfrivillige" class="nav-link px-2 link-dark"><span class="bi bi-people"></span> Frivillige</a></li>
+                        <li><a href="adminStartside" class="nav-link px-2 link-dark"><span class="bi bi-layout-text-window"></span> Dashboard</a></li>
+                        <li><a href="opretVagtOpgave" class="nav-link px-2 link-dark"><span class="bi bi-plus-circle"></span> Opret</a></li>
+                        <li><a href="koordinatorFrivilligeSide" class="nav-link px-2 link-dark"><span class="bi bi-people"></span> Frivillige</a></li>
                     }
                     else if (loggedInBruger.ErLoggetPå() && !loggedInBruger.ErKoordinator() && !loggedInBruger.ErFormand())
                     {
-                        <li><a href="FrivilligStartside" class="nav-link px-2 link-dark"><span class="bi bi-signpost-2"></span> Dashboard</a></li>
-                        <li><a href="FrivilligTagVagt" class="nav-link px-2 link-dark"><span class="bi bi-layout-text-window"></span> Vagter</a></li>
-                        <li><a href="Frivillige" class="nav-link px-2 link-dark"><span class="bi bi-people"></span> Frivillige</a></li>
+                        <li><a href="frivilligStartside" class="nav-link px-2 link-dark"><span class="bi bi-signpost-2"></span> Dashboard</a></li>
+                        <li><a href="frivilligTagVagt" class="nav-link px-2 link-dark"><span class="bi bi-layout-text-window"></span> Vagter</a></li>
+                        <li><a href="frivilligeSide" class="nav-link px-2 link-dark"><span class="bi bi-people"></span> Frivillige</a></li>
                     }
                     else if (loggedInBruger.ErLoggetPå() && loggedInBruger.ErFormand())
                     {
-                        <li><a href="koordinatorStartside" class="nav-link px-2 link-dark"><span class="bi bi-layout-text-window"></span> Dashboard</a></li>
-                        <li><a href="koordinatorVagtOpgave" class="nav-link px-2 link-dark"><span class="bi bi-plus-circle"></span> Opret</a></li>
-                        <li><a href="formandfrivillige" class="nav-link px-2 link-dark"><span class="bi bi-plus-circle"></span> Frivillige</a></li>
+                        <li><a href="adminStartside" class="nav-link px-2 link-dark"><span class="bi bi-layout-text-window"></span> Dashboard</a></li>
+                        <li><a href="opretVagtOpgave" class="nav-link px-2 link-dark"><span class="bi bi-plus-circle"></span> Opret</a></li>
+                        <li><a href="formandFrivilligeSide" class="nav-link px-2 link-dark"><span class="bi bi-people"></span> Frivillige</a></li>
                     }
 
                 </ul>
 
                 <div class="col-md-3 text-center">
+
+                    @*Hvis brugeren er logget ind, vises en "Log af"- og "Profil"-knap, og hvis ikke vises der "Log ind"- og "Opret profil"-knapper*@
                     @if (loggedInBruger.ErLoggetPå())
                     {
                         <a class="btn btn-outline-success me-2" href="#" role="button" @onclick="LogAf"><span class="bi bi-box-arrow-left" aria-hidden="true"></span> Log af</a>
                         <a class="btn btn-success me-2" href="profil" role="button"><span class="bi bi-person-badge" aria-hidden="true"></span> Profil</a>
-
                     }
                     else
                     {
@@ -62,6 +67,7 @@
             </header>
         </div>
 
+        @*"Body" er den razor page som vi nuværende er på. Den ændres altså dynamisk*@
         <div class="content px-4">
             @Body
         </div>
@@ -71,6 +77,8 @@
 </div>
 
 @code {
+
+    // Logger brugeren af, som er logget ind nu (sætter alle attributter til null / empty)
     private void LogAf()
     {
         loggedInBruger.Bruger_Id = 0;

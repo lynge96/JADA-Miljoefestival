@@ -3,6 +3,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MiljøFestival.Shared.Models
 {
+    // I Bruger-klassen bruger vi EditForm ved oprettelse af en bruger.
+    // Derfor finder man [REQUIRED] m.m. over nogle properties, som bruges
+    // ved til validering.
 
     public class Bruger
     {
@@ -40,7 +43,7 @@ namespace MiljøFestival.Shared.Models
         public List<Kompetence> Kompetencer { get; set; }
          
 
-        // Returnerer true / false om brugeren er logget på (abstraktion?)
+        // Returnerer true / false hvis brugeren er logget på eller ej
         public bool ErLoggetPå()
         {
             if (Bruger_Id > 1)
@@ -54,7 +57,7 @@ namespace MiljøFestival.Shared.Models
         }
 
 
-        // Returnerer true / false om brugeren er koordinator (abstraktion?)
+        // Returnerer true / false hvis brugeren er koordinator eller ej
         public bool ErKoordinator()
         {
             if (Rolle == "Koordinator")
@@ -67,7 +70,7 @@ namespace MiljøFestival.Shared.Models
         }
 
 
-        // Returnerer true / false om brugeren er formand (abstraktion?)
+        // Returnerer true / false hvis brugeren er formand eller ej
         public bool ErFormand()
         {
             if (Rolle == "Formand")
