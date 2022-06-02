@@ -5,8 +5,13 @@
 
 
 <main class="opretBrugerContainer mx-auto col-md-6 row">
+<<<<<<< HEAD
+    @*Opret Bruger*@
+    <div class="col-md-6 px-4">
+=======
     @*Opret Bruger EditForm. Binder alle indtastede felter til et objekt af klassen bruger*@
     <div class="col-md-6">
+>>>>>>> main
         <h2 class="my-3">Opret en bruger</h2>
 
         <EditForm Model="@BrugerModel" class="row g-2" OnValidSubmit="() => OpretUser(alleKompetencer)">
@@ -77,30 +82,23 @@
                     </button>
                 </div>
             }
-
-
         </EditForm>
     </div>
+<<<<<<< HEAD
+    @*Kompetencer*@
+    <div class="col-md-6 mb-3 px-4">
+=======
     @*Henter en liste af alle kompetencer, og laver en tjekliste for hver. Herefter kan brugeren dem de evner*@
     <div class="col-md-6 mb-3">
+>>>>>>> main
         <h2 class="my-3">Kompetencer</h2>
-        @if (alleKompetencer == null)
+
+        @foreach (var kompetence in alleKompetencer)
         {
-            <div class="d-flex justify-content-center">
-                <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
+            <div class="form-check mb-3">
+                <input type="checkbox" class="form-check-input" id="kompetencer" @onchange="eventArgs => { CheckboxClicked(kompetence, eventArgs.Value); }" />
+                <label class="form-check-label" for="kompetencer">@kompetence.Kompetence_Navn</label>
             </div>
-        }
-        else
-        {
-            @foreach (var kompetence in alleKompetencer)
-            {
-                <div class="form-check mb-3">
-                    <input type="checkbox" class="form-check-input" id="kompetencer" @onchange="eventArgs => { CheckboxClicked(kompetence, eventArgs.Value); }" />
-                    <label class="form-check-label" for="kompetencer">@kompetence.Kompetence_Navn</label>
-                </div>
-            }
         }
     </div>
 </main>
@@ -147,7 +145,7 @@
         // Resetter opret-formularen
         BrugerModel = new Bruger();
 
-        await Task.Delay(700);
+        await Task.Delay(500);
 
         // Videresender brugeren til login siden
         NavManager.NavigateTo("/login");

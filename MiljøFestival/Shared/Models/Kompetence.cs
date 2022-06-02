@@ -1,7 +1,4 @@
-﻿
-using System.ComponentModel.DataAnnotations;
-
-namespace MiljøFestival.Shared.Models
+﻿namespace MiljøFestival.Shared.Models
 {
     public class Kompetence
     {

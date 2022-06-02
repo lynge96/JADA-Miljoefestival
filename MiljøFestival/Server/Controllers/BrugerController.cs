@@ -1,14 +1,10 @@
 ﻿using Dapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using MiljøFestival.Shared.Models;
 using Npgsql;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-
 
 namespace MiljøFestival.Server.Controllers
 {
@@ -28,13 +24,13 @@ namespace MiljøFestival.Server.Controllers
         [HttpGet("all")]
         public async Task<IEnumerable<Bruger>> HentAlle()
         {
-            var sql = "SELECT * FROM alle_brugere;";
+            var querySQL = "SELECT * FROM alle_brugere;";
 
             try
             {
                 using (var connection = new NpgsqlConnection(connString))
                 {
-                    var brugerListe = await connection.QueryAsync<Bruger>(sql);
+                    var brugerListe = await connection.QueryAsync<Bruger>(querySQL);
 
                     return brugerListe;
                 }
@@ -45,23 +41,16 @@ namespace MiljøFestival.Server.Controllers
             }
         }
 
-
-        // Opretter en bruger
+        // Opret en bruger
         [HttpPost("opret")]
         public async Task OpretBruger(Bruger bruger)
         {
-            var sql = $"CALL opret_bruger('{bruger.Fornavn}', '{bruger.Efternavn}', '{bruger.Telefon}', '{bruger.Email}', '{bruger.Adresse}', '{bruger.Rolle}', '{bruger.Team}', '{bruger.Kode}');";
-
-            try
+            var querySQL = $"CALL opret_bruger('{bruger.Fornavn}', '{bruger.Efternavn}', '{bruger.Telefon}', '{bruger.Email}', '{bruger.Adresse}', '{bruger.Rolle}', '{bruger.Team}', '{bruger.Kode}');";
+ 
+            
+            using (var connection = new NpgsqlConnection(connString))
             {
-                using (var connection = new NpgsqlConnection(connString))
-                {
-                    await connection.ExecuteAsync(sql);
-                }
-            }
-            catch (System.Exception)
-            {
-                throw;
+                await connection.ExecuteAsync(querySQL);
             }
         }
 
@@ -70,22 +59,15 @@ namespace MiljøFestival.Server.Controllers
         [HttpGet("tjeklogin")]
         public async Task<IEnumerable<Bruger>> TjekLogin(string email, string kode)
         {
-            var sql = $"SELECT * FROM tjek_login('{email}', '{kode}');";
+            var querySQL = $"SELECT * FROM tjek_login('{email}', '{kode}');";
 
-            try
+
+            using (var connection = new NpgsqlConnection(connString))
             {
-                using (var connection = new NpgsqlConnection(connString))
-                {
-                    var test = await connection.QueryAsync<Bruger>(sql);
+                var test = await connection.QueryAsync<Bruger>(querySQL);
 
-                    return test;
-                }
+                return test;
             }
-            catch (System.Exception)
-            {
-                throw;
-            }
-
         }
 
 
@@ -93,18 +75,12 @@ namespace MiljøFestival.Server.Controllers
         [HttpPut("opdater")]
         public async Task OpdaterBruger(Bruger bruger)
         {
-            var sql = $"CALL opdater_bruger({bruger.Bruger_Id}, '{bruger.Fornavn}', '{bruger.Efternavn}', '{bruger.Telefon}', '{bruger.Email}', '{bruger.Adresse}', '{bruger.Rolle}', '{bruger.Team}')";
+            var querySQL = $"CALL opdater_bruger({bruger.Bruger_Id}, '{bruger.Fornavn}', '{bruger.Efternavn}', '{bruger.Telefon}', '{bruger.Email}', '{bruger.Adresse}', '{bruger.Rolle}', '{bruger.Team}')";
 
-            try
+
+            using (var connection = new NpgsqlConnection(connString))
             {
-                using (var connection = new NpgsqlConnection(connString))
-                {
-                    await connection.ExecuteAsync(sql);
-                }
-            }
-            catch (System.Exception)
-            {
-                throw;
+                await connection.ExecuteAsync(querySQL);
             }
         }
 
@@ -113,18 +89,12 @@ namespace MiljøFestival.Server.Controllers
         [HttpPut("opdaterFrivillig")]
         public async Task OpdaterFrivilligBruger(Bruger bruger)
         {
-            var sql = $"CALL opdater_frivillig({bruger.Bruger_Id}, '{bruger.Rolle}', '{bruger.Team}')";
+            var querySQL = $"CALL opdater_frivillig({bruger.Bruger_Id}, '{bruger.Rolle}', '{bruger.Team}')";
 
-            try
+
+            using (var connection = new NpgsqlConnection(connString))
             {
-                using (var connection = new NpgsqlConnection(connString))
-                {
-                    await connection.ExecuteAsync(sql);
-                }
-            }
-            catch (System.Exception)
-            {
-                throw;
+                await connection.ExecuteAsync(querySQL);
             }
         }
 
@@ -132,18 +102,12 @@ namespace MiljøFestival.Server.Controllers
         [HttpPut("opdaterPassword")]
         public async Task OpdaterPassword(Bruger bruger)
         {
-            var sql = $"CALL opdater_password('{bruger.Bruger_Id}', '{bruger.Kode}')";
+            var querySQL = $"CALL opdater_password('{bruger.Bruger_Id}', '{bruger.Kode}')";
 
-            try
+
+            using (var connection = new NpgsqlConnection(connString))
             {
-                using (var connection = new NpgsqlConnection(connString))
-                {
-                    await connection.ExecuteAsync(sql);
-                }
-            }
-            catch (System.Exception)
-            {
-                throw;
+                await connection.ExecuteAsync(querySQL);
             }
         }
 
@@ -152,34 +116,27 @@ namespace MiljøFestival.Server.Controllers
         [HttpPut("sletProfil")]
         public async Task SletProfil(Bruger bruger)
         {
-            var sql = $"CALL slet_profil({bruger.Bruger_Id})";
+            var querySQL = $"CALL slet_profil({bruger.Bruger_Id})";
 
-            try
+
+            using (var connection = new NpgsqlConnection(connString))
             {
-                using (var connection = new NpgsqlConnection(connString))
-                {
-                    await connection.ExecuteAsync(sql);
-                }
-            }
-            catch (System.Exception)
-            {
-                throw;
+                await connection.ExecuteAsync(querySQL);
             }
         }
 
         
-
-        // Find bruger_id med email som input parameter 
+        // Find bruger_id med email
         [HttpGet("findBrugerIdMail")]
         public async Task<IEnumerable<int>> HentBrugerIdMail(string email)
         {
-            var sql = $"SELECT bruger_id FROM bruger WHERE email = '{email}'";
+            var querySQL = $"SELECT bruger_id FROM bruger WHERE email = '{email}'";
 
             try
             {
                 using (var connection = new NpgsqlConnection(connString))
                 {
-                    var bruger_id = await connection.QueryAsync<int>(sql);
+                    var bruger_id = await connection.QueryAsync<int>(querySQL);
 
                     return bruger_id;
                 }

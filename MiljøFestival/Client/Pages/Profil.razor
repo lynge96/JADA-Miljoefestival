@@ -7,31 +7,32 @@
 @if (loggedInBruger.ErLoggetPå())
 {
     <main class="row col-md-6 mx-auto">
-        @*Profiloplysninger for den bruger, der er logged in.*@
-        <div class="profilContainer col-md-6">
+        @*Profiloplysninger*@
+        <div class="profilContainer col-md-6 was-validated px-4">
             <h2 class="my-3">Profiloplysninger</h2>
+
             <div class="form-floating mb-4">
-                <input type="text" class="form-control" id="floatingFornavn" @bind="loggedInBruger.Fornavn" placeholder="text">
+                <input type="text" class="form-control" id="floatingFornavn" @bind="loggedInBruger.Fornavn" placeholder="text" required>
                 <label for="floatingFornavn">Fornavn</label>
             </div>
 
             <div class="form-floating mb-4">
-                <input type="text" class="form-control" id="floatingEfternavn" @bind="loggedInBruger.Efternavn" placeholder="text">
+                <input type="text" class="form-control" id="floatingEfternavn" @bind="loggedInBruger.Efternavn" placeholder="text" required>
                 <label for="floatingEfternavn">Efternavn</label>
             </div>
 
             <div class="form-floating mb-4">
-                <input type="tel" class="form-control" id="floatingTelefon" @bind="loggedInBruger.Telefon" placeholder="text">
+                <input type="tel" class="form-control" id="floatingTelefon" @bind="loggedInBruger.Telefon" placeholder="text" required>
                 <label for="floatingTelefon">Telefon</label>
             </div>
 
             <div class="form-floating mb-4">
-                <input type="text" class="form-control" id="floatingInput" @bind="loggedInBruger.Adresse" placeholder="text">
+                <input type="text" class="form-control" id="floatingInput" @bind="loggedInBruger.Adresse" placeholder="text" required>
                 <label for="floatingInput">Adresse</label>
             </div>
 
             <div class="form-floating mb-4">
-                <input type="email" class="form-control" id="floatingInput" @bind="loggedInBruger.Email" placeholder="text">
+                <input type="email" class="form-control" id="floatingInput" @bind="loggedInBruger.Email" placeholder="text" required>
                 <label for="floatingInput">Email adresse</label>
             </div>
 
@@ -44,14 +45,13 @@
             @if (brugerÆndring == true)
             {
                 <div class="alert alert-success col-md-9 mt-4">
-                    <span class="bi bi-shield-lock-fill" aria-hidden="true"></span>
+                    <span class="bi bi-check-circle-fill" aria-hidden="true"></span>
                     <strong> Succes!</strong> Dine oplysninger er ændret!
                 </div>
             }
         </div>
-
-        @*Kompetencer og password kan opdateres i nedenstående.*@
-        <div class="kompetenceContainer col-md-6">
+        @*Kompetencer og password*@
+        <div class="kompetenceContainer col-md-6 px-4">
             <h2 class="my-3">Kompetencer</h2>
             @* Henter in liste over alle kompetencer, og checker dem af, som brugeren har valgt tidligere *@
             @foreach (var kompetence in loggedInBruger.Kompetencer)
@@ -87,13 +87,13 @@
             @if (passwordÆndring == true)
             {
                 <div class="alert alert-success col-md-9 my-3">
-                    <span class="bi bi-shield-lock-fill" aria-hidden="true"></span>
+                    <span class="bi bi-check-circle-fill" aria-hidden="true"></span>
                     <strong> Succes!</strong> Dit password er ændret!
                 </div>
             }
         </div>
-        @*Sletter hele profilen for brugeren*@
-        <div class="passwordContainer col-md-6">
+        @*Slet profil*@
+        <div class="passwordContainer col-md-6 px-4">
             <div class="my-5">
                 <button type="button" class="btn btn-danger" @onclick="() => SletProfil()">Slet profil</button>
             </div>
