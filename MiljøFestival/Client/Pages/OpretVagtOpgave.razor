@@ -26,7 +26,6 @@ else
         @*Opret Vagt*@
         <div class="opretvagtContainer col-md-6 px-4">
 
-        <div class="opretvagtContainer col-md-6">
             @* Opret vagt div. Binder alle felterne til et nyt objekt at klassen vagt *@
 
             <h2 class="my-3">Opret vagt</h2>
@@ -44,11 +43,7 @@ else
 
             <div class="form-group mb-3">
                 <label for="exampleFormControlSelect1" class="mb-2">Antal Vagter</label>
-
-            @* Vælger hvor mange objekter (vagter) magen til hinanden, der skal oprettes *@
-            <div class="form-group">
-                <label for="exampleFormControlSelect1">Antal Vagter</label>
-
+                @* Vælger hvor mange objekter (vagter) magen til hinanden, der skal oprettes *@
                 <select class="form-select" @bind="antalVagter">
                     <option selected>1</option>
                     <option>2</option>
@@ -59,13 +54,9 @@ else
             </div>
 
 
+            @* Vælger hvilken type opgave, som vagterne skal være koblet op på *@
             <div class="form-group mb-5">
                 <label for="exampleFormControlSelect1" class="mb-2">Opgave Type </label>
-
-            @* Vælger hvilken type opgave, som vagterne skal være koblet op på *@
-            <div class="form-group">
-                <label for="exampleFormControlSelect1">Opgave Type </label>
-
                 <select class="form-select" @bind="nyVagt.Opgave">
                     <option selected>Vælg en opgave...</option>
                     @foreach (var item in opgaveListe)
@@ -102,17 +93,6 @@ else
         </div>
         @*Opret Opgave*@
         <div class="opretopgaveContainer col-md-6 px-4">
-
-
-            @* Er valideringen godkendt, kan man trykke på kanppen for at køre funktionen Opretvagt(nyVagt)*@
-            <div class="d-grid gap-2 col-md-6 mx-auto">
-                <button class="btn btn-success" type="button" @onclick="() => OpretVagt(nyVagt)">Opret vagt</button>
-            </div>
-
-        </div>
-        <div class="opretopgaveContainer col-md-6">
-
-
             @* Opret opgave div. Binder alle felterne til et nyt objekt at klassen opgave *@
             <h2 class="my-3">Opret opgave</h2>
 
@@ -127,13 +107,9 @@ else
             </div>
 
 
+            @* Vælger hvilken status opgaven skal starte ud i. Kan senere ændres manuelt *@
             <div class="form-group mb-3">
                 <label for="exampleFormControlSelect1" class="mb-2">Start status:</label>
-
-            @* Vælger hvilken status opgaven skal starte ud i. Kan senere ændres manuelt *@
-            <div class="form-group">
-                <label for="exampleFormControlSelect1">Start status:</label>
-
                 <select class="form-select" @bind="nyOpgave.Status">
                     <option selected hdden>Vælg en status...</option>
                     @foreach (var status in status)
@@ -143,14 +119,9 @@ else
                 </select>
             </div>
 
-
+            @* Vælger hvilket team som kan se opgaven og dens vagter *@
             <div class="form-group mb-5">
                 <label for="exampleFormControlSelect1" class="mb-2">Tilknyttet team:</label>
-
-            @* Vælger hvilket team som kan se opgaven og dens vagter *@
-            <div class="form-group">
-                <label for="exampleFormControlSelect1">Tilknyttet team:</label>
-
                 <select class="form-select" @bind="nyOpgave.Team">
                     <option selected>Vælg et team...</option>
                     @foreach (var team in teams)
@@ -159,7 +130,6 @@ else
                     }
                 </select>
             </div>
-
 
             <div class="d-grid gap-2 col-md-4 mx-auto my-3">
                 <button class="btn btn-success" type="button" @onclick="() => OpretOpgave(nyOpgave)">Opret opgave</button>
@@ -181,11 +151,8 @@ else
                     <strong>Succes!</strong> - Opgave er nu oprettet
                 </div>
             }
-            @* Opretter opgaven, hvis valideringen bliver godkendt *@
-            <div class="d-grid gap-2 col-md-6 mx-auto">
-                <button class="btn btn-success" type="button" @onclick="() => OpretOpgave(nyOpgave)">Opret opgave</button>
-            </div>
         </div>
+
     </main>
 }
 

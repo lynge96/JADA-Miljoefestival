@@ -5,10 +5,8 @@
 
 
 <main class="opretBrugerContainer mx-auto col-md-6 row">
-    @*Opret Bruger*@
     <div class="col-md-6 px-4">
     @*Opret Bruger EditForm. Binder alle indtastede felter til et objekt af klassen bruger*@
-    <div class="col-md-6">
         <h2 class="my-3">Opret en bruger</h2>
 
         <EditForm Model="@BrugerModel" class="row g-2" OnValidSubmit="() => OpretUser(alleKompetencer)">
@@ -83,8 +81,7 @@
     </div>
     @*Kompetencer*@
     <div class="col-md-6 mb-3 px-4">
-    @*Henter en liste af alle kompetencer, og laver en tjekliste for hver. Herefter kan brugeren dem de evner*@
-    <div class="col-md-6 mb-3">
+        @*Henter en liste af alle kompetencer, og laver en tjekliste for hver. Herefter kan brugeren dem de evner*@
         <h2 class="my-3">Kompetencer</h2>
 
         @foreach (var kompetence in alleKompetencer)
