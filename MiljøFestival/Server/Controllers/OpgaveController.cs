@@ -18,6 +18,7 @@ namespace MiljøFestival.Server.Controllers
 
         private string connString;
 
+        // Henter connectionstring fra appsettings.json
         public OpgaveController(IConfiguration configuration)
         {
             connString = configuration.GetConnectionString("miljøDB");
@@ -46,7 +47,7 @@ namespace MiljøFestival.Server.Controllers
         }
 
 
-        // Opdater en opgave
+        // Opdaterer en opgave
         [HttpPut("opdaterOpgave")]
         public async Task OpdaterOpgave(Opgave opgave)
         {
@@ -65,7 +66,7 @@ namespace MiljøFestival.Server.Controllers
             }
         }
 
-        // Opret en opgave
+        // Opretter en opgave
         [HttpPost("opret")]
         public async Task OpretOpgave(Opgave opgave)
         {
@@ -84,7 +85,7 @@ namespace MiljøFestival.Server.Controllers
             }
         }
 
-        // Slet opgave
+        // Sletter opgave
         [HttpPut("slet")]
         public async Task SletOpgave(Opgave opgave)
         {

@@ -7,14 +7,16 @@
 {
     <div class="d-flex justify-content-center">
         <div class="spinner-border text-success" role="status">
-          <span class="visually-hidden">Loading...</span>
+            <span class="visually-hidden">Loading...</span>
         </div>
     </div>
 }
 else if (loggedInBruger.ErKoordinator() || loggedInBruger.ErFormand())
 {
+    @* Laver to forskellige div's. Én til at oprette vagt og én til at oprette opgaver i. *@
     <main class="row col-md-7 mx-auto">
         <div class="opretvagtContainer col-md-6">
+            @* Opret vagt div. Binder alle felterne til et nyt objekt at klassen vagt *@
             <h2 class="my-3">Opret vagt</h2>
 
             <div class="form-floating mb-3">
@@ -27,6 +29,7 @@ else if (loggedInBruger.ErKoordinator() || loggedInBruger.ErFormand())
                 <label for="floatingSlutdato">Slut</label>
             </div>
 
+            @* Vælger hvor mange objekter (vagter) magen til hinanden, der skal oprettes *@
             <div class="form-group">
                 <label for="exampleFormControlSelect1">Antal Vagter</label>
                 <select class="form-select" @bind="antalVagter">
@@ -38,6 +41,7 @@ else if (loggedInBruger.ErKoordinator() || loggedInBruger.ErFormand())
                 </select>
             </div>
 
+            @* Vælger hvilken type opgave, som vagterne skal være koblet op på *@
             <div class="form-group">
                 <label for="exampleFormControlSelect1">Opgave Type </label>
                 <select class="form-select" @bind="nyVagt.Opgave">
@@ -49,6 +53,7 @@ else if (loggedInBruger.ErKoordinator() || loggedInBruger.ErFormand())
                 </select>
             </div>
 
+            @* Giver feedback ift. om brugeren har glemt at udfylde noget eller om den er godkendt *@
             @if (feedbackVagt == "Fejl!")
             {
                 <div class="alert alert-warning">
@@ -65,14 +70,15 @@ else if (loggedInBruger.ErKoordinator() || loggedInBruger.ErFormand())
                 </div>
             }
 
+            @* Er valideringen godkendt, kan man trykke på kanppen for at køre funktionen Opretvagt(nyVagt)*@
             <div class="d-grid gap-2 col-md-6 mx-auto">
                 <button class="btn btn-success" type="button" @onclick="() => OpretVagt(nyVagt)">Opret vagt</button>
             </div>
 
         </div>
-        @*Opret Opgave*@
         <div class="opretopgaveContainer col-md-6">
 
+            @* Opret opgave div. Binder alle felterne til et nyt objekt at klassen opgave *@
             <h2 class="my-3">Opret opgave</h2>
 
             <div class="form-floating mb-3">
@@ -85,6 +91,7 @@ else if (loggedInBruger.ErKoordinator() || loggedInBruger.ErFormand())
                 <label for="floatingBeskrivelse">Opgave beskrivelse</label>
             </div>
 
+            @* Vælger hvilken status opgaven skal starte ud i. Kan senere ændres manuelt *@
             <div class="form-group">
                 <label for="exampleFormControlSelect1">Start status:</label>
                 <select class="form-select" @bind="nyOpgave.Status">
@@ -96,6 +103,7 @@ else if (loggedInBruger.ErKoordinator() || loggedInBruger.ErFormand())
                 </select>
             </div>
 
+            @* Vælger hvilket team som kan se opgaven og dens vagter *@
             <div class="form-group">
                 <label for="exampleFormControlSelect1">Tilknyttet team:</label>
                 <select class="form-select" @bind="nyOpgave.Team">
@@ -107,6 +115,7 @@ else if (loggedInBruger.ErKoordinator() || loggedInBruger.ErFormand())
                 </select>
             </div>
 
+            @* Giver feedback ift. om brugeren har glemt at udfylde noget eller om den er godkendt *@
             @if (feedbackOpgave == "Fejl!")
             {
                 <div class="alert alert-warning">
@@ -123,6 +132,7 @@ else if (loggedInBruger.ErKoordinator() || loggedInBruger.ErFormand())
                 </div>
             }
 
+            @* Opretter opgaven, hvis valideringen bliver godkendt *@
             <div class="d-grid gap-2 col-md-6 mx-auto">
                 <button class="btn btn-success" type="button" @onclick="() => OpretOpgave(nyOpgave)">Opret opgave</button>
             </div>
@@ -150,6 +160,8 @@ else
     private string feedbackVagt = string.Empty;
     private string feedbackOpgave = string.Empty;
 
+    // Henter lister over alle eksisterende opgaver, statusser, teams og sætter 
+    // default værdien af dato-felterne til datoen i dag
     protected override async Task OnInitializedAsync()
     {
         opgaveListe = await Http.GetFromJsonAsync<List<Opgave>>("Opgave/all");
@@ -163,14 +175,17 @@ else
         nyVagt.Slut = DateTime.Today;
     }
 
+    // Opretter en vagt
     private async Task OpretVagt(Vagt vagt)
     {
+        // Hvis man mangler at udfylde nogle felter, melder den fejl
         if (vagt.Opgave == null || vagt.Start == DateTime.Today || vagt.Slut == DateTime.Today)
         {
             feedbackVagt = "Fejl!";
 
             return;
         }
+        // - ellers opretter den en vagter / flere vagter
         else
         {
             Opgave valgteOpgave = new Opgave();
@@ -184,6 +199,7 @@ else
                 await Http.PostAsJsonAsync<Vagt>("Vagt/opret", vagt);
             }
 
+            // Sætter felterne tilbage til det de var til at starte med
             nyVagt = new Vagt();
 
             antalVagter = 1;
@@ -198,12 +214,15 @@ else
         }
     }
 
+    // Opretter en opgave
     private async Task OpretOpgave(Opgave opgave)
     {
+        // Hvis brugeren mangler at udfylde nogle felter, melder den fejl
         if (opgave.Navn == null || opgave.Beskrivelse == null || opgave.Status == null || opgave.Team == null)
         {
             feedbackOpgave = "Fejl!";
         }
+        // Ellers opretter den en opgave og nulstiller felterne, til det de var til at starte med
         else
         {
             await Http.PostAsJsonAsync<Opgave>("Opgave/opret", opgave);

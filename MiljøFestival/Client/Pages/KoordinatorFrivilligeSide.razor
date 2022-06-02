@@ -42,6 +42,7 @@ else if (loggedInBruger.ErLoggetPå())
                     </tr>
                 </thead>
                 <tbody>
+                    @* Laver en række for hver formand  *@
                     @foreach (var bruger in formandListe)
                     {
                         <tr>
@@ -58,6 +59,9 @@ else if (loggedInBruger.ErLoggetPå())
         <h2 class="mt-1">Frivillige</h2>
         <div class="flex-md-wrap mt-3">
             <p class="mb-0">Sorter efter: </p>
+            @* Laver en chechkbox for hver kompetence der findes. Trykkes der på én af dem, hentes der en ny liste af frivillige,
+                som er sorteret alt efter, hvilke kompetencer som er valgt
+            *@
             @foreach (var kompetence in alleKompetencer)
             {
                 <div class="form-check form-check-inline mb-2">
@@ -81,6 +85,7 @@ else if (loggedInBruger.ErLoggetPå())
                     </tr>
                 </thead>
                 <tbody>
+                    @* Laver en række med information for hver bruger, som har rollen frivillig *@
                     @foreach (var bruger in frivilligListe)
                     {
                         <tr>
@@ -90,6 +95,9 @@ else if (loggedInBruger.ErLoggetPå())
                             <td>@bruger.Email</td>
                             <td>@bruger.Adresse</td>
                             <td>
+                                @* Gør det muligt for koordinatoren at flytte den frivillig fra et team til et andet.
+                                    Når der vælges et nyt team, kører OpdaterBurger(bruger) funktionen og opdaterer brugeren.
+                                *@
                                 <select class="form-select" @bind-value="bruger.Team" @onchange="() => OpdaterBruger(bruger)" @bind-value:event="oninput">
                                     @foreach (var team in teams)
                                     {
@@ -119,6 +127,7 @@ else if (loggedInBruger.ErLoggetPå())
                     </tr>
                 </thead>
                 <tbody>
+                    @* Viser en liste over alle koordinatorer og deres information *@
                     @foreach (var bruger in koordinatorListe)
                     {
                         <tr>
@@ -147,6 +156,7 @@ else if (loggedInBruger.ErLoggetPå())
     private List<string> valgteKompetencer = new List<string>();
     private List<Kompetence> alleKompetencer = new List<Kompetence>();
 
+    // Henter lister over brugere, frivillige, koordinatorer, formænd, teams og kompetencer
     protected override async Task OnInitializedAsync()
     {
         brugerListeUnsorted = await Http.GetFromJsonAsync<List<Bruger>>("Bruger/all");
@@ -164,7 +174,7 @@ else if (loggedInBruger.ErLoggetPå())
         alleKompetencer = await Http.GetFromJsonAsync<List<Kompetence>>("Kompetence/all");
     }
 
-    // Sorterer frivillige efter valgte kompetencer (til jacob: kig på opdaterbruger hvad den gør med sort)
+    // Sorterer frivillige efter valgte kompetencer vha. valgteKompetencer listen, der husker valget af tidligere valgte kompetencer.
     private void CheckboxKompetencer(Kompetence kompetence, object checkedValue)
     {
         if ((bool)checkedValue)
@@ -215,7 +225,7 @@ else if (loggedInBruger.ErLoggetPå())
         }
     }
 
-    // Indsætter kompetencer på alle brugere
+    // Henter kompetencer for alle brugere
     private async Task<List<Bruger>> HentKompetencer(List<Bruger> brugerListe)
     {
         foreach (var bruger in brugerListe)
@@ -226,10 +236,33 @@ else if (loggedInBruger.ErLoggetPå())
         return brugerListe;
     }
 
+    // Opdaterer brugerens rolle
     private async Task OpdaterBruger(Bruger bruger)
     {
+        bruger.Kode = "placeholder";
+
         await Http.PutAsJsonAsync<Bruger>("Bruger/opdaterFrivillig", bruger);
 
-        await OnInitializedAsync();
+
+        // Sørger for at frivilliglisten stadig er sorteret efter valgte kompetencer
+        List<Bruger> nyListe = new List<Bruger>();
+
+        frivilligListe = brugerListe.FindAll(q => q.Rolle_Id == 2).OrderBy(q => q.Team).ToList();
+
+        foreach (var valgteKompetence in valgteKompetencer.ToList())
+        {
+            foreach (var user in frivilligListe.ToList())
+            {
+                if (user.Kompetencer.Exists(q => q.Kompetence_Navn == valgteKompetence))
+                {
+                    nyListe.Add(user);
+                }
+            }
+
+            frivilligListe = nyListe;
+
+            nyListe = new List<Bruger>();
+        }
+
     }
 }

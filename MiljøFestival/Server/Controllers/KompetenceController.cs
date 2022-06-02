@@ -18,12 +18,13 @@ namespace MiljøFestival.Server.Controllers
     {
         private string connString;
 
+        // Henter connectionstring fra appsettings.json
         public KompetenceController(IConfiguration configuration)
         {
             connString = configuration.GetConnectionString("miljøDB");
         }
 
-        // Hent alle kompetencer
+        // Henter alle kompetencer
         [HttpGet("all")]
         public async Task<IEnumerable<Kompetence>> HentAlle()
         {
@@ -87,7 +88,7 @@ namespace MiljøFestival.Server.Controllers
             }
         }
 
-        // Opdaterer kompetencer for en bruger
+        // Opdaterer kompetencevalget for en bruger
         [HttpPut("opdater")]
         public async Task OpretBruger(List<Kompetence> kompetenceListe)
         {

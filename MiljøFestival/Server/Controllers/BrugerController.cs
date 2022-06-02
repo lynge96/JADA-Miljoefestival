@@ -18,12 +18,13 @@ namespace MiljøFestival.Server.Controllers
     {
         private string connString; 
 
+        // Henter connectionstring fra appsettings.json
         public BrugerController(IConfiguration configuration)
         {
             connString = configuration.GetConnectionString("miljøDB");
         }
 
-        // Hent alle brugere
+        // Henter en liste med alle brugere
         [HttpGet("all")]
         public async Task<IEnumerable<Bruger>> HentAlle()
         {
@@ -45,7 +46,7 @@ namespace MiljøFestival.Server.Controllers
         }
 
 
-        // Opret en bruger
+        // Opretter en bruger
         [HttpPost("opret")]
         public async Task OpretBruger(Bruger bruger)
         {
@@ -168,7 +169,7 @@ namespace MiljøFestival.Server.Controllers
 
         
 
-        // Find bruger_id med email
+        // Find bruger_id med email som input parameter 
         [HttpGet("findBrugerIdMail")]
         public async Task<IEnumerable<int>> HentBrugerIdMail(string email)
         {

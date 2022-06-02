@@ -17,12 +17,13 @@ namespace MiljøFestival.Server.Controllers
     {
         private string connString;
 
+        // Henter connectionstring fra appsettings.json
         public VagtController(IConfiguration configuration)
         {
             connString = configuration.GetConnectionString("miljøDB");
         }
 
-        // Hent alle vagter
+        // Henter alle vagter
         [HttpGet("all")]
         public async Task<IEnumerable<Vagt>> GetAll()
         {
@@ -45,9 +46,9 @@ namespace MiljøFestival.Server.Controllers
         }
 
 
-        // Find vagter efter bruger id
+        // Finder vagter der tilhører en bruger. Tager bruger_id som input parameter
         [HttpGet("brugerVagter")]
-        public async Task<IEnumerable<Vagt>> BrugerIdVagt(int brugerid) // Ændre til int bruger_id
+        public async Task<IEnumerable<Vagt>> BrugerIdVagt(int brugerid)
         {
             var sql = $"SELECT * FROM hent_bruger_vagter({brugerid})";
 
@@ -67,7 +68,7 @@ namespace MiljøFestival.Server.Controllers
         }
 
 
-        // Find alle ledige vagter baseret på team ID
+        // Finder alle ledige vagter baseret på team_id som input parameter
         [HttpGet("ledigeVagter")]
         public async Task<IEnumerable<Vagt>> LedigeVagter(int team_id)
         {
@@ -152,7 +153,10 @@ namespace MiljøFestival.Server.Controllers
         [HttpPut("opdaterVagt")]
         public async Task OpdaterBruger(Vagt vagt)
         {
-            var sql = $"UPDATE vagt SET start = '{vagt.Start}', slut = '{vagt.Slut}' where vagt_id = '{vagt.Vagt_Id}'";
+            string vagtStart = vagt.Start.ToString("MM-dd-yyyy HH:mm:ss");
+            string vagtSlut = vagt.Slut.ToString("MM-dd-yyyy HH:mm:ss");
+
+            var sql = $"UPDATE vagt SET start = '{vagtStart}', slut = '{vagtSlut}' where vagt_id = '{vagt.Vagt_Id}'";
 
             try
             {
@@ -168,7 +172,7 @@ namespace MiljøFestival.Server.Controllers
         }
 
 
-        // Opret en vagt
+        // Opretter en vagt
         [HttpPost("opret")]
         public async Task OpretVagt(Vagt vagt)
         {
