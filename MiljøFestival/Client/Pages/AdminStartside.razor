@@ -42,13 +42,13 @@ else if (loggedInBruger.ErKoordinator() || loggedInBruger.ErFormand())
                         <h2 class="accordion-header mx-auto" id="panelsStayOpen-heading-@opgave.Opgave_Id">
                             <table class="table table-borderless">
                                 <thead>
-                                    <tr class="align-middle">
-                                        <th class="">
+                                    <tr class="d-flex flex-wrap justify-content-around ">
+                                        <th class="col-1">
                                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-@opgave.Opgave_Id" aria-expanded="false" aria-controls="panelsStayOpen-@opgave.Opgave_Id"></button>
                                         </th>
                                         <th class="lead col-3">@opgave.Navn</th>
-                                        <th class="lead col-3">@FindAntalVagter(opgave.Opgave_Id, FindVagtOpgave(opgave, vagtListe))</th>
-                                        <th class="lead col-3">
+                                        <th class="lead col-2">@FindAntalVagter(opgave.Opgave_Id, FindVagtOpgave(opgave, vagtListe))</th>
+                                        <th class="lead col-2">
                                             <select class="form-select" @bind-value="opgave.Status" @onchange="() => OpdaterStatus(opgave)" @bind-value:event="oninput">
                                                 @foreach (var status in status)
                                                 {
@@ -56,10 +56,10 @@ else if (loggedInBruger.ErKoordinator() || loggedInBruger.ErFormand())
                                                 }
                                             </select>
                                         </th>
-                                        <th class="">
+                                        <th class="col-2">
                                             <input type="button" class="btn btn-danger" value="Slet opgave" @onclick="() => SletOpgave(opgave)">
                                         </th>
-                                        <th class="lead col-3">Team: @opgave.Team</th>
+                                        <th class="lead col-2">Team: @opgave.Team</th>
                                     </tr>
                                 </thead>
                             </table>
