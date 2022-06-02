@@ -5,8 +5,13 @@
 
 
 <main class="opretBrugerContainer mx-auto col-md-6 row">
+<<<<<<< HEAD
     @*Opret Bruger*@
     <div class="col-md-6 px-4">
+=======
+    @*Opret Bruger EditForm. Binder alle indtastede felter til et objekt af klassen bruger*@
+    <div class="col-md-6">
+>>>>>>> main
         <h2 class="my-3">Opret en bruger</h2>
 
         <EditForm Model="@BrugerModel" class="row g-2" OnValidSubmit="() => OpretUser(alleKompetencer)">
@@ -51,6 +56,7 @@
             <div class="col-md-12 mb-5">
                 <InputSelect id="team" @bind-Value="BrugerModel.Team" class="form-select" placeholder="Team">
                     <label for="team">Team</label>
+                    @* Henter en liste af alle teams, og lader brugeren selv vælge hvilket de kunne tænke sig *@
                     <option selected>Vælg et team</option>
                     @foreach (var team in teams)
                     {
@@ -59,7 +65,8 @@
                 </InputSelect>
                 <ValidationMessage For="@(() => BrugerModel.Team)" />
             </div>
-
+            
+            @* Laver en "spinner" animation, mens brugeren bliver oprettet *@
             @if (opretBrugerLoading == false)
             {
                 <div class="mx-auto">
@@ -77,8 +84,13 @@
             }
         </EditForm>
     </div>
+<<<<<<< HEAD
     @*Kompetencer*@
     <div class="col-md-6 mb-3 px-4">
+=======
+    @*Henter en liste af alle kompetencer, og laver en tjekliste for hver. Herefter kan brugeren dem de evner*@
+    <div class="col-md-6 mb-3">
+>>>>>>> main
         <h2 class="my-3">Kompetencer</h2>
 
         @foreach (var kompetence in alleKompetencer)
@@ -98,6 +110,8 @@
     private Bruger BrugerModel = new Bruger();
     private EditContext EditContext;
 
+    // Henter en liste over alle teams, kompetencer og en ny instant af klassen EditContext, der bruges til validering. 
+    // Den bliver herefter bundet op på en ny bruger (BrugerModel)
     protected override async Task OnInitializedAsync()
     {
         teams = await Http.GetFromJsonAsync<List<string>>("team/all");
@@ -108,14 +122,17 @@
 
     }
 
+    // Opretter en ny bruger i databasen, hvis EditForm valideringen altså er godkendt
     private async Task OpretUser(List<Kompetence> kompetenceListe)
     {
         opretBrugerLoading = true;
+
+        // Sætter brugerens rolle til frivillig, hvilket er vores default
         BrugerModel.Rolle = "Frivillig";
 
         await Http.PostAsJsonAsync<Bruger>("Bruger/opret", BrugerModel);
 
-        // Henter bruger_id'et for den nyoprettede bruger og kobler det op på kompetencelisten
+        // Henter bruger_id'et for den nyoprettede bruger og kobler herefter brugeren op på kompetencelisten
         int bruger_id = (await Http.GetFromJsonAsync<List<int>>($"Bruger/findBrugerIdMail?email={BrugerModel.Email}")).First();
 
         foreach (var kompetence in alleKompetencer)
@@ -130,10 +147,11 @@
 
         await Task.Delay(500);
 
+        // Videresender brugeren til login siden
         NavManager.NavigateTo("/login");
     }
 
-    // Gemmer ændringer i kompetencevalg
+    // Gemmer ændringer i kompetencevalg (om brugeren har check'ed en checkbox eller ej)
     private void CheckboxClicked(Kompetence kompetence, object checkedValue)
     {
         if ((bool)checkedValue)

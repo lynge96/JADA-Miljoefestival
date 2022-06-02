@@ -266,8 +266,26 @@ else if (loggedInBruger.ErFormand())
 
         await Http.PutAsJsonAsync<Bruger>("Bruger/opdaterFrivillig", bruger);
 
+        koordinatorListe = brugerListe.FindAll(q => q.Rolle_Id == 1).OrderBy(q => q.Fornavn).ToList();
+
+         // Sørger for at frivilliglisten stadig er sorteret efter valgte kompetencer
+        List<Bruger> nyListe = new List<Bruger>();
+
         frivilligListe = brugerListe.FindAll(q => q.Rolle_Id == 2).OrderBy(q => q.Team).ToList();
 
-        koordinatorListe = brugerListe.FindAll(q => q.Rolle_Id == 1).OrderBy(q => q.Fornavn).ToList();
+        foreach (var valgteKompetence in valgteKompetencer.ToList())
+        {
+            foreach (var user in frivilligListe.ToList())
+            {
+                if (user.Kompetencer.Exists(q => q.Kompetence_Navn == valgteKompetence))
+                {
+                    nyListe.Add(user);
+                }
+            }
+
+            frivilligListe = nyListe;
+
+            nyListe = new List<Bruger>();
+        }
     }
 }

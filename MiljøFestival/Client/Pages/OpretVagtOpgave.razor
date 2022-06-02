@@ -7,7 +7,7 @@
 {
     <div class="d-flex justify-content-center">
         <div class="spinner-border text-success" role="status">
-          <span class="visually-hidden">Loading...</span>
+            <span class="visually-hidden">Loading...</span>
         </div>
     </div>
 }
@@ -20,9 +20,15 @@ else if (!loggedInBruger.ErKoordinator() && !loggedInBruger.ErFormand())
 }
 else
 {
+    @* Laver to forskellige div's. Én til at oprette vagt og én til at oprette opgaver i. *@
     <main class="row col-md-7 mx-auto">
+<<<<<<< HEAD
         @*Opret Vagt*@
         <div class="opretvagtContainer col-md-6 px-4">
+=======
+        <div class="opretvagtContainer col-md-6">
+            @* Opret vagt div. Binder alle felterne til et nyt objekt at klassen vagt *@
+>>>>>>> main
             <h2 class="my-3">Opret vagt</h2>
 
             <div class="form-floating mb-3">
@@ -35,8 +41,14 @@ else
                 <label for="floatingSlutdato">Slut</label>
             </div>
 
+<<<<<<< HEAD
             <div class="form-group mb-3">
                 <label for="exampleFormControlSelect1" class="mb-2">Antal Vagter</label>
+=======
+            @* Vælger hvor mange objekter (vagter) magen til hinanden, der skal oprettes *@
+            <div class="form-group">
+                <label for="exampleFormControlSelect1">Antal Vagter</label>
+>>>>>>> main
                 <select class="form-select" @bind="antalVagter">
                     <option selected>1</option>
                     <option>2</option>
@@ -46,8 +58,14 @@ else
                 </select>
             </div>
 
+<<<<<<< HEAD
             <div class="form-group mb-5">
                 <label for="exampleFormControlSelect1" class="mb-2">Opgave Type </label>
+=======
+            @* Vælger hvilken type opgave, som vagterne skal være koblet op på *@
+            <div class="form-group">
+                <label for="exampleFormControlSelect1">Opgave Type </label>
+>>>>>>> main
                 <select class="form-select" @bind="nyVagt.Opgave">
                     <option selected>Vælg en opgave...</option>
                     @foreach (var item in opgaveListe)
@@ -57,10 +75,14 @@ else
                 </select>
             </div>
 
+<<<<<<< HEAD
             <div class="d-grid gap-2 col-md-4 mx-auto my-3">
                 <button class="btn btn-success" type="button" @onclick="() => OpretVagt(nyVagt)">Opret vagt</button>
             </div>
 
+=======
+            @* Giver feedback ift. om brugeren har glemt at udfylde noget eller om den er godkendt *@
+>>>>>>> main
             @if (feedbackVagt == "Fejl!")
             {
                 <div class="alert alert-warning">
@@ -76,10 +98,22 @@ else
                     <strong>Succes!</strong> - Vagt(er) er nu oprettet
                 </div>
             }
+<<<<<<< HEAD
         </div>
         @*Opret Opgave*@
         <div class="opretopgaveContainer col-md-6 px-4">
+=======
 
+            @* Er valideringen godkendt, kan man trykke på kanppen for at køre funktionen Opretvagt(nyVagt)*@
+            <div class="d-grid gap-2 col-md-6 mx-auto">
+                <button class="btn btn-success" type="button" @onclick="() => OpretVagt(nyVagt)">Opret vagt</button>
+            </div>
+
+        </div>
+        <div class="opretopgaveContainer col-md-6">
+>>>>>>> main
+
+            @* Opret opgave div. Binder alle felterne til et nyt objekt at klassen opgave *@
             <h2 class="my-3">Opret opgave</h2>
 
             <div class="form-floating mb-3">
@@ -92,8 +126,14 @@ else
                 <label for="floatingBeskrivelse">Opgave beskrivelse</label>
             </div>
 
+<<<<<<< HEAD
             <div class="form-group mb-3">
                 <label for="exampleFormControlSelect1" class="mb-2">Start status:</label>
+=======
+            @* Vælger hvilken status opgaven skal starte ud i. Kan senere ændres manuelt *@
+            <div class="form-group">
+                <label for="exampleFormControlSelect1">Start status:</label>
+>>>>>>> main
                 <select class="form-select" @bind="nyOpgave.Status">
                     <option selected hdden>Vælg en status...</option>
                     @foreach (var status in status)
@@ -103,8 +143,14 @@ else
                 </select>
             </div>
 
+<<<<<<< HEAD
             <div class="form-group mb-5">
                 <label for="exampleFormControlSelect1" class="mb-2">Tilknyttet team:</label>
+=======
+            @* Vælger hvilket team som kan se opgaven og dens vagter *@
+            <div class="form-group">
+                <label for="exampleFormControlSelect1">Tilknyttet team:</label>
+>>>>>>> main
                 <select class="form-select" @bind="nyOpgave.Team">
                     <option selected>Vælg et team...</option>
                     @foreach (var team in teams)
@@ -114,10 +160,14 @@ else
                 </select>
             </div>
 
+<<<<<<< HEAD
             <div class="d-grid gap-2 col-md-4 mx-auto my-3">
                 <button class="btn btn-success" type="button" @onclick="() => OpretOpgave(nyOpgave)">Opret opgave</button>
             </div>
 
+=======
+            @* Giver feedback ift. om brugeren har glemt at udfylde noget eller om den er godkendt *@
+>>>>>>> main
             @if (feedbackOpgave == "Fejl!")
             {
                 <div class="alert alert-warning">
@@ -133,6 +183,15 @@ else
                     <strong>Succes!</strong> - Opgave er nu oprettet
                 </div>
             }
+<<<<<<< HEAD
+=======
+
+            @* Opretter opgaven, hvis valideringen bliver godkendt *@
+            <div class="d-grid gap-2 col-md-6 mx-auto">
+                <button class="btn btn-success" type="button" @onclick="() => OpretOpgave(nyOpgave)">Opret opgave</button>
+            </div>
+
+>>>>>>> main
         </div>
     </main>
 }
@@ -147,6 +206,8 @@ else
     private string feedbackVagt = string.Empty;
     private string feedbackOpgave = string.Empty;
 
+    // Henter lister over alle eksisterende opgaver, statusser, teams og sætter 
+    // default værdien af dato-felterne til datoen i dag
     protected override async Task OnInitializedAsync()
     {
         opgaveListe = await Http.GetFromJsonAsync<List<Opgave>>("Opgave/all");
@@ -160,14 +221,17 @@ else
         nyVagt.Slut = DateTime.UtcNow;
     }
 
+    // Opretter en vagt
     private async Task OpretVagt(Vagt vagt)
     {
+        // Hvis man mangler at udfylde nogle felter, melder den fejl
         if (vagt.Opgave == null || vagt.Start == DateTime.Today || vagt.Slut == DateTime.Today)
         {
             feedbackVagt = "Fejl!";
 
             return;
         }
+        // - ellers opretter den en vagter / flere vagter
         else
         {
             Opgave valgteOpgave = new Opgave();
@@ -181,6 +245,7 @@ else
                 await Http.PostAsJsonAsync<Vagt>("Vagt/opret", vagt);
             }
 
+            // Sætter felterne tilbage til det de var til at starte med
             nyVagt = new Vagt();
 
             antalVagter = 1;
@@ -195,12 +260,15 @@ else
         }
     }
 
+    // Opretter en opgave
     private async Task OpretOpgave(Opgave opgave)
     {
+        // Hvis brugeren mangler at udfylde nogle felter, melder den fejl
         if (opgave.Navn == null || opgave.Beskrivelse == null || opgave.Status == null || opgave.Team == null)
         {
             feedbackOpgave = "Fejl!";
         }
+        // Ellers opretter den en opgave og nulstiller felterne, til det de var til at starte med
         else
         {
             await Http.PostAsJsonAsync<Opgave>("Opgave/opret", opgave);

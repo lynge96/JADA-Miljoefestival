@@ -14,12 +14,13 @@ namespace MiljøFestival.Server.Controllers
     {
         private string connString; 
 
+        // Henter connectionstring fra appsettings.json
         public BrugerController(IConfiguration configuration)
         {
             connString = configuration.GetConnectionString("miljøDB");
         }
 
-        // Hent alle brugere
+        // Henter en liste med alle brugere
         [HttpGet("all")]
         public async Task<IEnumerable<Bruger>> HentAlle()
         {

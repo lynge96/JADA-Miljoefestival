@@ -13,12 +13,14 @@ namespace MiljøFestival.Server.Controllers
     public class TeamController : ControllerBase
     {
         private string connString;
+
+        // Henter connectionstring fra appsettings.json
         public TeamController(IConfiguration configuration)
         {
             connString = configuration.GetConnectionString("miljøDB");
         }
 
-        // Hent alle teams
+        // Henter alle teams
         [HttpGet("all")]
         public async Task<IEnumerable<string>> HentAlle()
         {
