@@ -11,10 +11,18 @@
         </div>
     </div>
 }
-else if (loggedInBruger.ErKoordinator() || loggedInBruger.ErFormand())
+else if (!loggedInBruger.ErKoordinator() && !loggedInBruger.ErFormand())
+{
+    <div class="alert alert-info col-md-3 mx-auto">
+        <span class="bi bi-door-open-fill" aria-hidden="true"></span>
+        <strong> Hov!</strong> Du skal være logget på en koordinator bruger for at se denne side.
+    </div>
+}
+else
 {
     <main class="row col-md-7 mx-auto">
-        <div class="opretvagtContainer col-md-6">
+        @*Opret Vagt*@
+        <div class="opretvagtContainer col-md-6 px-4">
             <h2 class="my-3">Opret vagt</h2>
 
             <div class="form-floating mb-3">
@@ -27,8 +35,8 @@ else if (loggedInBruger.ErKoordinator() || loggedInBruger.ErFormand())
                 <label for="floatingSlutdato">Slut</label>
             </div>
 
-            <div class="form-group">
-                <label for="exampleFormControlSelect1">Antal Vagter</label>
+            <div class="form-group mb-3">
+                <label for="exampleFormControlSelect1" class="mb-2">Antal Vagter</label>
                 <select class="form-select" @bind="antalVagter">
                     <option selected>1</option>
                     <option>2</option>
@@ -38,8 +46,8 @@ else if (loggedInBruger.ErKoordinator() || loggedInBruger.ErFormand())
                 </select>
             </div>
 
-            <div class="form-group">
-                <label for="exampleFormControlSelect1">Opgave Type </label>
+            <div class="form-group mb-5">
+                <label for="exampleFormControlSelect1" class="mb-2">Opgave Type </label>
                 <select class="form-select" @bind="nyVagt.Opgave">
                     <option selected>Vælg en opgave...</option>
                     @foreach (var item in opgaveListe)
@@ -49,10 +57,14 @@ else if (loggedInBruger.ErKoordinator() || loggedInBruger.ErFormand())
                 </select>
             </div>
 
+            <div class="d-grid gap-2 col-md-4 mx-auto my-3">
+                <button class="btn btn-success" type="button" @onclick="() => OpretVagt(nyVagt)">Opret vagt</button>
+            </div>
+
             @if (feedbackVagt == "Fejl!")
             {
                 <div class="alert alert-warning">
-                    <span class="bi bi-key" aria-hidden="true"></span>
+                    <span class="bi bi-exclamation-circle-fill" aria-hidden="true"></span>
                     <strong>Hov!</strong> - Udfyld alle felterne rigtigt inden du trykker opret
                 </div>
 
@@ -60,18 +72,13 @@ else if (loggedInBruger.ErKoordinator() || loggedInBruger.ErFormand())
             else if (feedbackVagt == "Succes!")
             {
                 <div class="alert alert-success">
-                    <span class="bi bi-key" aria-hidden="true"></span>
+                    <span class="bi bi-check-circle-fill" aria-hidden="true"></span>
                     <strong>Succes!</strong> - Vagt(er) er nu oprettet
                 </div>
             }
-
-            <div class="d-grid gap-2 col-md-6 mx-auto">
-                <button class="btn btn-success" type="button" @onclick="() => OpretVagt(nyVagt)">Opret vagt</button>
-            </div>
-
         </div>
         @*Opret Opgave*@
-        <div class="opretopgaveContainer col-md-6">
+        <div class="opretopgaveContainer col-md-6 px-4">
 
             <h2 class="my-3">Opret opgave</h2>
 
@@ -85,8 +92,8 @@ else if (loggedInBruger.ErKoordinator() || loggedInBruger.ErFormand())
                 <label for="floatingBeskrivelse">Opgave beskrivelse</label>
             </div>
 
-            <div class="form-group">
-                <label for="exampleFormControlSelect1">Start status:</label>
+            <div class="form-group mb-3">
+                <label for="exampleFormControlSelect1" class="mb-2">Start status:</label>
                 <select class="form-select" @bind="nyOpgave.Status">
                     <option selected hdden>Vælg en status...</option>
                     @foreach (var status in status)
@@ -96,8 +103,8 @@ else if (loggedInBruger.ErKoordinator() || loggedInBruger.ErFormand())
                 </select>
             </div>
 
-            <div class="form-group">
-                <label for="exampleFormControlSelect1">Tilknyttet team:</label>
+            <div class="form-group mb-5">
+                <label for="exampleFormControlSelect1" class="mb-2">Tilknyttet team:</label>
                 <select class="form-select" @bind="nyOpgave.Team">
                     <option selected>Vælg et team...</option>
                     @foreach (var team in teams)
@@ -107,10 +114,14 @@ else if (loggedInBruger.ErKoordinator() || loggedInBruger.ErFormand())
                 </select>
             </div>
 
+            <div class="d-grid gap-2 col-md-4 mx-auto my-3">
+                <button class="btn btn-success" type="button" @onclick="() => OpretOpgave(nyOpgave)">Opret opgave</button>
+            </div>
+
             @if (feedbackOpgave == "Fejl!")
             {
                 <div class="alert alert-warning">
-                    <span class="bi bi-key" aria-hidden="true"></span>
+                    <span class="bi bi-exclamation-circle-fill" aria-hidden="true"></span>
                     <strong>Hov!</strong> - Udfyld alle felterne rigtigt inden du trykker opret
                 </div>
 
@@ -118,27 +129,13 @@ else if (loggedInBruger.ErKoordinator() || loggedInBruger.ErFormand())
             else if (feedbackOpgave == "Succes!")
             {
                 <div class="alert alert-success">
-                    <span class="bi bi-key" aria-hidden="true"></span>
+                    <span class="bi bi-check-circle-fill" aria-hidden="true"></span>
                     <strong>Succes!</strong> - Opgave er nu oprettet
                 </div>
             }
-
-            <div class="d-grid gap-2 col-md-6 mx-auto">
-                <button class="btn btn-success" type="button" @onclick="() => OpretOpgave(nyOpgave)">Opret opgave</button>
-            </div>
-
         </div>
     </main>
 }
-else
-{
-    <div class="alert alert-info col-md-3 mx-auto">
-        <span class="bi bi-door-open-fill" aria-hidden="true"></span>
-        <strong> Hov!</strong> Du skal være logget på en koordinator bruger for at se denne side.
-    </div>
-}
-
-
 
 @code {
     private Vagt nyVagt = new Vagt();
@@ -158,9 +155,9 @@ else
 
         teams = await Http.GetFromJsonAsync<List<string>>("Team/all");
 
-        nyVagt.Start = DateTime.Today;
+        nyVagt.Start = DateTime.UtcNow;
 
-        nyVagt.Slut = DateTime.Today;
+        nyVagt.Slut = DateTime.UtcNow;
     }
 
     private async Task OpretVagt(Vagt vagt)
@@ -190,9 +187,9 @@ else
 
             nyVagt.Opgave = "Vælg en opgave...";
 
-            nyVagt.Start = DateTime.Today;
+            nyVagt.Start = DateTime.UtcNow;
 
-            nyVagt.Slut = DateTime.Today;
+            nyVagt.Slut = DateTime.UtcNow;
 
             feedbackVagt = "Succes!";
         }

@@ -24,13 +24,15 @@ else if (loggedInBruger.ErKoordinator() || loggedInBruger.ErFormand())
             <br /><br />
         </p>
 
-        @* Gør det muligt at sortere i alle opgaver efter tre muligheder *@        
-        <p class="mb-0">Sorter efter: </p>
-        <select class="form-select mb-4 col-md-3" @bind="SorteringsInput">
-            <option selected>Status</option>
-            <option>Flest ledige vagter</option>
-            <option>Ansvarlige team</option>
-        </select>
+        @* Gør det muligt at sortere i alle opgaver efter tre muligheder *@   
+        <div class="col-md-2">
+            <p class="mb-0">Sorter efter: </p>
+            <select class="form-select mb-4 col-md-3" @bind="SorteringsInput">
+                <option selected>Status</option>
+                <option>Flest ledige vagter</option>
+                <option>Ansvarlige team</option>
+            </select>
+        </div>
 
        @* Laver en div for hver opgave der findes i databasen. Her kan man ændre status, slette vagten
            se ledige vagter, slette vagter og opdatere dem *@

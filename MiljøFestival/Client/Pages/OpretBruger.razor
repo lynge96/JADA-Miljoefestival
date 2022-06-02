@@ -6,7 +6,7 @@
 
 <main class="opretBrugerContainer mx-auto col-md-6 row">
     @*Opret Bruger*@
-    <div class="col-md-6">
+    <div class="col-md-6 px-4">
         <h2 class="my-3">Opret en bruger</h2>
 
         <EditForm Model="@BrugerModel" class="row g-2" OnValidSubmit="() => OpretUser(alleKompetencer)">
@@ -75,30 +75,18 @@
                     </button>
                 </div>
             }
-
-
         </EditForm>
     </div>
     @*Kompetencer*@
-    <div class="col-md-6 mb-3">
+    <div class="col-md-6 mb-3 px-4">
         <h2 class="my-3">Kompetencer</h2>
-        @if (alleKompetencer == null)
+
+        @foreach (var kompetence in alleKompetencer)
         {
-            <div class="d-flex justify-content-center">
-                <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
+            <div class="form-check mb-3">
+                <input type="checkbox" class="form-check-input" id="kompetencer" @onchange="eventArgs => { CheckboxClicked(kompetence, eventArgs.Value); }" />
+                <label class="form-check-label" for="kompetencer">@kompetence.Kompetence_Navn</label>
             </div>
-        }
-        else
-        {
-            @foreach (var kompetence in alleKompetencer)
-            {
-                <div class="form-check mb-3">
-                    <input type="checkbox" class="form-check-input" id="kompetencer" @onchange="eventArgs => { CheckboxClicked(kompetence, eventArgs.Value); }" />
-                    <label class="form-check-label" for="kompetencer">@kompetence.Kompetence_Navn</label>
-                </div>
-            }
         }
     </div>
 </main>
@@ -140,7 +128,7 @@
         // Resetter opret-formularen
         BrugerModel = new Bruger();
 
-        await Task.Delay(700);
+        await Task.Delay(500);
 
         NavManager.NavigateTo("/login");
     }

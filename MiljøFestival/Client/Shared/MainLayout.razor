@@ -4,10 +4,9 @@
 
 <style>
     body {
-        background-color: #F5F5F5
+        background-color: #EDEDED
     }
 </style>
-
 
 <div class="page">
 
@@ -15,11 +14,11 @@
 
        @* Denne div indeholder vores navigationbar *@ 
         <div class="container">
-            <header class="d-flex flex-wrap justify-content-md-between py-3 mb-4 border-bottom">
+            <header class="d-flex flex-wrap justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
 
-                <div class="d-flex align-items-center">
-                    <img src="leaves.png" class="img-fluid" width="40" height="32">
-                    <a href="#" class=" col-md-3 mb-2 mb-md-0 text-dark text-decoration-none fs-3 justify-content-center">Miljøfestival</a>
+                <div class="d-flex col-md-3">
+                    <img src="leaves.png" class="img-fluid me-2" width="40" height="32">
+                    <a href="#" class="col-md-3 text-dark text-decoration-none fs-3"> Miljøfestival</a>
                 </div>
      
 
@@ -49,8 +48,7 @@
 
                 </ul>
 
-                <div class="col-md-3 text-center">
-
+                <div class="col-md-3 text-end">
                     @*Hvis brugeren er logget ind, vises en "Log af"- og "Profil"-knap, og hvis ikke vises der "Log ind"- og "Opret profil"-knapper*@
                     @if (loggedInBruger.ErLoggetPå())
                     {

@@ -1,12 +1,9 @@
 ﻿using Dapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using MiljøFestival.Shared.Models;
 using Npgsql;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MiljøFestival.Server.Controllers
@@ -28,13 +25,13 @@ namespace MiljøFestival.Server.Controllers
         [HttpGet("all")]
         public async Task<IEnumerable<Opgave>> GetAll()
         {
-            var sql = "SELECT * FROM alle_opgaver;";
+            var querySQL = "SELECT * FROM alle_opgaver;";
 
             try
             {
                 using (var connection = new NpgsqlConnection(connString))
                 {
-                    var opgaveListe = await connection.QueryAsync<Opgave>(sql);
+                    var opgaveListe = await connection.QueryAsync<Opgave>(querySQL);
 
                     return opgaveListe;
                 }
@@ -50,18 +47,12 @@ namespace MiljøFestival.Server.Controllers
         [HttpPut("opdaterOpgave")]
         public async Task OpdaterOpgave(Opgave opgave)
         {
-            var sql = $"CALL opdater_opgave_status({opgave.Opgave_Id}, '{opgave.Status}')";
+            var querySQL = $"CALL opdater_opgave_status({opgave.Opgave_Id}, '{opgave.Status}')";
 
-            try
+
+            using (var connection = new NpgsqlConnection(connString))
             {
-                using (var connection = new NpgsqlConnection(connString))
-                {
-                    await connection.ExecuteAsync(sql);
-                }
-            }
-            catch (System.Exception)
-            {
-                throw;  
+                await connection.ExecuteAsync(querySQL);
             }
         }
 
@@ -69,18 +60,12 @@ namespace MiljøFestival.Server.Controllers
         [HttpPost("opret")]
         public async Task OpretOpgave(Opgave opgave)
         {
-            var sql = $"CALL opret_opgave('{opgave.Navn}', '{opgave.Beskrivelse}', '{opgave.Status}', '{opgave.Team}')";
+            var querySQL = $"CALL opret_opgave('{opgave.Navn}', '{opgave.Beskrivelse}', '{opgave.Status}', '{opgave.Team}')";
 
-            try
+
+            using (var connection = new NpgsqlConnection(connString))
             {
-                using (var connection = new NpgsqlConnection(connString))
-                {
-                    await connection.ExecuteAsync(sql);
-                }
-            }
-            catch (System.Exception)
-            {
-                throw;
+                await connection.ExecuteAsync(querySQL);
             }
         }
 
@@ -88,18 +73,12 @@ namespace MiljøFestival.Server.Controllers
         [HttpPut("slet")]
         public async Task SletOpgave(Opgave opgave)
         {
-            var sql = $"CALL slet_opgave({opgave.Opgave_Id});";
+            var querySQL = $"CALL slet_opgave({opgave.Opgave_Id});";
 
-            try
+
+            using (var connection = new NpgsqlConnection(connString))
             {
-                using (var connection = new NpgsqlConnection(connString))
-                {
-                    await connection.ExecuteAsync(sql);
-                }
-            }
-            catch (System.Exception)
-            {
-                throw;
+                await connection.ExecuteAsync(querySQL);
             }
         }
     }

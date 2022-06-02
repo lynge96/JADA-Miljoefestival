@@ -11,9 +11,12 @@
         </div>
     </div>
 }
-else if (loggedInBruger.ErKoordinator())
+else if (loggedInBruger.ErKoordinator() || loggedInBruger.ErFormand())
 {
-    <p><em>Du skal være frivillig for at se denne side</em></p>
+    <div class="alert alert-info col-md-3 mx-auto">
+        <span class="bi bi-door-open-fill" aria-hidden="true"></span>
+        <strong> Hov!</strong> Du skal være logget på en frivillig bruger for at se denne side.
+    </div>
 }
 else if (loggedInBruger.ErLoggetPå())
 {
@@ -43,17 +46,13 @@ else if (loggedInBruger.ErLoggetPå())
                             <td>@vagt.Slut.ToShortTimeString()</td>
                             <td>@vagt.Opgave</td>
                             <td>@vagt.Beskrivelse</td>
-                            <td><input type="button" class="btn btn-primary" value="Tag vagt" @onclick="() => TagVagt(vagt)"></td>
+                            <td><button type="button" class="btn btn-primary" @onclick="() => TagVagt(vagt)"><i class="bi bi-clipboard-check-fill"></i> Tag vagt</button></td>
                         </tr>
                     }
                 </tbody>
             </table>
         </div>
     </div>
-}
-else
-{
-    <p><em>Log in for at se ledige vagter</em></p>
 }
 
 @code {

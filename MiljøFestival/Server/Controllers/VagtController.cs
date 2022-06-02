@@ -1,12 +1,9 @@
 ﻿using Dapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using MiljøFestival.Shared.Models;
 using Npgsql;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MiljøFestival.Server.Controllers
@@ -27,13 +24,13 @@ namespace MiljøFestival.Server.Controllers
         public async Task<IEnumerable<Vagt>> GetAll()
         {
             
-            var sql = "SELECT * FROM alle_vagter";
+            var querySQL = "SELECT * FROM alle_vagter";
 
             try
             {
                 using (var connection = new NpgsqlConnection(connString))
                 {
-                    var vagtListe = await connection.QueryAsync<Vagt>(sql);
+                    var vagtListe = await connection.QueryAsync<Vagt>(querySQL);
 
                     return vagtListe;
                 }
@@ -49,13 +46,13 @@ namespace MiljøFestival.Server.Controllers
         [HttpGet("brugerVagter")]
         public async Task<IEnumerable<Vagt>> BrugerIdVagt(int brugerid) // Ændre til int bruger_id
         {
-            var sql = $"SELECT * FROM hent_bruger_vagter({brugerid})";
+            var querySQL = $"SELECT * FROM hent_bruger_vagter({brugerid})";
 
             try
             {
                 using (var connection = new NpgsqlConnection(connString))
                 {
-                    var vagtListe = await connection.QueryAsync<Vagt>(sql);
+                    var vagtListe = await connection.QueryAsync<Vagt>(querySQL);
 
                     return vagtListe;
                 }
@@ -71,13 +68,13 @@ namespace MiljøFestival.Server.Controllers
         [HttpGet("ledigeVagter")]
         public async Task<IEnumerable<Vagt>> LedigeVagter(int team_id)
         {
-            var sql = $"SELECT * FROM hent_ledige_vagter_team({team_id})"; 
+            var querySQL = $"SELECT * FROM hent_ledige_vagter_team({team_id})"; 
 
             try
             {
                 using (var connection = new NpgsqlConnection(connString))
                 {
-                    var vagtListe = await connection.QueryAsync<Vagt>(sql);
+                    var vagtListe = await connection.QueryAsync<Vagt>(querySQL);
 
                     return vagtListe;
                 }
@@ -93,13 +90,13 @@ namespace MiljøFestival.Server.Controllers
         [HttpPut("tagVagt")]
         public async Task TagVagt(Vagt vagt)
         {
-            var sql = $"UPDATE vagt SET bruger_id = {vagt.Bruger_Id} WHERE vagt_id = {vagt.Vagt_Id};";
+            var querySQL = $"UPDATE vagt SET bruger_id = {vagt.Bruger_Id} WHERE vagt_id = {vagt.Vagt_Id};";
 
             try
             {
                 using (var connection = new NpgsqlConnection(connString))
                 {
-                    await connection.ExecuteAsync(sql);
+                    await connection.ExecuteAsync(querySQL);
                 }
             }
             catch (System.Exception)
@@ -113,18 +110,12 @@ namespace MiljøFestival.Server.Controllers
         [HttpPut("frigivVagt")]
         public async Task FrigivVagt(Vagt vagt)
         {
-            var sql = $"UPDATE vagt SET bruger_id = null WHERE vagt_id = {vagt.Vagt_Id};";
+            var querySQL = $"UPDATE vagt SET bruger_id = null WHERE vagt_id = {vagt.Vagt_Id};";
 
-            try
+
+            using (var connection = new NpgsqlConnection(connString))
             {
-                using (var connection = new NpgsqlConnection(connString))
-                {
-                    await connection.ExecuteAsync(sql);
-                }
-            }
-            catch (System.Exception)
-            {
-                throw;
+                await connection.ExecuteAsync(querySQL);
             }
         }
 
@@ -133,18 +124,12 @@ namespace MiljøFestival.Server.Controllers
         [HttpPut("sletVagt")]
         public async Task SletVagt(Vagt vagt)
         {
-            var sql = $"DELETE FROM vagt WHERE vagt_id = {vagt.Vagt_Id};";
+            var querySQL = $"DELETE FROM vagt WHERE vagt_id = {vagt.Vagt_Id};";
 
-            try
+
+            using (var connection = new NpgsqlConnection(connString))
             {
-                using (var connection = new NpgsqlConnection(connString))
-                {
-                    await connection.ExecuteAsync(sql);
-                }
-            }
-            catch (System.Exception)
-            {
-                throw;
+                await connection.ExecuteAsync(querySQL);
             }
         }
 
@@ -152,18 +137,12 @@ namespace MiljøFestival.Server.Controllers
         [HttpPut("opdaterVagt")]
         public async Task OpdaterBruger(Vagt vagt)
         {
-            var sql = $"UPDATE vagt SET start = '{vagt.Start}', slut = '{vagt.Slut}' where vagt_id = '{vagt.Vagt_Id}'";
+            var querySQL = $"UPDATE vagt SET start = '{vagt.Start}', slut = '{vagt.Slut}' where vagt_id = '{vagt.Vagt_Id}'";
 
-            try
+
+            using (var connection = new NpgsqlConnection(connString))
             {
-                using (var connection = new NpgsqlConnection(connString))
-                {
-                    await connection.ExecuteAsync(sql);
-                }
-            }
-            catch (System.Exception)
-            {
-                throw;
+                await connection.ExecuteAsync(querySQL);
             }
         }
 
@@ -175,20 +154,13 @@ namespace MiljøFestival.Server.Controllers
             string vagtStart = vagt.Start.ToString("MM-dd-yyyy HH:mm:ss");
             string vagtSlut = vagt.Slut.ToString("MM-dd-yyyy HH:mm:ss");
 
-            var sql = $"INSERT INTO vagt (start, slut, opgave_id) VALUES ('{vagtStart}', '{vagtSlut}', {vagt.Opgave_Id})";
+            var querySQL = $"INSERT INTO vagt (start, slut, opgave_id) VALUES ('{vagtStart}', '{vagtSlut}', {vagt.Opgave_Id})";
 
-            try
+
+            using (var connection = new NpgsqlConnection(connString))
             {
-                using (var connection = new NpgsqlConnection(connString))
-                {
-                    await connection.ExecuteAsync(sql);
-                }
-            }
-            catch (System.Exception)
-            {
-                throw;
+                await connection.ExecuteAsync(querySQL);
             }
         }
-
     }
 }
