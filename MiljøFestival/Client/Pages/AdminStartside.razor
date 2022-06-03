@@ -21,113 +21,116 @@ else if (loggedInBruger.ErKoordinator() || loggedInBruger.ErFormand())
             Hej <bold>@loggedInBruger.Fornavn</bold> (ID: @loggedInBruger.Bruger_Id)! Nedenfor kan du se en oversigt over alle opgaver, som er oprettet til festivalen.
             Udvider du opgaven, får du også mulighed for at se alle de vagter, som er tilknyttet den enkelte opgave.
             <br /><br>Yderligere har du mulighed for at opdaterer status for de enkelte vagter samt slette dem.
-            <br /><br />
-        </p>
+            <br /><br />@if (loggedInBruger.ErKoordinator())
+            {
+        <p class="lead">Du er ansvarlig for team: <bold>@loggedInBruger.Team</bold></p> 
+            }
+            </p>
 
-        @* Gør det muligt at sortere i alle opgaver efter tre muligheder *@   
-        <div class="col-md-2">
-            <p class="mb-0">Sorter efter: </p>
-            <select class="form-select mb-4 col-md-3" @bind="SorteringsInput">
-                <option selected>Status</option>
-                <option>Flest ledige vagter</option>
-                <option>Ansvarlige team</option>
-            </select>
-        </div>
+            @* Gør det muligt at sortere i alle opgaver efter tre muligheder *@
+            <div class="col-md-2">
+                <p class="mb-0">Sorter efter: </p>
+                <select class="form-select mb-4 col-md-3" @bind="SorteringsInput">
+                    <option selected>Status</option>
+                    <option>Flest ledige vagter</option>
+                    <option>Ansvarlige team</option>
+                </select>
+            </div>
 
-       @* Laver en div for hver opgave der findes i databasen. Her kan man ændre status, slette vagten
-           se ledige vagter, slette vagter og opdatere dem *@
-        @foreach (var opgave in opgaveListe)
-        {
-            <div class="table-responsive rounded mb-3">
-                <div class="accordion" id="accordionExample">
-                    <div class="accordion-item mx-auto">
-                        <h2 class="accordion-header mx-auto" id="panelsStayOpen-heading-@opgave.Opgave_Id">
-                            <table class="table table-borderless">
-                                <thead>
-                                    <tr class="d-flex flex-wrap justify-content-around ">
-                                        <th class="col-1">
-                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-@opgave.Opgave_Id" aria-expanded="false" aria-controls="panelsStayOpen-@opgave.Opgave_Id"></button>
-                                        </th>
-                                        <th class="lead col-3">@opgave.Navn</th>
-                                        <th class="lead col-2">@FindAntalVagter(opgave.Opgave_Id, FindVagtOpgave(opgave, vagtListe))</th>
-                                        <th class="lead col-2">
-                                            <select class="form-select" @bind-value="opgave.Status" @onchange="() => OpdaterStatus(opgave)" @bind-value:event="oninput">
-                                                @foreach (var status in status)
-                                                {
-                                                    <option value=@status selected=@(opgave.Status == status)>@status</option>
-                                                }
-                                            </select>
-                                        </th>
-                                        <th class="col-2">
-                                            <input type="button" class="btn btn-danger" value="Slet opgave" @onclick="() => SletOpgave(opgave)">
-                                        </th>
-                                        <th class="lead col-2">Team: @opgave.Team</th>
-                                    </tr>
-                                </thead>
-                            </table>
-
-                        </h2>
-
-                        <div id="panelsStayOpen-@opgave.Opgave_Id" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-heading-@opgave.Opgave_Id">
-                            <div class="accordion-body">
-                                <table class="table table-striped">
+            @* Laver en div for hver opgave der findes i databasen. Her kan man ændre status, slette vagten
+                se ledige vagter, slette vagter og opdatere dem *@
+            @foreach (var opgave in opgaveListe)
+            {
+                <div class="table-responsive rounded mb-3">
+                    <div class="accordion" id="accordionExample">
+                        <div class="accordion-item mx-auto">
+                            <h2 class="accordion-header mx-auto" id="panelsStayOpen-heading-@opgave.Opgave_Id">
+                                <table class="table table-borderless">
                                     <thead>
-                                        <tr class="table">
-                                            <th>Slet</th>
-                                            <th>Opdater</th>
-                                            <th>Vagt ID</th>
-                                            <th>Start</th>
-                                            <th>Slut</th>
-                                            <th>Taget af</th>
-                                            <th>Opgave navn</th>
+                                        <tr class="d-flex flex-wrap justify-content-around ">
+                                            <th class="col-1">
+                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-@opgave.Opgave_Id" aria-expanded="false" aria-controls="panelsStayOpen-@opgave.Opgave_Id"></button>
+                                            </th>
+                                            <th class="lead col-3">@opgave.Navn</th>
+                                            <th class="lead col-2">@FindAntalVagter(opgave.Opgave_Id, FindVagtOpgave(opgave, vagtListe))</th>
+                                            <th class="lead col-2">
+                                                <select class="form-select" @bind-value="opgave.Status" @onchange="() => OpdaterStatus(opgave)" @bind-value:event="oninput">
+                                                    @foreach (var status in status)
+                                                    {
+                                                        <option value=@status selected=@(opgave.Status == status)>@status</option>
+                                                    }
+                                                </select>
+                                            </th>
+                                            <th class="col-2">
+                                                <input type="button" class="btn btn-danger" value="Slet opgave" @onclick="() => SletOpgave(opgave)">
+                                            </th>
+                                            <th class="lead col-2">Team: @opgave.Team</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-
-                                        @* Laver en række for hver vagt, hver opgave indeholder *@
-                                        @foreach (var vagt in FindVagtOpgave(opgave, vagtListe))
-                                        {
-                                            <tr>
-                                                <td><input type="button" class="btn btn-danger" value="Slet" @onclick="() => SletVagt(vagt)"></td>
-                                                @if (editMode == false)
-                                                {
-                                                    <td><input type="button" class="btn btn-primary" value="Opdater" @onclick="() => editMode = true"></td>
-                                                    <td>@vagt.Vagt_Id</td>
-                                                    <td>@vagt.Start</td>
-                                                    <td>@vagt.Slut</td>
-                                                    <td>@vagt.Taget_Af</td>
-                                                    <td>@vagt.Opgave</td>
-                                                }
-                                                else if (editMode == true)
-                                                {
-                                                    <td><input type="button" class="btn btn-primary" value="Gem" @onclick="() => OpdaterVagt(vagt)"></td>
-                                                    <td>@vagt.Vagt_Id</td>
-                                                    <td> <input type="text" class="form-control" @bind="vagt.Start"></td>
-                                                    <td> <input type="text" class="form-control" @bind="vagt.Slut"></td>
-                                                    <td>@vagt.Taget_Af</td>
-                                                    <td>@vagt.Opgave</td>
-                                                }
-                                            </tr>
-                                        }
-                                    </tbody>
                                 </table>
-                            </div>
-                        </div>
 
+                            </h2>
+
+                            <div id="panelsStayOpen-@opgave.Opgave_Id" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-heading-@opgave.Opgave_Id">
+                                <div class="accordion-body">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr class="table">
+                                                <th>Slet</th>
+                                                <th>Opdater</th>
+                                                <th>Vagt ID</th>
+                                                <th>Start</th>
+                                                <th>Slut</th>
+                                                <th>Taget af</th>
+                                                <th>Opgave navn</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            @* Laver en række for hver vagt, hver opgave indeholder *@
+                                            @foreach (var vagt in FindVagtOpgave(opgave, vagtListe))
+                                            {
+                                                <tr>
+                                                    <td><input type="button" class="btn btn-danger" value="Slet" @onclick="() => SletVagt(vagt)"></td>
+                                                    @if (editMode == false)
+                                                    {
+                                                        <td><input type="button" class="btn btn-primary" value="Opdater" @onclick="() => editMode = true"></td>
+                                                        <td>@vagt.Vagt_Id</td>
+                                                        <td>@vagt.Start</td>
+                                                        <td>@vagt.Slut</td>
+                                                        <td>@vagt.Taget_Af</td>
+                                                        <td>@vagt.Opgave</td>
+                                                    }
+                                                    else if (editMode == true)
+                                                    {
+                                                        <td><input type="button" class="btn btn-primary" value="Gem" @onclick="() => OpdaterVagt(vagt)"></td>
+                                                        <td>@vagt.Vagt_Id</td>
+                                                        <td> <input type="text" class="form-control" @bind="vagt.Start"></td>
+                                                        <td> <input type="text" class="form-control" @bind="vagt.Slut"></td>
+                                                        <td>@vagt.Taget_Af</td>
+                                                        <td>@vagt.Opgave</td>
+                                                    }
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
                 </div>
-            </div>
-        }
+            }
 
-    </main>
-}
-else
-{
-    <div class="alert alert-info col-md-3 mx-auto">
-        <span class="bi bi-door-open-fill" aria-hidden="true"></span>
-        <strong> Hov!</strong> Du skal være logget på en koordinator bruger for at se denne side.
-    </div>
-}
+        </main>
+    }
+    else
+    {
+        <div class="alert alert-info col-md-3 mx-auto">
+            <span class="bi bi-door-open-fill" aria-hidden="true"></span>
+            <strong> Hov!</strong> Du skal være logget på en koordinator bruger for at se denne side.
+        </div>
+    }
 
 
 
