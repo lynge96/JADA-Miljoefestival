@@ -165,7 +165,7 @@ else
 
         frivilligListe = brugerListeUnsorted.FindAll(q => q.Rolle_Id == 2).OrderBy(q => q.Team).ToList();
 
-        koordinatorListe = brugerListeUnsorted.FindAll(q => q.Rolle_Id == 1);
+        koordinatorListe = brugerListeUnsorted.FindAll(q => q.Rolle_Id == 1).OrderBy(q => q.Team).ToList();
 
         formandListe = brugerListeUnsorted.FindAll(q => q.Rolle_Id == 3);
 

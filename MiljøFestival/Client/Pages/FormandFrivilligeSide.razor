@@ -106,6 +106,7 @@ else if (loggedInBruger.ErFormand())
                     <th>Telefon</th>
                     <th>Email</th>
                     <th>Adresse</th>
+                    <th>Team</th>
                     <th>Koordinator?</th>
                 </tr>
             </thead>
@@ -114,26 +115,35 @@ else if (loggedInBruger.ErFormand())
                 @* Laver en række for hver koordinator med alt deres information *@
                 @foreach (var bruger in koordinatorListe)
                 {
-                    <tr>
-                        <th>@bruger.Bruger_Id</th>
-                        <td>@bruger.Fornavn @bruger.Efternavn</td>
-                        <td>@bruger.Telefon</td>
-                        <td>@bruger.Email</td>
-                        <td>@bruger.Adresse</td>
-                        <td>
-                            <div class="form-check form-switch">
-                                @* Gør det muligt at ændre koordinator-status for den frivillige *@
-                                @if (bruger.ErKoordinator())
-                                {
-                                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @onchange="async eventArgs => { await CheckboxClicked(bruger, eventArgs.Value); }" checked>
-                                }
-                                else
-                                {
-                                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @onchange="async eventArgs => { await CheckboxClicked(bruger, eventArgs.Value); }">
-                                }
-                            </div>
-                        </td>
-                    </tr>
+                <tr>
+                    <th>@bruger.Bruger_Id</th>
+                    <td>@bruger.Fornavn @bruger.Efternavn</td>
+                    <td>@bruger.Telefon</td>
+                    <td>@bruger.Email</td>
+                    <td>@bruger.Adresse</td>
+                    <td>
+                        @* Gør det muligt at ændre teamet for en bruger *@
+                        <select class="form-select" @bind-value="bruger.Team" @onchange="() => OpdaterBruger(bruger)" @bind-value:event="oninput">
+                            @foreach (var team in teams)
+                            {
+                                <option value="@team" selected=@(bruger.Team == team)>@team</option>
+                            }
+                        </select>
+                    </td>
+                    <td>
+                        <div class="form-check form-switch">
+                            @* Gør det muligt at ændre koordinator-status for den frivillige *@
+                            @if (bruger.ErKoordinator())
+                            {
+                                <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @onchange="async eventArgs => { await CheckboxClicked(bruger, eventArgs.Value); }" checked>
+                            }
+                            else
+                            {
+                                <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @onchange="async eventArgs => { await CheckboxClicked(bruger, eventArgs.Value); }">
+                            }
+                        </div>
+                    </td>
+                </tr>
                 }
             </tbody>
         </table>
@@ -162,7 +172,7 @@ else if (loggedInBruger.ErFormand())
 
         frivilligListe = brugerListe.FindAll(q => q.Rolle_Id == 2).OrderBy(q => q.Team).ToList();
 
-        koordinatorListe = brugerListe.FindAll(q => q.Rolle_Id == 1).OrderBy(q => q.Fornavn).ToList();
+        koordinatorListe = brugerListe.FindAll(q => q.Rolle_Id == 1).OrderBy(q => q.Team).ToList();
 
         formandListe = brugerListe.FindAll(q => q.Rolle_Id == 3);
 
@@ -266,7 +276,7 @@ else if (loggedInBruger.ErFormand())
 
         await Http.PutAsJsonAsync<Bruger>("Bruger/opdaterFrivillig", bruger);
 
-        koordinatorListe = brugerListe.FindAll(q => q.Rolle_Id == 1).OrderBy(q => q.Fornavn).ToList();
+        koordinatorListe = brugerListe.FindAll(q => q.Rolle_Id == 1).OrderBy(q => q.Team).ToList();
 
          // Sørger for at frivilliglisten stadig er sorteret efter valgte kompetencer
         List<Bruger> nyListe = new List<Bruger>();
