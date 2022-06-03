@@ -5,7 +5,7 @@
 
 @if (opgaveListe == null)
 {
-    <div class="d-flex justify-content-center">
+    <div class="position-absolute top-50 start-50 translate-middle">
         <div class="spinner-border text-success" role="status">
             <span class="visually-hidden">Loading...</span>
         </div>
@@ -176,9 +176,9 @@ else
 
         teams = await Http.GetFromJsonAsync<List<string>>("Team/all");
 
-        nyVagt.Start = DateTime.UtcNow;
+        nyVagt.Start = DateTime.Today;
 
-        nyVagt.Slut = DateTime.UtcNow;
+        nyVagt.Slut = DateTime.Today;
     }
 
     // Opretter en vagt
@@ -212,9 +212,9 @@ else
 
             nyVagt.Opgave = "Vælg en opgave...";
 
-            nyVagt.Start = DateTime.UtcNow;
+            nyVagt.Start = DateTime.Today;
 
-            nyVagt.Slut = DateTime.UtcNow;
+            nyVagt.Slut = DateTime.Today;
 
             feedbackVagt = "Succes!";
         }
