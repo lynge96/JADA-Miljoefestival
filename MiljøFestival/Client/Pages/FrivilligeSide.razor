@@ -8,7 +8,7 @@
 {
     <div class="position-absolute top-50 start-50 translate-middle">
         <div class="spinner-border text-success" role="status">
-          <span class="visually-hidden">Loading...</span>
+            <span class="visually-hidden">Loading...</span>
         </div>
     </div>
 }
@@ -25,7 +25,7 @@ else if (loggedInBruger.ErLoggetPå())
 
         <h1 class="display-4">Overblik over alle frivillige</h1>
 
-        <h2 class="mt-3">Formand</h2>
+        <h2 class="mt-3">Formænd</h2>
 
         <div class="table-responsive rounded">
             <table class="table table-striped">
@@ -42,33 +42,6 @@ else if (loggedInBruger.ErLoggetPå())
                         <tr>
                             <td>@bruger.Fornavn @bruger.Efternavn</td>
                             <td>@bruger.Email</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-
-        <h2 class="mt-3">Frivillige</h2>
-
-        <div class="table-responsive rounded">
-            <table class="table table-striped">
-                <thead class="table-dark">
-                    <tr>
-                        <th>ID</th>
-                        <th>Navn</th>
-                        <th>Telefon</th>
-                        <th>Team</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @* En liste over alle frivillige  *@
-                    @foreach (var bruger in frivilligListe)
-                    {
-                        <tr>
-                            <th class="col-md-1">@bruger.Bruger_Id</th>
-                            <td class="col-md-4">@bruger.Fornavn @bruger.Efternavn</td>
-                            <td class="col-md-4">@bruger.Telefon</td>
-                            <td class="col-md-3">@bruger.Team</td>
                         </tr>
                     }
                 </tbody>
@@ -101,6 +74,33 @@ else if (loggedInBruger.ErLoggetPå())
                 </tbody>
             </table>
         </div>
+
+        <h2 class="mt-3">Frivillige</h2>
+
+        <div class="table-responsive rounded">
+            <table class="table table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Navn</th>
+                        <th>Telefon</th>
+                        <th>Team</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @* En liste over alle frivillige  *@
+                    @foreach (var bruger in frivilligListe)
+                    {
+                        <tr>
+                            <th class="col-md-1">@bruger.Bruger_Id</th>
+                            <td class="col-md-4">@bruger.Fornavn @bruger.Efternavn</td>
+                            <td class="col-md-4">@bruger.Telefon</td>
+                            <td class="col-md-3">@bruger.Team</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </main>
 }
 
@@ -110,7 +110,7 @@ else if (loggedInBruger.ErLoggetPå())
     private List<Bruger> formandListe;
     private List<Bruger> brugerListeUnsorted;
 
-    // Henter lister over alle brugere, frivillige, koordinatorer, formænd. 
+    // Henter lister over alle brugere, frivillige, koordinatorer, formænd.
     protected override async Task OnInitializedAsync()
     {
         brugerListeUnsorted = await Http.GetFromJsonAsync<List<Bruger>>("Bruger/all");

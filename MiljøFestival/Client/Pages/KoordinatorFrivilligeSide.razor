@@ -20,130 +20,129 @@ else if (!loggedInBruger.ErKoordinator())
 }
 else
 {
-    <main class="col-md-7 mx-auto">
+<main class="col-md-7 mx-auto">
 
-        <h1 class="display-4">Overblik over alle frivillige</h1>
-        <p class="lead">
-            Her har du mulighed for at se alle frivillige på festivallen. Yderligere kan du flytte frivillige fra ét hold til et andet, hvis det skulle være nødvendigt.
-            <br /> <br /><i>OBS:</i> Gøres dette, bliver alle vagterne, som brugeren eventuelt havde taget, frigivet tilbage til brugerens tidligere team. <br /><br />
+    <h1 class="display-4">Overblik over alle frivillige</h1>
+    <p class="lead">
+        Her har du mulighed for at se alle frivillige på festivallen. Yderligere kan du flytte frivillige fra ét hold til et andet, hvis det skulle være nødvendigt.
+        <br /> <br /><i>OBS:</i> Gøres dette, bliver alle vagterne, som brugeren eventuelt havde taget, frigivet tilbage til brugerens tidligere team. <br /><br />
 
-        </p>
+    </p>
 
-        <h2 class="mt-3">Formand</h2>
+    <h2 class="mt-3">Formænd</h2>
 
-        <div class="table-responsive rounded mb-3">
-            <table class="table table-striped">
-                <thead class="table-dark">
+    <div class="table-responsive rounded mb-3">
+        <table class="table table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th class="col-md-1">ID</th>
+                    <th class="col-md-4">Navn</th>
+                    <th class="col-md-3">Telefon</th>
+                    <th class="col-md-4">Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                @* Laver en række for hver formand  *@
+                @foreach (var bruger in formandListe)
+                {
                     <tr>
-                        <th class="col-md-1">ID</th>
-                        <th class="col-md-4">Navn</th>
-                        <th class="col-md-3">Telefon</th>
-                        <th class="col-md-4">Email</th>
+                        <th>@bruger.Bruger_Id</th>
+                        <td>@bruger.Fornavn @bruger.Efternavn</td>
+                        <td>@bruger.Telefon</td>
+                        <td>@bruger.Email</td>
                     </tr>
-                </thead>
-                <tbody>
-                    @* Laver en række for hver formand  *@
-                    @foreach (var bruger in formandListe)
-                    {
-                        <tr>
-                            <th>@bruger.Bruger_Id</th>
-                            <td>@bruger.Fornavn @bruger.Efternavn</td>
-                            <td>@bruger.Telefon</td>
-                            <td>@bruger.Email</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+                }
+            </tbody>
+        </table>
+    </div>
 
-        <h2 class="mt-1">Frivillige</h2>
-        <div class="flex-md-wrap mt-3">
-            <p class="mb-0">Sorter efter: </p>
-            @* Laver en chechkbox for hver kompetence der findes. Trykkes der på én af dem, hentes der en ny liste af frivillige,
-                som er sorteret alt efter, hvilke kompetencer som er valgt
-            *@
-            @foreach (var kompetence in alleKompetencer)
-            {
-                <div class="form-check form-check-inline mb-2">
-                    <input type="checkbox" class="form-check-input" id="defaultCheck" @onchange="eventArgs => { CheckboxKompetencer(kompetence, eventArgs.Value); }">
-                    <label class="form-check-label" for="defaultCheck">@kompetence.Kompetence_Navn</label>
-                </div>
-            }
-        </div>
+    <h2 class="mt-3">Koordinatorer</h2>
 
-
-        <div class="table-responsive rounded">
-            <table class="table table-striped">
-                <thead class="table-dark">
+    <div class="table-responsive rounded">
+        <table class="table table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th class="col-md-1">ID</th>
+                    <th class="col-md-2">Navn</th>
+                    <th class="col-md-2">Telefon</th>
+                    <th class="col-md-2">Email</th>
+                    <th class="col-md-3">Adresse</th>
+                    <th class="col-md-2">Team</th>
+                </tr>
+            </thead>
+            <tbody>
+                @* Viser en liste over alle koordinatorer og deres information *@
+                @foreach (var bruger in koordinatorListe)
+                {
                     <tr>
-                        <th class="col-md-1">ID</th>
-                        <th class="col-md-2">Navn</th>
-                        <th class="col-md-2">Telefon</th>
-                        <th class="col-md-2">Email</th>
-                        <th class="col-md-3">Adresse</th>
-                        <th class="col-md-2">Team</th>
+                        <th>@bruger.Bruger_Id</th>
+                        <td>@bruger.Fornavn @bruger.Efternavn</td>
+                        <td>@bruger.Telefon</td>
+                        <td>@bruger.Email</td>
+                        <td>@bruger.Adresse</td>
+                        <td>@bruger.Team</td>
                     </tr>
-                </thead>
-                <tbody>
-                    @* Laver en række med information for hver bruger, som har rollen frivillig *@
-                    @foreach (var bruger in frivilligListe)
-                    {
-                        <tr>
-                            <th>@bruger.Bruger_Id</th>
-                            <td>@bruger.Fornavn @bruger.Efternavn</td>
-                            <td>@bruger.Telefon</td>
-                            <td>@bruger.Email</td>
-                            <td>@bruger.Adresse</td>
-                            <td>
-                                @* Gør det muligt for koordinatoren at flytte den frivillig fra et team til et andet.
-                                    Når der vælges et nyt team, kører OpdaterBurger(bruger) funktionen og opdaterer brugeren.
-                                *@
-                                <select class="form-select" @bind-value="bruger.Team" @onchange="() => OpdaterBruger(bruger)" @bind-value:event="oninput">
-                                    @foreach (var team in teams)
-                                    {
-                                        <option value="@team" selected=@(bruger.Team == team)>@team</option>
-                                    }
-                                </select>
-                            </td>
+                }
+            </tbody>
+        </table>
+    </div>
 
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+    <h2 class="mt-1">Frivillige</h2>
+    <div class="flex-md-wrap mt-3">
+        <p class="mb-0">Sorter efter: </p>
+        @* Laver en chechkbox for hver kompetence der findes. Trykkes der på én af dem, hentes der en ny liste af frivillige,
+            som er sorteret alt efter, hvilke kompetencer som er valgt
+        *@
+        @foreach (var kompetence in alleKompetencer)
+        {
+            <div class="form-check form-check-inline mb-2">
+                <input type="checkbox" class="form-check-input" id="defaultCheck" @onchange="eventArgs => { CheckboxKompetencer(kompetence, eventArgs.Value); }">
+                <label class="form-check-label" for="defaultCheck">@kompetence.Kompetence_Navn</label>
+            </div>
+        }
+    </div>
 
-        <h2 class="mt-3">Koordinatorer</h2>
 
-        <div class="table-responsive rounded">
-            <table class="table table-striped">
-                <thead class="table-dark">
+    <div class="table-responsive rounded">
+        <table class="table table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th class="col-md-1">ID</th>
+                    <th class="col-md-2">Navn</th>
+                    <th class="col-md-2">Telefon</th>
+                    <th class="col-md-2">Email</th>
+                    <th class="col-md-3">Adresse</th>
+                    <th class="col-md-2">Team</th>
+                </tr>
+            </thead>
+            <tbody>
+                @* Laver en række med information for hver bruger, som har rollen frivillig *@
+                @foreach (var bruger in frivilligListe)
+                {
                     <tr>
-                        <th class="col-md-1">ID</th>
-                        <th class="col-md-2">Navn</th>
-                        <th class="col-md-2">Telefon</th>
-                        <th class="col-md-2">Email</th>
-                        <th class="col-md-3">Adresse</th>
-                        <th class="col-md-2">Team</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @* Viser en liste over alle koordinatorer og deres information *@
-                    @foreach (var bruger in koordinatorListe)
-                    {
-                        <tr>
-                            <th>@bruger.Bruger_Id</th>
-                            <td>@bruger.Fornavn @bruger.Efternavn</td>
-                            <td>@bruger.Telefon</td>
-                            <td>@bruger.Email</td>
-                            <td>@bruger.Adresse</td>
-                            <td>@bruger.Team</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+                        <th>@bruger.Bruger_Id</th>
+                        <td>@bruger.Fornavn @bruger.Efternavn</td>
+                        <td>@bruger.Telefon</td>
+                        <td>@bruger.Email</td>
+                        <td>@bruger.Adresse</td>
+                        <td>
+                            @* Gør det muligt for koordinatoren at flytte den frivillig fra et team til et andet.
+                                Når der vælges et nyt team, kører OpdaterBurger(bruger) funktionen og opdaterer brugeren.
+                            *@
+                            <select class="form-select" @bind-value="bruger.Team" @onchange="() => OpdaterBruger(bruger)" @bind-value:event="oninput">
+                                @foreach (var team in teams)
+                                {
+                                    <option value="@team" selected=@(bruger.Team == team)>@team</option>
+                                }
+                            </select>
+                        </td>
 
-    </main>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</main>
 }
 
 @code {

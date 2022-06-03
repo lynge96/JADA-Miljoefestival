@@ -20,135 +20,162 @@ else if (!loggedInBruger.ErFormand())
 }
 else if (loggedInBruger.ErFormand())
 {
-<main class="col-md-8 mx-auto">
+    <main class="col-md-8 mx-auto">
 
-    <h1 class="display-4">Overblik over alle frivillige</h1>
+        <h1 class="display-4">Overblik over alle frivillige</h1>
 
-    <h2 class="mt-3">Frivillige</h2>
-      <p class="lead">Her har du mulighed for at flytte frivillige fra et hold til et andet, hvis det skulle blive nødvendigt.
-          Yderligere kan du opgradere en frivillig til koordinator.
-          <br /><br /><i>OBS:</i> Gøres dette, bliver alle vagterne, som brugeren eventuelt havde taget, frigivet tilbage til brugerens tidligere team.  <br /><br />
-      </p>
+        <h2 class="mt-3">Formænd</h2>
 
-   @* Gør det muligt for formanden at sortere i de frivillige ud fra deres kompetencer*@   
-    <div class="flex-md-wrap mt-3">
-        <p class="mb-0">Sorter efter: </p>
-        @foreach (var kompetence in alleKompetencer)
-        {
-            <div class="form-check form-check-inline mb-2">
-                <input type="checkbox" class="form-check-input" id="defaultCheck" @onchange="eventArgs => { CheckboxKompetencer(kompetence, eventArgs.Value); }">
-                <label class="form-check-label" for="defaultCheck">@kompetence.Kompetence_Navn</label>
-            </div>
-        }
-    </div>
-
-    <div class="table-responsive rounded">
-        <table class="table table-striped">
-            <thead class="table-dark">
-                <tr>
-                    <th>ID</th>
-                    <th>Navn</th>
-                    <th>Telefon</th>
-                    <th>Email</th>
-                    <th>Adresse</th>
-                    <th>Team</th>
-                    <th>Koordinator?</th>
-                </tr>
-            </thead>
-            <tbody>
-                @* Laver en række pr. frivillig med alt deres information *@
-                @foreach (var bruger in frivilligListe)
-                {
+        <div class="table-responsive rounded mb-3">
+            <table class="table table-striped">
+                <thead class="table-dark">
                     <tr>
-                        <th>@bruger.Bruger_Id</th>
-                        <td>@bruger.Fornavn @bruger.Efternavn</td>
-                        <td>@bruger.Telefon</td>
-                        <td>@bruger.Email</td>
-                        <td>@bruger.Adresse</td>
-                        <td>
-                            @* Gør det muligt at ændre teamet for en bruger *@
-                            <select class="form-select" @bind-value="bruger.Team" @onchange="() => OpdaterBruger(bruger)" @bind-value:event="oninput">
-                                @foreach (var team in teams)
-                                {
-                                    <option value="@team" selected=@(bruger.Team == team)>@team</option>
-                                }
-                            </select>
-                        </td>
-                        <td>
-                            <div class="form-check form-switch">
-                                @* Gør det muligt at ændre koordinator-status for den frivillige *@
-                                @if (!bruger.ErKoordinator())
-                                {
-                                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @onchange="async eventArgs => { await CheckboxClicked(bruger, eventArgs.Value); }">
-                                }
-                                else
-                                {
-                                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @onchange="async eventArgs => { await CheckboxClicked(bruger, eventArgs.Value); }" checked>
-
-                                }
-                            </div>
-                        </td>
+                        <th class="col-md-1">ID</th>
+                        <th class="col-md-4">Navn</th>
+                        <th class="col-md-3">Telefon</th>
+                        <th class="col-md-4">Email</th>
                     </tr>
-                }
-            </tbody>
-        </table>
-    </div>
+                </thead>
+                <tbody>
+                    @* Laver en række for hver formand  *@
+                    @foreach (var bruger in formandListe)
+                    {
+                        <tr>
+                            <th>@bruger.Bruger_Id</th>
+                            <td>@bruger.Fornavn @bruger.Efternavn</td>
+                            <td>@bruger.Telefon</td>
+                            <td>@bruger.Email</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
 
+        <h2 class="mt-3">Koordinatorer</h2>
+        <p class="lead">Herunder kan du se alle koordinatorerne til festivalen, og du også mulighed for at ændre dem tilbage til almindelige frivillige.</p>
+        <div class="table-responsive rounded">
+            <table class="table table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Navn</th>
+                        <th>Telefon</th>
+                        <th>Email</th>
+                        <th>Adresse</th>
+                        <th>Team</th>
+                        <th>Koordinator</th>
+                    </tr>
+                </thead>
+                <tbody>
 
-    <h2 class="mt-3">Koordinatorer</h2>
-     <p class="lead">Herunder kan du se alle koordinatorerne til festivalen, og du også mulighed for at ændre dem tilbage til almindelige frivillige.</p>
-    <div class="table-responsive rounded">
-        <table class="table table-striped">
-            <thead class="table-dark">
-                <tr>
-                    <th>ID</th>
-                    <th>Navn</th>
-                    <th>Telefon</th>
-                    <th>Email</th>
-                    <th>Adresse</th>
-                    <th>Team</th>
-                    <th>Koordinator?</th>
-                </tr>
-            </thead>
-            <tbody>
+                    @* Laver en række for hver koordinator med alt deres information *@
+                    @foreach (var bruger in koordinatorListe)
+                    {
+                        <tr>
+                            <th>@bruger.Bruger_Id</th>
+                            <td>@bruger.Fornavn @bruger.Efternavn</td>
+                            <td>@bruger.Telefon</td>
+                            <td>@bruger.Email</td>
+                            <td>@bruger.Adresse</td>
+                            <td>
+                                @* Gør det muligt at ændre teamet for en bruger *@
+                                <select class="form-select" @bind-value="bruger.Team" @onchange="() => OpdaterBruger(bruger)" @bind-value:event="oninput">
+                                    @foreach (var team in teams)
+                                    {
+                                        <option value="@team" selected=@(bruger.Team == team)>@team</option>
+                                    }
+                                </select>
+                            </td>
+                            <td>
+                                <div class="form-check form-switch">
+                                    @* Gør det muligt at ændre koordinator-status for den frivillige *@
+                                    @if (bruger.ErKoordinator())
+                                    {
+                                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @onchange="async eventArgs => { await CheckboxClicked(bruger, eventArgs.Value); }" checked>
+                                    }
+                                    else
+                                    {
+                                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @onchange="async eventArgs => { await CheckboxClicked(bruger, eventArgs.Value); }">
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
 
-                @* Laver en række for hver koordinator med alt deres information *@
-                @foreach (var bruger in koordinatorListe)
-                {
-                <tr>
-                    <th>@bruger.Bruger_Id</th>
-                    <td>@bruger.Fornavn @bruger.Efternavn</td>
-                    <td>@bruger.Telefon</td>
-                    <td>@bruger.Email</td>
-                    <td>@bruger.Adresse</td>
-                    <td>
-                        @* Gør det muligt at ændre teamet for en bruger *@
-                        <select class="form-select" @bind-value="bruger.Team" @onchange="() => OpdaterBruger(bruger)" @bind-value:event="oninput">
-                            @foreach (var team in teams)
-                            {
-                                <option value="@team" selected=@(bruger.Team == team)>@team</option>
-                            }
-                        </select>
-                    </td>
-                    <td>
-                        <div class="form-check form-switch">
-                            @* Gør det muligt at ændre koordinator-status for den frivillige *@
-                            @if (bruger.ErKoordinator())
-                            {
-                                <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @onchange="async eventArgs => { await CheckboxClicked(bruger, eventArgs.Value); }" checked>
-                            }
-                            else
-                            {
-                                <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @onchange="async eventArgs => { await CheckboxClicked(bruger, eventArgs.Value); }">
-                            }
-                        </div>
-                    </td>
-                </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-</main>
+        <h2 class="mt-3">Frivillige</h2>
+        <p class="lead">
+            Her har du mulighed for at flytte frivillige fra et hold til et andet, hvis det skulle blive nødvendigt.
+            Yderligere kan du opgradere en frivillig til koordinator.
+            <br /><br /><i>OBS:</i> Gøres dette, bliver alle vagterne, som brugeren eventuelt havde taget, frigivet tilbage til brugerens tidligere team.  <br /><br />
+        </p>
+
+        @* Gør det muligt for formanden at sortere i de frivillige ud fra deres kompetencer*@
+        <div class="flex-md-wrap mt-3">
+            <p class="mb-0">Sorter efter: </p>
+            @foreach (var kompetence in alleKompetencer)
+            {
+                <div class="form-check form-check-inline mb-2">
+                    <input type="checkbox" class="form-check-input" id="defaultCheck" @onchange="eventArgs => { CheckboxKompetencer(kompetence, eventArgs.Value); }">
+                    <label class="form-check-label" for="defaultCheck">@kompetence.Kompetence_Navn</label>
+                </div>
+            }
+        </div>
+
+        <div class="table-responsive rounded">
+            <table class="table table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Navn</th>
+                        <th>Telefon</th>
+                        <th>Email</th>
+                        <th>Adresse</th>
+                        <th>Team</th>
+                        <th>Koordinator</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @* Laver en række pr. frivillig med alt deres information *@
+                    @foreach (var bruger in frivilligListe)
+                    {
+                        <tr>
+                            <th>@bruger.Bruger_Id</th>
+                            <td>@bruger.Fornavn @bruger.Efternavn</td>
+                            <td>@bruger.Telefon</td>
+                            <td>@bruger.Email</td>
+                            <td>@bruger.Adresse</td>
+                            <td>
+                                @* Gør det muligt at ændre teamet for en bruger *@
+                                <select class="form-select" @bind-value="bruger.Team" @onchange="() => OpdaterBruger(bruger)" @bind-value:event="oninput">
+                                    @foreach (var team in teams)
+                                    {
+                                        <option value="@team" selected=@(bruger.Team == team)>@team</option>
+                                    }
+                                </select>
+                            </td>
+                            <td>
+                                <div class="form-check form-switch">
+                                    @* Gør det muligt at ændre koordinator-status for den frivillige *@
+                                    @if (!bruger.ErKoordinator())
+                                    {
+                                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @onchange="async eventArgs => { await CheckboxClicked(bruger, eventArgs.Value); }">
+                                    }
+                                    else
+                                    {
+                                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @onchange="async eventArgs => { await CheckboxClicked(bruger, eventArgs.Value); }" checked>
+
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </main>
 
 }
 
@@ -278,7 +305,7 @@ else if (loggedInBruger.ErFormand())
 
         koordinatorListe = brugerListe.FindAll(q => q.Rolle_Id == 1).OrderBy(q => q.Team).ToList();
 
-         // Sørger for at frivilliglisten stadig er sorteret efter valgte kompetencer
+        // Sørger for at frivilliglisten stadig er sorteret efter valgte kompetencer
         List<Bruger> nyListe = new List<Bruger>();
 
         frivilligListe = brugerListe.FindAll(q => q.Rolle_Id == 2).OrderBy(q => q.Team).ToList();

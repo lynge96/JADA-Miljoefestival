@@ -64,7 +64,7 @@ else if (loggedInBruger.ErLoggetPå())
     {
         VagtListeUnsorted = await Http.GetFromJsonAsync<List<Vagt>>($"Vagt/ledigeVagter?team_id={loggedInBruger.Team_Id}");
 
-        VagtListe = VagtListeUnsorted.OrderBy(q => q.Vagt_Id).ToList();
+        VagtListe = VagtListeUnsorted.OrderBy(q => q.Start).ToList();
     }
 
     // Tager vagt og opdaterer ledige vagter

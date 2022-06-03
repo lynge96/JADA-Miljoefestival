@@ -22,7 +22,7 @@ else
 {
     <main class="col-md-7 mx-auto">
         <h1 class="display-4 text-center mb-4">Dit dashboard</h1>
-        <p class="lead">Hej <bold>@loggedInBruger.Fornavn</bold>! Nedenfor kan du se en oversigt over alle dine nuværende vagter samt en liste over alle dine medfrivillige i dit team
+        <p class="lead">Hej <strong>@loggedInBruger.Fornavn</strong> (ID: @loggedInBruger.Bruger_Id)! Nedenfor kan du se en oversigt over alle dine nuværende vagter samt en liste over alle dine medfrivillige i dit team
             <br /><br /><i>OBS:</i> Dine vagter kan kun frigives, når selve opgaven er i planlægnings-status.</p>
 
         @*Dashboard Tabel*@
@@ -74,6 +74,7 @@ else
             <table class="table table-striped">
                 <thead class="table-dark">
                     <tr>
+                        <th scope:"col">ID</th>
                         <th scope="col">Frivillige</th>
                         <th scope="col">Telefon</th>
                         <th scope="col">Rolle</th>
@@ -84,6 +85,7 @@ else
                     @foreach (var bruger in frivilligListe)
                     {
                         <tr>
+                            <td>@bruger.Bruger_Id</td>
                             <td>@bruger.Fornavn @bruger.Efternavn</td>
                             <td>@bruger.Telefon</td>
                             <td>@bruger.Rolle</td>
@@ -107,7 +109,7 @@ else
     {
         vagtListeUnsorted = await Http.GetFromJsonAsync<List<Vagt>>($"Vagt/brugerVagter?brugerid={loggedInBruger.Bruger_Id}");
 
-        vagtListe = vagtListeUnsorted.OrderBy(q => q.Vagt_Id).ToList();
+        vagtListe = vagtListeUnsorted.OrderBy(q => q.Start).ToList();
 
         brugerListeUnsorted = await Http.GetFromJsonAsync<List<Bruger>>("Bruger/all");
 
