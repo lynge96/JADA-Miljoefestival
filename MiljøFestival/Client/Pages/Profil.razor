@@ -75,12 +75,12 @@
             <h2 class="mt-3">Ændre Password</h2>
 
             <div class="form-floating mt-2">
-                <input type="password" class="form-control" id="floatingPassword" @bind="loggedInBruger.Kode">
+                <input type="password" class="form-control" id="floatingPassword" @bind="nytPassword">
                 <label for="floatingPassword">Password</label>
             </div>
 
             <div class="mt-4">
-                <button class="btn btn-outline-success" type="button" @onclick="() => OpdaterPassword()">Opdater password</button>
+                <button class="btn btn-outline-success" type="button" @onclick="() => OpdaterPassword(nytPassword)">Opdater password</button>
             </div>
 
             @* Giver feedback, hvis ændringen bliver godkendt *@
@@ -112,6 +112,7 @@ else
 @code {
     private bool passwordÆndring = false;
     private bool brugerÆndring = false;
+    private string nytPassword; 
 
     // Gemmer ændringer i kompetencevalg
     private void CheckboxClicked(Kompetence kompetence, object checkedValue)
@@ -130,6 +131,8 @@ else
     // Til sidst aktiveres feedbacken
     private async Task OpdaterBruger()
     {
+        loggedInBruger.Kode = "Placeholder";
+
         await OpdaterKompetencer(loggedInBruger.Kompetencer);
 
         await Http.PutAsJsonAsync<Bruger>("Bruger/opdater", loggedInBruger);
@@ -147,8 +150,10 @@ else
 
 
     // Sender det nye password til databasen, og aktiverer godkendt feedback
-    private async Task OpdaterPassword()
+    private async Task OpdaterPassword(string password)
     {
+        loggedInBruger.Kode = password;
+
         await Http.PutAsJsonAsync<Bruger>("Bruger/opdaterPassword", loggedInBruger);
 
         passwordÆndring = true;
